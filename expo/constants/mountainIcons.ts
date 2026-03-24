@@ -118,6 +118,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'pobeda-peak': 'https://r2-pub.rork.com/generated-images/a373ff34-5731-4b43-b31e-1ac010bf289f.png',
   'popocatepetl': 'https://r2-pub.rork.com/generated-images/d5aa6292-a5f6-49ac-bd42-16dbdc0cb1f8.png',
   'mt-st-helens': 'https://r2-pub.rork.com/generated-images/c35527d0-5466-4611-b213-db4ab38b32d0.png',
+  'tre-cime': 'https://r2-pub.rork.com/generated-images/df30defb-c2f2-4e0b-8648-11e3fd5a2706.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/43aa48aa-e898-4ce0-a22d-7bbd53a3411e.png';
