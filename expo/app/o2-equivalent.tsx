@@ -4,10 +4,15 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Image,
+  Dimensions,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { Wind } from 'lucide-react-native';
 import Colors from '@/constants/colors';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const HERO_HEIGHT = 280;
 
 interface AltitudeRow {
   altitude: number;
@@ -44,9 +49,10 @@ export default function O2EquivalentScreen() {
       <Stack.Screen
         options={{
           title: 'O₂ Equivalent',
-          headerStyle: { backgroundColor: Colors.white },
-          headerTintColor: Colors.text,
-          headerTitleStyle: { fontWeight: '700' as const },
+          headerTransparent: true,
+          headerTintColor: '#FFFFFF',
+          headerTitleStyle: { fontWeight: '700' as const, color: '#FFFFFF' },
+          headerStyle: { backgroundColor: 'transparent' },
         }}
       />
       <ScrollView
@@ -54,84 +60,109 @@ export default function O2EquivalentScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.infoCard}>
-          <View style={styles.infoIconWrap}>
-            <Wind color={Colors.primary} size={28} />
-          </View>
-          <Text style={styles.infoTitle}>Oxygen Equivalent at Altitudes</Text>
-          <Text style={styles.infoText}>
-            As altitude increases, atmospheric pressure decreases, reducing the amount of oxygen available. At 8,000m, you breathe only ~33% of the oxygen available at sea level.
-          </Text>
-        </View>
-
-        <View style={styles.legendRow}>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#3A9E5C' }]} />
-            <Text style={styles.legendText}>Low</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#E8A838' }]} />
-            <Text style={styles.legendText}>High</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#D94F4F' }]} />
-            <Text style={styles.legendText}>Extreme</Text>
-          </View>
-          <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#7B68AE' }]} />
-            <Text style={styles.legendText}>Death Zone</Text>
-          </View>
-        </View>
-
-        <View style={styles.tableContainer}>
-          <View style={styles.tableHeader}>
-            <Text style={[styles.tableHeaderText, styles.colAlt]}>Altitude</Text>
-            <Text style={[styles.tableHeaderText, styles.colO2]}>O₂ %</Text>
-            <Text style={[styles.tableHeaderText, styles.colEff]}>Eff. O₂</Text>
-            <Text style={[styles.tableHeaderText, styles.colZone]}>Zone</Text>
-          </View>
-          {altitudeData.map((row, index) => (
-            <View
-              key={row.altitude}
-              style={[
-                styles.tableRow,
-                index % 2 === 0 && styles.tableRowAlt,
-              ]}
-            >
-              <View style={styles.colAlt}>
-                <Text style={styles.altPrimary}>{row.altitude.toLocaleString()}m</Text>
-                <Text style={styles.altSecondary}>{row.altitudeFt.toLocaleString()}ft</Text>
-              </View>
-              <View style={styles.colO2}>
-                <View style={styles.o2BarContainer}>
-                  <View
-                    style={[
-                      styles.o2Bar,
-                      { width: `${row.o2Percent}%`, backgroundColor: row.color },
-                    ]}
-                  />
-                </View>
-                <Text style={styles.o2Text}>{row.o2Percent}%</Text>
-              </View>
-              <Text style={[styles.effText, styles.colEff]}>{row.effectiveO2}%</Text>
-              <View style={styles.colZone}>
-                <View style={[styles.zoneBadge, { backgroundColor: row.color + '15', borderColor: row.color + '35' }]}>
-                  <Text style={[styles.zoneText, { color: row.color }]}>{row.zone}</Text>
-                </View>
-              </View>
+        <View style={styles.heroContainer}>
+          <Image
+            source={{ uri: 'https://r2-pub.rork.com/attachments/37ju8kn02uoq9cuh159tp' }}
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+          <View style={styles.heroOverlay} />
+          <View style={styles.heroContent}>
+            <View style={styles.heroIconWrap}>
+              <Wind color="#FFFFFF" size={30} />
             </View>
-          ))}
+            <Text style={styles.heroTitle}>Oxygen at Altitude</Text>
+            <Text style={styles.heroSubtitle}>
+              How thin air affects your body as you climb higher
+            </Text>
+          </View>
         </View>
 
-        <View style={styles.noteCard}>
-          <Text style={styles.noteTitle}>Key Facts</Text>
-          <Text style={styles.noteText}>
-            • The "Death Zone" begins above ~7,600m (25,000ft){'\n'}
-            • Above this altitude, the body deteriorates faster than it can acclimatize{'\n'}
-            • Most climbers use supplemental oxygen above 7,000m{'\n'}
-            • Effective O₂ shows the equivalent oxygen percentage you'd breathe{'\n'}
-            • Acclimatization allows the body to partially compensate
-          </Text>
+        <View style={styles.bodyContent}>
+          <View style={styles.statRow}>
+            <View style={styles.statCard}>
+              <Text style={styles.statValue}>33%</Text>
+              <Text style={styles.statLabel}>O₂ at Everest</Text>
+            </View>
+            <View style={styles.statCard}>
+              <Text style={styles.statValue}>7,600m</Text>
+              <Text style={styles.statLabel}>Death Zone</Text>
+            </View>
+            <View style={styles.statCard}>
+              <Text style={styles.statValue}>20.9%</Text>
+              <Text style={styles.statLabel}>O₂ at Sea Level</Text>
+            </View>
+          </View>
+
+          <View style={styles.legendRow}>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#3A9E5C' }]} />
+              <Text style={styles.legendText}>Low</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#E8A838' }]} />
+              <Text style={styles.legendText}>High</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#D94F4F' }]} />
+              <Text style={styles.legendText}>Extreme</Text>
+            </View>
+            <View style={styles.legendItem}>
+              <View style={[styles.legendDot, { backgroundColor: '#7B68AE' }]} />
+              <Text style={styles.legendText}>Death Zone</Text>
+            </View>
+          </View>
+
+          <View style={styles.tableContainer}>
+            <View style={styles.tableHeader}>
+              <Text style={[styles.tableHeaderText, styles.colAlt]}>Altitude</Text>
+              <Text style={[styles.tableHeaderText, styles.colO2]}>O₂ %</Text>
+              <Text style={[styles.tableHeaderText, styles.colEff]}>Eff. O₂</Text>
+              <Text style={[styles.tableHeaderText, styles.colZone]}>Zone</Text>
+            </View>
+            {altitudeData.map((row, index) => (
+              <View
+                key={row.altitude}
+                style={[
+                  styles.tableRow,
+                  index % 2 === 0 && styles.tableRowAlt,
+                ]}
+              >
+                <View style={styles.colAlt}>
+                  <Text style={styles.altPrimary}>{row.altitude.toLocaleString()}m</Text>
+                  <Text style={styles.altSecondary}>{row.altitudeFt.toLocaleString()}ft</Text>
+                </View>
+                <View style={styles.colO2}>
+                  <View style={styles.o2BarContainer}>
+                    <View
+                      style={[
+                        styles.o2Bar,
+                        { width: `${row.o2Percent}%`, backgroundColor: row.color },
+                      ]}
+                    />
+                  </View>
+                  <Text style={styles.o2Text}>{row.o2Percent}%</Text>
+                </View>
+                <Text style={[styles.effText, styles.colEff]}>{row.effectiveO2}%</Text>
+                <View style={styles.colZone}>
+                  <View style={[styles.zoneBadge, { backgroundColor: row.color + '15', borderColor: row.color + '35' }]}>
+                    <Text style={[styles.zoneText, { color: row.color }]}>{row.zone}</Text>
+                  </View>
+                </View>
+              </View>
+            ))}
+          </View>
+
+          <View style={styles.noteCard}>
+            <Text style={styles.noteTitle}>Key Facts</Text>
+            <Text style={styles.noteText}>
+              • The "Death Zone" begins above ~7,600m (25,000ft){'\n'}
+              • Above this altitude, the body deteriorates faster than it can acclimatize{'\n'}
+              • Most climbers use supplemental oxygen above 7,000m{'\n'}
+              • Effective O₂ shows the equivalent oxygen percentage you'd breathe{'\n'}
+              • Acclimatization allows the body to partially compensate
+            </Text>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -147,39 +178,77 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
     paddingBottom: 40,
   },
-  infoCard: {
+  heroContainer: {
+    width: SCREEN_WIDTH,
+    height: HERO_HEIGHT,
+    position: 'relative',
+  },
+  heroImage: {
+    width: '100%',
+    height: '100%',
+  },
+  heroOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(10, 20, 40, 0.55)',
+  },
+  heroContent: {
+    position: 'absolute',
+    bottom: 28,
+    left: 20,
+    right: 20,
+  },
+  heroIconWrap: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  heroTitle: {
+    fontSize: 26,
+    fontWeight: '800' as const,
+    color: '#FFFFFF',
+    letterSpacing: -0.5,
+    marginBottom: 4,
+  },
+  heroSubtitle: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.8)',
+    fontWeight: '500' as const,
+  },
+  bodyContent: {
+    padding: 16,
+  },
+  statRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginBottom: 16,
+  },
+  statCard: {
+    flex: 1,
     backgroundColor: Colors.white,
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 14,
+    paddingVertical: 14,
+    paddingHorizontal: 10,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.border,
-    marginBottom: 16,
   },
-  infoIconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.frost,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  infoTitle: {
-    fontSize: 18,
-    fontWeight: '700' as const,
+  statValue: {
+    fontSize: 17,
+    fontWeight: '800' as const,
     color: Colors.text,
-    marginTop: 10,
-    marginBottom: 8,
+    marginBottom: 2,
   },
-  infoText: {
-    fontSize: 13,
-    color: Colors.textSecondary,
+  statLabel: {
+    fontSize: 10,
+    color: Colors.textMuted,
+    fontWeight: '600' as const,
     textAlign: 'center',
-    lineHeight: 20,
   },
   legendRow: {
     flexDirection: 'row',
