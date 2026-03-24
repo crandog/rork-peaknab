@@ -45,7 +45,7 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
       >
         <View style={styles.cardContent}>
           <View style={styles.leftSection}>
-            <MountainIcon mountainId={mountain.id} category={mountain.category} size={26} />
+            <MountainIcon mountainId={mountain.id} category={mountain.category} size={34} />
           </View>
 
           <View style={styles.centerSection}>
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   leftSection: {
     marginRight: 14,
-    width: 28,
+    width: 36,
     alignItems: 'center',
   },
   centerSection: {
