@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   location: {
     fontSize: 11,
-    color: Colors.textSecondary,
+    color: Colors.ice,
     marginBottom: 5,
   },
   tagRow: {
