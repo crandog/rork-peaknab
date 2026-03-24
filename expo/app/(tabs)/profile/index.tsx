@@ -285,7 +285,7 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/5tvlwzt7tfogn2gqqotng' }}
+        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/h9lsc5acg9fa3uka6bwlz' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
@@ -297,7 +297,7 @@ export default function ProfileScreen() {
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.title}>My Summits</Text>
-            <Text style={styles.subtitle}>Your mountaineering journey</Text>
+            <Text style={styles.subtitleLight}>Your mountaineering journey</Text>
           </View>
           {summitCount > 0 && (
             <View style={styles.headerActions}>
@@ -307,7 +307,7 @@ export default function ProfileScreen() {
                 activeOpacity={0.7}
                 testID="export-pdf-button"
               >
-                <FileDown color={Colors.primary} size={18} />
+                <FileDown color={Colors.white} size={18} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.shareStatsButton}
@@ -520,20 +520,18 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
-    height: 300,
-    opacity: 0.3,
+    height: 260,
   },
   backgroundOverlay: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
-    height: 300,
-    backgroundColor: Colors.ice,
-    opacity: 0.4,
+    height: 260,
+    backgroundColor: 'rgba(180, 205, 230, 0.25)',
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -548,13 +546,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700' as const,
-    color: Colors.text,
+    color: Colors.white,
     letterSpacing: -0.5,
     marginBottom: 4,
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
-  subtitle: {
+  subtitleLight: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: 'rgba(255,255,255,0.85)',
+    textShadowColor: 'rgba(0,0,0,0.2)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
   headerActions: {
     flexDirection: 'row',
@@ -564,19 +568,21 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   shareStatsButton: {
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: Colors.primary,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   completionCard: {
     borderRadius: 16,
