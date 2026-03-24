@@ -15,12 +15,14 @@ import { useSummits } from '@/contexts/SummitContext';
 let MapView: any = null;
 let Marker: any = null;
 
-try {
-  const Maps = require('react-native-maps');
-  MapView = Maps.default;
-  Marker = Maps.Marker;
-} catch (e) {
-  console.log('react-native-maps not available');
+if (Platform.OS !== 'web') {
+  try {
+    const Maps = require('react-native-maps');
+    MapView = Maps.default;
+    Marker = Maps.Marker;
+  } catch (e) {
+    console.log('react-native-maps not available');
+  }
 }
 
 export default function MapScreen() {
