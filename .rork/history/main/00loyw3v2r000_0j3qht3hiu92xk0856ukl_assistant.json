@@ -1,0 +1,18 @@
+{
+  "id": "0j3qht3hiu92xk0856ukl",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "t7f7jg3uqzo4goj3vl8z6",
+      "text": "Your progress is automatically saved! Everything you've done in this project is persisted. When you come back later, just open the same project and all your code, mountains, summit data, and settings will be right where you left it.\n\nFor **user data** (like which mountains they've summited), that's stored via AsyncStorage on the device, so it persists between app sessions on the same device.\n\nIf you want to **back up your code**, you can download the project files or connect it to a Git repository for version control.",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "0.4"
+      },
+      "type": "meta"
+    }
+  ]
+}

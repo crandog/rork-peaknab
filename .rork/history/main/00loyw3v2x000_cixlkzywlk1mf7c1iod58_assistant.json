@@ -1,0 +1,18 @@
+{
+  "id": "cixlkzywlk1mf7c1iod58",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "t7f7jg3uqzo4goj3vl8z6",
+      "text": "\n\nYour project is hosted on Rork. To get back to it, visit:\n\n**https://rork.app/project/0flxsf6ncoo30x7j7rdu6**\n\nThis is the direct link to your mountain summit tracker app. Bookmark it so you can find it anytime!",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "0.4"
+      },
+      "type": "meta"
+    }
+  ]
+}

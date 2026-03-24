@@ -45,6 +45,7 @@ function RootLayoutNav() {
           headerTintColor: Colors.text,
         }}
       />
+      <Stack.Screen name="+not-found" />
     </Stack>
   );
 }
