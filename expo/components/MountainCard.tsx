@@ -51,11 +51,19 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
           <View style={styles.centerSection}>
             <View style={styles.nameRow}>
               <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
+              {isSummited && (
+                <View style={styles.summitBadge}>
+                  <Text style={styles.summitBadgeText}>SUMMITED</Text>
+                </View>
+              )}
             </View>
+            <Text style={styles.locationText} numberOfLines={1}>
+              {mountain.country} · {mountain.range}
+            </Text>
           </View>
 
           <View style={styles.rightSection}>
-            <Text style={styles.elevation}>
+            <Text style={[styles.elevation, isSummited && styles.elevationSummited]}>
               {useFeet
                 ? `${mountain.elevationFt.toLocaleString()} ft`
                 : `${mountain.elevation.toLocaleString()} m`}
@@ -66,14 +74,6 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
                 : `${mountain.elevationFt.toLocaleString()} ft`}
             </Text>
           </View>
-
-          {isSummited && (
-            <View style={styles.stampContainer}>
-              <View style={styles.stamp}>
-                <Text style={styles.stampText}>SUMMITED</Text>
-              </View>
-            </View>
-          )}
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border + '50',
   },
   cardSummited: {
-    backgroundColor: 'rgba(58, 158, 92, 0.04)',
+    backgroundColor: 'rgba(192, 57, 43, 0.03)',
   },
   cardContent: {
     flexDirection: 'row',
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
   },
   name: {
     fontSize: 15,
@@ -120,34 +120,35 @@ const styles = StyleSheet.create({
     color: Colors.text,
     flexShrink: 1,
   },
-  rightSection: {
-    alignItems: 'flex-end',
-  },
-  stampContainer: {
-    position: 'absolute' as const,
-    right: 14,
-    top: 6,
-    transform: [{ rotate: '-12deg' }],
-  },
-  stamp: {
-    borderWidth: 2,
+  summitBadge: {
+    borderWidth: 1.5,
     borderColor: '#C0392B',
-    borderRadius: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    backgroundColor: 'rgba(192, 57, 43, 0.08)',
+    borderRadius: 3,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    transform: [{ rotate: '-3deg' }],
   },
-  stampText: {
-    fontSize: 8,
+  summitBadgeText: {
+    fontSize: 7,
     fontWeight: '900' as const,
     color: '#C0392B',
-    letterSpacing: 1.5,
-    textTransform: 'uppercase' as const,
+    letterSpacing: 1,
+  },
+  locationText: {
+    fontSize: 12,
+    color: Colors.textMuted,
+    marginTop: 2,
+  },
+  rightSection: {
+    alignItems: 'flex-end',
   },
   elevation: {
     fontSize: 13,
     fontWeight: '500' as const,
     color: Colors.textSecondary,
+  },
+  elevationSummited: {
+    color: Colors.text,
   },
   elevationAlt: {
     fontSize: 11,
