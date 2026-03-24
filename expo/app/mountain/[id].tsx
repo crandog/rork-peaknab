@@ -536,6 +536,15 @@ export default function MountainDetailScreen() {
             </View>
           )}
         </View>
+
+        <View style={styles.bottomImageContainer}>
+          <Image
+            source={{ uri: heroImageUrl }}
+            style={styles.bottomImage}
+            resizeMode="cover"
+          />
+          <View style={styles.bottomImageOverlay} />
+        </View>
       </Animated.ScrollView>
     </View>
   );
@@ -605,7 +614,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.15)',
   },
   scrollView: { flex: 1, zIndex: 2 },
-  scrollContent: { paddingBottom: 100 },
+  scrollContent: { paddingBottom: 0 },
   heroSpacer: { height: HERO_HEIGHT - 80 },
   heroOverlay: {
     paddingHorizontal: 24,
@@ -755,5 +764,18 @@ const styles = StyleSheet.create({
   deleteInlineButton: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-end', paddingVertical: 8, paddingHorizontal: 12, marginBottom: 8 },
   deleteInlineText: { color: Colors.danger, fontSize: 12, fontWeight: '500' as const },
   removeButtonText: { color: Colors.danger, fontSize: 14, fontWeight: '500' as const },
+  bottomImageContainer: {
+    width: '100%',
+    height: 260,
+    overflow: 'hidden',
+  },
+  bottomImage: {
+    width: '100%',
+    height: '100%',
+  },
+  bottomImageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(11, 29, 48, 0.35)',
+  },
   errorText: { color: Colors.text, fontSize: 16, textAlign: 'center', marginTop: 100 },
 });
