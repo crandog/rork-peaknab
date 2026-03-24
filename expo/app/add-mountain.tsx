@@ -43,18 +43,15 @@ export default function AddMountainScreen() {
   const [difficulty, setDifficulty] = useState<string>('Moderate');
   const [description, setDescription] = useState('');
 
-  const isValid = useCallback(() => {
-    return (
-      name.trim().length > 0 &&
-      elevation.trim().length > 0 &&
-      !isNaN(Number(elevation)) &&
-      Number(elevation) > 0
-    );
-  }, [name, elevation]);
+  const isValid =
+    name.trim().length > 0 &&
+    elevation.trim().length > 0 &&
+    !isNaN(Number(elevation)) &&
+    Number(elevation) > 0;
 
   const handleSave = useCallback(() => {
-    console.log('[AddMountain] Save pressed, valid:', isValid());
-    if (!isValid()) {
+    console.log('[AddMountain] Save pressed, valid:', isValid);
+    if (!isValid) {
       Alert.alert('Missing Info', 'Please enter at least a name and elevation.');
       return;
     }
@@ -136,10 +133,10 @@ export default function AddMountainScreen() {
             </TouchableOpacity>
             <Text style={styles.screenTitle}>Add Peak</Text>
             <TouchableOpacity
-              style={[styles.saveButton, !isValid() && styles.saveButtonDisabled]}
+              style={[styles.saveButton, !isValid && styles.saveButtonDisabled]}
               onPress={handleSave}
               activeOpacity={0.7}
-              disabled={!isValid()}
+              disabled={!isValid}
               testID="save-mountain"
             >
               <Check color={Colors.white} size={20} />
