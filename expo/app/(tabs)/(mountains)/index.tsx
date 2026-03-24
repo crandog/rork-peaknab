@@ -130,7 +130,7 @@ export default function MountainsScreen() {
         </View>
 
         <View style={styles.peakCountRow}>
-          <Text style={styles.titleSub}>{allMountains.length} peaks to conquer</Text>
+          <Text style={styles.titleSub}>{allMountains.length} peaks</Text>
           <TouchableOpacity
             style={styles.unitToggleBtn}
             onPress={() => setUseFeet(prev => !prev)}
