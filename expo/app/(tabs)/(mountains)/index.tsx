@@ -108,22 +108,8 @@ export default function MountainsScreen() {
         style={[styles.header, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleRow}>
-          <View>
-            <Text style={styles.title}>Summit Tracker</Text>
-            <View style={styles.titleSubRow}>
-            <Text style={styles.titleSub}>{allMountains.length} peaks to conquer</Text>
-          </View>
-          </View>
+          <Text style={styles.title}>Summit Tracker</Text>
           <View style={styles.titleActions}>
-            <TouchableOpacity
-              style={styles.unitToggleBtn}
-              onPress={() => setUseFeet(prev => !prev)}
-              activeOpacity={0.7}
-              testID="unit-toggle-button"
-            >
-              <ArrowUpDown color={useFeet ? Colors.accentLight : Colors.ice} size={14} />
-              <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
-            </TouchableOpacity>
             <TouchableOpacity
               style={styles.addButton}
               onPress={handleAddMountain}
@@ -141,6 +127,19 @@ export default function MountainsScreen() {
               <Text style={styles.o2Text}>O₂</Text>
             </TouchableOpacity>
           </View>
+        </View>
+
+        <View style={styles.peakCountRow}>
+          <Text style={styles.titleSub}>{allMountains.length} peaks to conquer</Text>
+          <TouchableOpacity
+            style={styles.unitToggleBtn}
+            onPress={() => setUseFeet(prev => !prev)}
+            activeOpacity={0.7}
+            testID="unit-toggle-button"
+          >
+            <ArrowUpDown color={useFeet ? Colors.accentLight : Colors.ice} size={13} />
+            <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.searchRow}>
@@ -260,11 +259,12 @@ const styles = StyleSheet.create({
     color: Colors.text,
     letterSpacing: -0.8,
   },
-  titleSubRow: {
+  peakCountRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
-    gap: 10,
-    marginTop: 2,
+    justifyContent: 'space-between' as const,
+    paddingHorizontal: 20,
+    marginBottom: 12,
   },
   titleSub: {
     fontSize: 12,
@@ -274,15 +274,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     backgroundColor: Colors.cardBg,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    borderRadius: 12,
-    gap: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    gap: 4,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   unitToggleBtnText: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '700' as const,
     color: Colors.ice,
   },
