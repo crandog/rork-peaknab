@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,14 @@ import {
   ScrollView,
   Alert,
   Platform,
+  Animated,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Stack } from 'expo-router';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
-import { Camera, FileText, Save, X } from 'lucide-react-native';
+import { Camera, FileText, Save, X, Mountain } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useSummits } from '@/contexts/SummitContext';
 
@@ -33,6 +34,14 @@ export default function SummitReportScreen() {
 
   const [report, setReport] = useState(summitRecord?.report ?? '');
   const [photoUri, setPhotoUri] = useState<string | null>(summitRecord?.photoUri ?? null);
+  const saveScale = useRef(new Animated.Value(1)).current;
+
+  const handleSavePress = useCallback(() => {
+    Animated.sequence([
+      Animated.timing(saveScale, { toValue: 0.95, duration: 80, useNativeDriver: true }),
+      Animated.timing(saveScale, { toValue: 1, duration: 80, useNativeDriver: true }),
+    ]).start();
+  }, [saveScale]);
 
   const handlePickPhoto = useCallback(async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -68,28 +77,41 @@ export default function SummitReportScreen() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: mountainName ?? 'Summit Report',
+          title: '',
           headerStyle: { backgroundColor: Colors.secondary },
           headerTintColor: Colors.text,
+          headerShadowVisible: false,
         }}
       />
+
+      <View style={styles.heroHeader}>
+        <Mountain color={Colors.accent} size={28} />
+        <Text style={styles.heroTitle}>{mountainName ?? 'Summit Report'}</Text>
+        <Text style={styles.heroSubtitle}>Document your achievement</Text>
+      </View>
+
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
       >
-        <View style={styles.section}>
+        <View style={styles.card}>
           <View style={styles.sectionHeader}>
-            <FileText color={Colors.accent} size={20} />
-            <Text style={styles.sectionTitle}>Summit Report</Text>
+            <View style={styles.iconBadge}>
+              <FileText color={Colors.accent} size={16} />
+            </View>
+            <View>
+              <Text style={styles.sectionTitle}>Summit Notes</Text>
+              <Text style={styles.sectionSubtitle}>
+                Conditions, route, memorable moments
+              </Text>
+            </View>
           </View>
-          <Text style={styles.sectionSubtitle}>
-            Share your experience, conditions, and memories from the climb
-          </Text>
           <TextInput
             style={styles.reportInput}
-            placeholder="How was the climb? Describe the conditions, your route, memorable moments..."
-            placeholderTextColor={Colors.textMuted}
+            placeholder="How was the climb?"
+            placeholderTextColor="rgba(160,152,136,0.6)"
             value={report}
             onChangeText={setReport}
             multiline
@@ -97,14 +119,18 @@ export default function SummitReportScreen() {
           />
         </View>
 
-        <View style={styles.section}>
+        <View style={styles.card}>
           <View style={styles.sectionHeader}>
-            <Camera color={Colors.accent} size={20} />
-            <Text style={styles.sectionTitle}>Summit Photo</Text>
+            <View style={styles.iconBadge}>
+              <Camera color={Colors.accent} size={16} />
+            </View>
+            <View>
+              <Text style={styles.sectionTitle}>Summit Photo</Text>
+              <Text style={styles.sectionSubtitle}>
+                Capture the moment
+              </Text>
+            </View>
           </View>
-          <Text style={styles.sectionSubtitle}>
-            Upload a photo from your summit
-          </Text>
 
           {photoUri ? (
             <View style={styles.photoContainer}>
@@ -117,7 +143,7 @@ export default function SummitReportScreen() {
                 style={styles.removePhotoButton}
                 onPress={() => setPhotoUri(null)}
               >
-                <X color={Colors.white} size={16} />
+                <X color="#fff" size={14} />
               </TouchableOpacity>
             </View>
           ) : (
@@ -126,20 +152,26 @@ export default function SummitReportScreen() {
               onPress={handlePickPhoto}
               activeOpacity={0.7}
             >
-              <Camera color={Colors.textMuted} size={32} />
-              <Text style={styles.photoPlaceholderText}>Tap to add photo</Text>
+              <View style={styles.photoIconCircle}>
+                <Camera color={Colors.accent} size={24} />
+              </View>
+              <Text style={styles.photoPlaceholderText}>Tap to add a photo</Text>
             </TouchableOpacity>
           )}
         </View>
 
-        <TouchableOpacity
-          style={styles.saveButton}
-          onPress={handleSave}
-          activeOpacity={0.8}
-        >
-          <Save color={Colors.white} size={20} />
-          <Text style={styles.saveButtonText}>Save Report</Text>
-        </TouchableOpacity>
+        <Animated.View style={{ transform: [{ scale: saveScale }] }}>
+          <TouchableOpacity
+            style={styles.saveButton}
+            onPress={() => { handleSavePress(); handleSave(); }}
+            activeOpacity={0.85}
+          >
+            <Save color="#fff" size={18} />
+            <Text style={styles.saveButtonText}>Save Report</Text>
+          </TouchableOpacity>
+        </Animated.View>
+
+        <View style={{ height: 20 }} />
       </ScrollView>
     </View>
   );
@@ -148,94 +180,140 @@ export default function SummitReportScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.secondary,
+  },
+  heroHeader: {
+    alignItems: 'center',
+    paddingTop: 4,
+    paddingBottom: 20,
+    backgroundColor: Colors.secondary,
+    gap: 6,
+  },
+  heroTitle: {
+    fontSize: 22,
+    fontWeight: '800' as const,
+    color: Colors.text,
+    marginTop: 6,
+    letterSpacing: 0.3,
+  },
+  heroSubtitle: {
+    fontSize: 13,
+    color: Colors.textSecondary,
+    letterSpacing: 0.2,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    padding: 20,
-    paddingBottom: 40,
+    padding: 16,
+    paddingTop: 8,
+    gap: 16,
   },
-  section: {
-    marginBottom: 28,
+  card: {
+    backgroundColor: Colors.cardBg,
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.06)',
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 6,
+    gap: 12,
+    marginBottom: 14,
+  },
+  iconBadge: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: 'rgba(212,168,67,0.12)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700' as const,
     color: Colors.text,
   },
   sectionSubtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: Colors.textSecondary,
-    marginBottom: 14,
+    marginTop: 2,
   },
   reportInput: {
-    backgroundColor: Colors.cardBg,
-    borderRadius: 14,
-    padding: 16,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 12,
+    padding: 14,
     color: Colors.text,
     fontSize: 15,
     lineHeight: 22,
-    minHeight: 180,
+    minHeight: 160,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.05)',
   },
   photoContainer: {
     position: 'relative',
-    borderRadius: 14,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   photo: {
     width: '100%',
-    height: 220,
-    borderRadius: 14,
+    height: 200,
+    borderRadius: 12,
   },
   removePhotoButton: {
     position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(0,0,0,0.6)',
+    top: 8,
+    right: 8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(0,0,0,0.55)',
     justifyContent: 'center',
     alignItems: 'center',
   },
   photoPlaceholder: {
-    height: 180,
-    backgroundColor: Colors.cardBg,
-    borderRadius: 14,
+    height: 150,
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.border,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.08)',
     borderStyle: 'dashed',
-    gap: 8,
+    gap: 10,
+  },
+  photoIconCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(212,168,67,0.1)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   photoPlaceholderText: {
-    color: Colors.textMuted,
-    fontSize: 14,
+    color: Colors.textSecondary,
+    fontSize: 13,
+    fontWeight: '500' as const,
   },
   saveButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.accent,
-    paddingVertical: 16,
+    paddingVertical: 15,
     borderRadius: 14,
     gap: 8,
-    marginTop: 8,
+    shadowColor: Colors.accent,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
   },
   saveButtonText: {
-    color: Colors.white,
-    fontSize: 17,
+    color: '#fff',
+    fontSize: 16,
     fontWeight: '700' as const,
+    letterSpacing: 0.3,
   },
 });
