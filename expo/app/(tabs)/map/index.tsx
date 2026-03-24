@@ -108,8 +108,8 @@ export default function MapScreen() {
             }}
             title={m.name}
             description={`${m.elevation.toLocaleString()}m - ${m.country}`}
-            pinColor={m.summited ? Colors.success : Colors.accent}
-            opacity={m.summited ? 1 : 0.5}
+            pinColor={m.summited ? '#22C55E' : '#EF4444'}
+            opacity={m.summited ? 1 : 0.8}
             onCalloutPress={() => navigateToMountain(m.id)}
           />
         ))}
@@ -117,12 +117,12 @@ export default function MapScreen() {
 
       <View style={styles.mapLegend}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: Colors.success }]} />
+          <View style={[styles.legendDot, { backgroundColor: '#22C55E' }]} />
           <Text style={styles.legendText}>Summited</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: Colors.accent, opacity: 0.5 }]} />
-          <Text style={styles.legendText}>Not Yet</Text>
+          <View style={[styles.legendDot, { backgroundColor: '#EF4444' }]} />
+          <Text style={styles.legendText}>Unclimbed</Text>
         </View>
       </View>
     </View>
