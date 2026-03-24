@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
   },
   resultCount: {
-    color: Colors.textMuted,
+    color: Colors.ice,
     fontSize: 12,
   },
   list: {
