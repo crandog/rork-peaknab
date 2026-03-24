@@ -172,6 +172,7 @@ export default function ProfileScreen() {
     const rows = sortedSummits.map((s, i) =>
       '<tr style="border-bottom:1px solid #eee;">' +
       '<td style="padding:10px 8px 10px 0;font-size:13px;color:#222;font-weight:500;">' + s.name + '</td>' +
+      '<td style="padding:10px 8px;font-size:12px;color:#555;white-space:nowrap;">' + s.country + '</td>' +
       '<td style="padding:10px 8px;font-size:12px;color:#555;text-align:right;white-space:nowrap;">' + s.elevation.toLocaleString() + 'm</td>' +
       '<td style="padding:10px 8px;font-size:12px;color:#555;text-align:right;white-space:nowrap;">' + s.elevationFt.toLocaleString() + 'ft</td>' +
       '<td style="padding:10px 0 10px 8px;font-size:12px;color:#999;text-align:right;white-space:nowrap;">' + s.date + '</td>' +
@@ -182,14 +183,14 @@ export default function ProfileScreen() {
     const totalElevFt = sortedSummits.reduce((a, s) => a + s.elevationFt, 0);
 
     const html = '<!DOCTYPE html><html><head><meta charset="utf-8"/>' +
-      '<style>@page{margin:50px 45px}body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;color:#222}table{width:100%;border-collapse:collapse}th{text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.5px;padding:0 8px 8px 0;font-weight:600;border-bottom:2px solid #222}th:nth-child(2),th:nth-child(3),th:nth-child(4){text-align:right}th:last-child{padding-right:0}td:first-child{max-width:200px}</style>' +
+      '<style>@page{margin:50px 45px}body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;color:#222}table{width:100%;border-collapse:collapse}th{text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.5px;padding:0 8px 8px 0;font-weight:600;border-bottom:2px solid #222}th:nth-child(3),th:nth-child(4),th:nth-child(5){text-align:right}th:last-child{padding-right:0}td:first-child{max-width:200px}</style>' +
       '</head><body>' +
       '<div style="margin-bottom:24px;">' +
       '<div style="font-size:26px;font-weight:bold;color:#111;letter-spacing:-0.5px;">Summit Log</div>' +
       '<div style="font-size:11px;color:#aaa;margin-top:4px;">' + sortedSummits.length + ' summit' + (sortedSummits.length !== 1 ? 's' : '') + ' \u2022 ' + totalElev.toLocaleString() + 'm / ' + totalElevFt.toLocaleString() + 'ft total \u2022 ' + dateStr + '</div>' +
       '</div>' +
       milestoneHtml +
-      '<table><thead><tr><th>Mountain</th><th style="text-align:right;padding-right:8px;">Meters</th><th style="text-align:right;padding-right:8px;">Feet</th><th style="text-align:right;padding-right:0;">Date</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+      '<table><thead><tr><th>Mountain</th><th>Country</th><th style="text-align:right;padding-right:8px;">Meters</th><th style="text-align:right;padding-right:8px;">Feet</th><th style="text-align:right;padding-right:0;">Date</th></tr></thead><tbody>' + rows + '</tbody></table>' +
       '<div style="margin-top:40px;text-align:center;font-size:9px;color:#ccc;">Summit Tracker</div>' +
       '</body></html>';
 
