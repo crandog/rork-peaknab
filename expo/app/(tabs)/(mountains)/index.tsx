@@ -104,7 +104,7 @@ export default function MountainsScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#081D30', '#0C2840', '#103550']}
+        colors={['#074E6A', '#0B5D7A', '#0F698A']}
         style={[styles.header, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleRow}>
@@ -208,9 +208,14 @@ export default function MountainsScreen() {
       </LinearGradient>
 
       <View style={styles.listContainer}>
+        <LinearGradient
+          colors={['#0F698A', 'transparent']}
+          style={styles.topFade}
+          pointerEvents="none"
+        />
         <View style={styles.listHeaderRow}>
           <Text style={styles.resultCount}>
-            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''} to conquer
           </Text>
           <TouchableOpacity
             style={styles.unitToggleBtn}
@@ -230,6 +235,11 @@ export default function MountainsScreen() {
           showsVerticalScrollIndicator={false}
           initialNumToRender={10}
           maxToRenderPerBatch={10}
+        />
+        <LinearGradient
+          colors={['transparent', '#0F698A']}
+          style={styles.bottomFade}
+          pointerEvents="none"
         />
       </View>
     </View>
@@ -393,6 +403,23 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     backgroundColor: '#0F698A',
+    position: 'relative' as const,
+  },
+  topFade: {
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 20,
+    zIndex: 10,
+  },
+  bottomFade: {
+    position: 'absolute' as const,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 40,
+    zIndex: 10,
   },
   listHeaderRow: {
     flexDirection: 'row' as const,
