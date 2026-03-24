@@ -112,7 +112,7 @@ export const mountainImages: Record<string, string> = {
   'torres-del-paine': 'https://images.unsplash.com/photo-1675348351326-4241ecc6fb2f?w=800&q=80',
   'paine-grande': 'https://images.unsplash.com/photo-1578922827298-2fe2e9e11809?w=800&q=80',
   'nuptse': 'https://images.unsplash.com/photo-1517783999520-f068d7431d60?w=800&q=80',
-  'rakaposhi': 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?w=800&q=80',
+  'rakaposhi': 'https://images.unsplash.com/photo-1691143288064-adaa46f8b839?w=800&q=80',
   'khan-tengri': 'https://images.unsplash.com/photo-1541367777708-7905fe3296c0?w=800&q=80',
   'pobeda-peak': 'https://images.unsplash.com/photo-1484910292437-025e5d13ce87?w=800&q=80',
   'popocatepetl': 'https://images.unsplash.com/photo-1745502943097-7ce5e7af2f0c?w=800&q=80',
