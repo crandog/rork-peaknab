@@ -129,19 +129,6 @@ export default function MountainsScreen() {
           </View>
         </View>
 
-        <View style={styles.peakCountRow}>
-          <Text style={styles.titleSub}>{allMountains.length} peaks</Text>
-          <TouchableOpacity
-            style={styles.unitToggleBtn}
-            onPress={() => setUseFeet(prev => !prev)}
-            activeOpacity={0.7}
-            testID="unit-toggle-button"
-          >
-            <ArrowUpDown color={useFeet ? Colors.accentLight : Colors.ice} size={13} />
-            <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
-          </TouchableOpacity>
-        </View>
-
         <View style={styles.searchRow}>
           <View style={styles.searchContainer}>
             <Search color={Colors.textMuted} size={16} />
@@ -221,9 +208,20 @@ export default function MountainsScreen() {
       </LinearGradient>
 
       <View style={styles.listContainer}>
-        <Text style={styles.resultCount}>
-          {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
-        </Text>
+        <View style={styles.listHeaderRow}>
+          <Text style={styles.resultCount}>
+            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+          </Text>
+          <TouchableOpacity
+            style={styles.unitToggleBtn}
+            onPress={() => setUseFeet(prev => !prev)}
+            activeOpacity={0.7}
+            testID="unit-toggle-button"
+          >
+            <ArrowUpDown color={useFeet ? Colors.accentLight : Colors.ice} size={13} />
+            <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
+          </TouchableOpacity>
+        </View>
         <FlatList
           data={filteredMountains}
           keyExtractor={(item) => item.id}
@@ -259,17 +257,7 @@ const styles = StyleSheet.create({
     color: Colors.text,
     letterSpacing: -0.8,
   },
-  peakCountRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'space-between' as const,
-    paddingHorizontal: 20,
-    marginBottom: 12,
-  },
-  titleSub: {
-    fontSize: 12,
-    color: Colors.textMuted,
-  },
+
   unitToggleBtn: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
@@ -405,12 +393,17 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
   },
-  resultCount: {
-    color: Colors.textMuted,
-    fontSize: 12,
+  listHeaderRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 6,
+  },
+  resultCount: {
+    color: Colors.textMuted,
+    fontSize: 12,
   },
   list: {
     paddingHorizontal: 16,
