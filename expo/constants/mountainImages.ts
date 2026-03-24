@@ -1,5 +1,5 @@
 export const mountainImages: Record<string, string> = {
-  'everest': 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80',
+  'everest': 'https://images.unsplash.com/photo-1575819719798-83d97dd6949c?w=800&q=80',
   'aconcagua': 'https://images.unsplash.com/photo-1594007654729-407eedc4be65?w=800&q=80',
   'denali': 'https://images.unsplash.com/photo-1531884422565-1b4a26326a31?w=800&q=80',
   'kilimanjaro': 'https://images.unsplash.com/photo-1559293743-f80e2f2d95e9?w=800&q=80',
