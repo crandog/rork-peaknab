@@ -38,7 +38,7 @@ export default function MapScreen() {
     }));
   }, [records, isSummited]);
 
-  if (!MapView || Platform.OS === 'web') {
+  if (!MapView) {
     return (
       <View style={styles.container}>
         <LinearGradient
