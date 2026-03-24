@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,19 +11,7 @@ import { MapPin } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { mountains } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
-
-let MapView: any = null;
-let Marker: any = null;
-
-if (Platform.OS !== 'web') {
-  try {
-    const Maps = require('react-native-maps');
-    MapView = Maps.default;
-    Marker = Maps.Marker;
-  } catch (e) {
-    console.log('react-native-maps not available');
-  }
-}
+import RNMapView, { Marker as RNMarker } from 'react-native-maps';
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
@@ -40,7 +28,7 @@ export default function MapScreen() {
     }));
   }, [records, isSummited]);
 
-  if (!MapView) {
+  if (Platform.OS === 'web') {
     return (
       <View style={styles.container}>
         <LinearGradient
@@ -90,7 +78,7 @@ export default function MapScreen() {
           </Text>
         </View>
       </View>
-      <MapView
+      <RNMapView
         style={styles.map}
         initialRegion={{
           latitude: 30,
@@ -101,7 +89,7 @@ export default function MapScreen() {
         mapType="terrain"
       >
         {allMountainMarkers.map((m) => (
-          <Marker
+          <RNMarker
             key={m.id}
             coordinate={{
               latitude: m.latitude,
@@ -113,7 +101,7 @@ export default function MapScreen() {
             opacity={m.summited ? 1 : 0.5}
           />
         ))}
-      </MapView>
+      </RNMapView>
 
       <View style={styles.mapLegend}>
         <View style={styles.legendItem}>
