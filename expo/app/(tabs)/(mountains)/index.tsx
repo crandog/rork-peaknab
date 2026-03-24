@@ -102,11 +102,14 @@ export default function MountainsScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
+        colors={['#1A1A2E', '#1E2240', '#222244']}
         style={[styles.header, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleRow}>
-          <Text style={styles.title}>Summit Tracker</Text>
+          <View>
+            <Text style={styles.title}>Summit Tracker</Text>
+            <Text style={styles.titleSub}>{allMountains.length} peaks to conquer</Text>
+          </View>
           <View style={styles.titleActions}>
             <TouchableOpacity
               style={styles.addButton}
@@ -121,7 +124,7 @@ export default function MountainsScreen() {
               onPress={handleO2Press}
               activeOpacity={0.7}
             >
-              <Wind color={Colors.accentLight} size={18} />
+              <Wind color={Colors.accentLight} size={16} />
               <Text style={styles.o2Text}>O₂</Text>
             </TouchableOpacity>
           </View>
@@ -129,7 +132,7 @@ export default function MountainsScreen() {
 
         <View style={styles.searchRow}>
           <View style={styles.searchContainer}>
-            <Search color={Colors.textMuted} size={18} />
+            <Search color={Colors.textMuted} size={16} />
             <TextInput
               style={styles.searchInput}
               placeholder="Search peaks, countries, ranges..."
@@ -148,7 +151,7 @@ export default function MountainsScreen() {
             onPress={() => setShowSort(!showSort)}
             activeOpacity={0.7}
           >
-            <ChevronDown color={Colors.accentLight} size={16} />
+            <ChevronDown color={Colors.accent} size={14} />
             <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
           </TouchableOpacity>
         </View>
@@ -179,25 +182,29 @@ export default function MountainsScreen() {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.key}
           contentContainerStyle={styles.categoryList}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={[
-                styles.categoryChip,
-                selectedCategory === item.key && styles.categoryChipActive,
-              ]}
-              onPress={() => setSelectedCategory(item.key)}
-              activeOpacity={0.7}
-            >
-              <Text
+          renderItem={({ item }) => {
+            const isActive = selectedCategory === item.key;
+            const chipColor = item.key !== 'all' ? Colors.categoryColors[item.key] : Colors.accent;
+            return (
+              <TouchableOpacity
                 style={[
-                  styles.categoryChipText,
-                  selectedCategory === item.key && styles.categoryChipTextActive,
+                  styles.categoryChip,
+                  isActive && { backgroundColor: chipColor, borderColor: chipColor },
                 ]}
+                onPress={() => setSelectedCategory(item.key)}
+                activeOpacity={0.7}
               >
-                {item.label}
-              </Text>
-            </TouchableOpacity>
-          )}
+                <Text
+                  style={[
+                    styles.categoryChipText,
+                    isActive && styles.categoryChipTextActive,
+                  ]}
+                >
+                  {item.label}
+                </Text>
+              </TouchableOpacity>
+            );
+          }}
         />
       </LinearGradient>
 
@@ -232,13 +239,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginBottom: 12,
+    marginBottom: 14,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800' as const,
-    color: Colors.white,
-    letterSpacing: -0.5,
+    fontSize: 30,
+    fontWeight: '900' as const,
+    color: Colors.text,
+    letterSpacing: -0.8,
+  },
+  titleSub: {
+    fontSize: 12,
+    color: Colors.textMuted,
+    marginTop: 2,
   },
   titleActions: {
     flexDirection: 'row',
@@ -246,10 +258,10 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   addButton: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: Colors.categoryColors.custom,
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: Colors.peach,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -258,15 +270,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.cardBg,
     paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    gap: 6,
+    paddingVertical: 9,
+    borderRadius: 12,
+    gap: 5,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   o2Text: {
     color: Colors.accentLight,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700' as const,
   },
   searchRow: {
@@ -289,8 +301,8 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     color: Colors.text,
-    fontSize: 15,
-    paddingVertical: Platform.OS === 'web' ? 10 : 12,
+    fontSize: 14,
+    paddingVertical: Platform.OS === 'web' ? 10 : 11,
   },
   sortButton: {
     flexDirection: 'row',
@@ -303,8 +315,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
   },
   sortLabel: {
-    color: Colors.accentLight,
-    fontSize: 12,
+    color: Colors.accent,
+    fontSize: 11,
     fontWeight: '600' as const,
   },
   sortDropdown: {
@@ -324,7 +336,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   sortOptionActive: {
-    backgroundColor: Colors.cardBg,
+    backgroundColor: Colors.accent + '12',
   },
   sortOptionText: {
     color: Colors.textSecondary,
@@ -347,10 +359,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  categoryChipActive: {
-    backgroundColor: Colors.accent,
-    borderColor: Colors.accent,
-  },
   categoryChipText: {
     color: Colors.textSecondary,
     fontSize: 13,
@@ -358,6 +366,7 @@ const styles = StyleSheet.create({
   },
   categoryChipTextActive: {
     color: Colors.white,
+    fontWeight: '700' as const,
   },
   listContainer: {
     flex: 1,
@@ -366,8 +375,8 @@ const styles = StyleSheet.create({
     color: Colors.textMuted,
     fontSize: 12,
     paddingHorizontal: 20,
-    paddingTop: 8,
-    paddingBottom: 4,
+    paddingTop: 10,
+    paddingBottom: 6,
   },
   list: {
     paddingHorizontal: 16,

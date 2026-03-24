@@ -1,0 +1,18 @@
+{
+  "id": "k1jxxerss79lbg689q8yj",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "3r1jlgc80oppmlw2tm569",
+      "text": "Rork Max gives you the ability to submit your app to the Apple App Store and Google Play Store, along with access to more builds, premium features, and priority support. If publishing your app is your goal, it's the way to go.",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "1"
+      },
+      "type": "meta"
+    }
+  ]
+}

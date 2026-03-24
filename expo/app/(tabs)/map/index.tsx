@@ -34,11 +34,13 @@ export default function MapScreen() {
     return (
       <View style={styles.container}>
         <LinearGradient
-          colors={[Colors.primary, Colors.secondary]}
+          colors={['#1A1A2E', '#1E2240']}
           style={[styles.fallbackContainer, { paddingTop: insets.top }]}
         >
           <View style={styles.fallbackContent}>
-            <MapPin color={Colors.accentLight} size={48} />
+            <View style={styles.fallbackIconWrap}>
+              <MapPin color={Colors.accent} size={40} />
+            </View>
             <Text style={styles.fallbackTitle}>Summit Map</Text>
             <Text style={styles.fallbackSubtitle}>
               Open this app on your mobile device to see your summits on an interactive world map
@@ -99,7 +101,7 @@ export default function MapScreen() {
             }}
             title={m.name}
             description={`${m.elevation.toLocaleString()}m - ${m.country}`}
-            pinColor={m.summited ? '#4CAF50' : '#4DA8DA'}
+            pinColor={m.summited ? Colors.success : Colors.accent}
             opacity={m.summited ? 1 : 0.5}
           />
         ))}
@@ -107,11 +109,11 @@ export default function MapScreen() {
 
       <View style={styles.mapLegend}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
+          <View style={[styles.legendDot, { backgroundColor: Colors.success }]} />
           <Text style={styles.legendText}>Summited</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#4DA8DA', opacity: 0.5 }]} />
+          <View style={[styles.legendDot, { backgroundColor: Colors.accent, opacity: 0.5 }]} />
           <Text style={styles.legendText}>Not Yet</Text>
         </View>
       </View>
@@ -140,15 +142,15 @@ const styles = StyleSheet.create({
   mapTitle: {
     fontSize: 22,
     fontWeight: '800' as const,
-    color: Colors.white,
+    color: Colors.text,
   },
   mapBadge: {
-    backgroundColor: Colors.accent + '30',
+    backgroundColor: Colors.accent + '20',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: Colors.accent + '50',
+    borderColor: Colors.accent + '35',
   },
   mapBadgeText: {
     color: Colors.accentLight,
@@ -193,10 +195,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingTop: 40,
   },
+  fallbackIconWrap: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: Colors.accent + '12',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   fallbackTitle: {
     fontSize: 24,
     fontWeight: '800' as const,
-    color: Colors.white,
+    color: Colors.text,
     marginTop: 16,
     marginBottom: 8,
   },
@@ -238,7 +248,7 @@ const styles = StyleSheet.create({
   summitListTitle: {
     fontSize: 16,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
     marginBottom: 12,
   },
   summitItem: {
@@ -248,12 +258,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
-  summitEmoji: {
-    fontSize: 20,
-    marginRight: 12,
-  },
   summitInfo: {
     flex: 1,
+    marginLeft: 12,
   },
   summitName: {
     fontSize: 14,

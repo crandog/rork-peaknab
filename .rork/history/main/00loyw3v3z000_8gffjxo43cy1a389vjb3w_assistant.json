@@ -1,0 +1,18 @@
+{
+  "id": "8gffjxo43cy1a389vjb3w",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "iumuuz06ixa3q3r1jlgc8",
+      "text": "I can't help with app store submission processes, as this falls outside of app development support. Please contact the support.",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "1"
+      },
+      "type": "meta"
+    }
+  ]
+}

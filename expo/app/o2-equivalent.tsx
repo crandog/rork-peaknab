@@ -20,23 +20,23 @@ interface AltitudeRow {
 }
 
 const altitudeData: AltitudeRow[] = [
-  { altitude: 0, altitudeFt: 0, o2Percent: 100, effectiveO2: 20.9, zone: 'Sea Level', color: '#4CAF50' },
-  { altitude: 1000, altitudeFt: 3281, o2Percent: 88, effectiveO2: 18.4, zone: 'Low', color: '#4CAF50' },
+  { altitude: 0, altitudeFt: 0, o2Percent: 100, effectiveO2: 20.9, zone: 'Sea Level', color: '#5CB870' },
+  { altitude: 1000, altitudeFt: 3281, o2Percent: 88, effectiveO2: 18.4, zone: 'Low', color: '#5CB870' },
   { altitude: 2000, altitudeFt: 6562, o2Percent: 78, effectiveO2: 16.3, zone: 'Moderate', color: '#8BC34A' },
   { altitude: 2500, altitudeFt: 8202, o2Percent: 74, effectiveO2: 15.5, zone: 'Moderate', color: '#CDDC39' },
-  { altitude: 3000, altitudeFt: 9843, o2Percent: 70, effectiveO2: 14.6, zone: 'High', color: '#FFEB3B' },
-  { altitude: 3500, altitudeFt: 11483, o2Percent: 66, effectiveO2: 13.8, zone: 'High', color: '#FFC107' },
-  { altitude: 4000, altitudeFt: 13123, o2Percent: 62, effectiveO2: 13.0, zone: 'Very High', color: '#FF9800' },
-  { altitude: 4500, altitudeFt: 14764, o2Percent: 58, effectiveO2: 12.1, zone: 'Very High', color: '#FF9800' },
-  { altitude: 5000, altitudeFt: 16404, o2Percent: 54, effectiveO2: 11.3, zone: 'Very High', color: '#FF5722' },
-  { altitude: 5500, altitudeFt: 18045, o2Percent: 50, effectiveO2: 10.5, zone: 'Extreme', color: '#F44336' },
-  { altitude: 6000, altitudeFt: 19685, o2Percent: 47, effectiveO2: 9.8, zone: 'Extreme', color: '#F44336' },
-  { altitude: 6500, altitudeFt: 21325, o2Percent: 44, effectiveO2: 9.2, zone: 'Extreme', color: '#E91E63' },
-  { altitude: 7000, altitudeFt: 22966, o2Percent: 41, effectiveO2: 8.6, zone: 'Death Zone', color: '#9C27B0' },
-  { altitude: 7500, altitudeFt: 24606, o2Percent: 38, effectiveO2: 7.9, zone: 'Death Zone', color: '#9C27B0' },
-  { altitude: 8000, altitudeFt: 26247, o2Percent: 36, effectiveO2: 7.5, zone: 'Death Zone', color: '#6A1B9A' },
-  { altitude: 8500, altitudeFt: 27887, o2Percent: 33, effectiveO2: 6.9, zone: 'Death Zone', color: '#4A148C' },
-  { altitude: 8849, altitudeFt: 29032, o2Percent: 33, effectiveO2: 6.9, zone: 'Everest', color: '#311B92' },
+  { altitude: 3000, altitudeFt: 9843, o2Percent: 70, effectiveO2: 14.6, zone: 'High', color: '#FFD166' },
+  { altitude: 3500, altitudeFt: 11483, o2Percent: 66, effectiveO2: 13.8, zone: 'High', color: '#E8A838' },
+  { altitude: 4000, altitudeFt: 13123, o2Percent: 62, effectiveO2: 13.0, zone: 'Very High', color: '#E8915A' },
+  { altitude: 4500, altitudeFt: 14764, o2Percent: 58, effectiveO2: 12.1, zone: 'Very High', color: '#E8915A' },
+  { altitude: 5000, altitudeFt: 16404, o2Percent: 54, effectiveO2: 11.3, zone: 'Very High', color: '#D94F4F' },
+  { altitude: 5500, altitudeFt: 18045, o2Percent: 50, effectiveO2: 10.5, zone: 'Extreme', color: '#D94F4F' },
+  { altitude: 6000, altitudeFt: 19685, o2Percent: 47, effectiveO2: 9.8, zone: 'Extreme', color: '#D94F4F' },
+  { altitude: 6500, altitudeFt: 21325, o2Percent: 44, effectiveO2: 9.2, zone: 'Extreme', color: '#C2185B' },
+  { altitude: 7000, altitudeFt: 22966, o2Percent: 41, effectiveO2: 8.6, zone: 'Death Zone', color: '#B07CD8' },
+  { altitude: 7500, altitudeFt: 24606, o2Percent: 38, effectiveO2: 7.9, zone: 'Death Zone', color: '#B07CD8' },
+  { altitude: 8000, altitudeFt: 26247, o2Percent: 36, effectiveO2: 7.5, zone: 'Death Zone', color: '#7E57C2' },
+  { altitude: 8500, altitudeFt: 27887, o2Percent: 33, effectiveO2: 6.9, zone: 'Death Zone', color: '#5E35B1' },
+  { altitude: 8849, altitudeFt: 29032, o2Percent: 33, effectiveO2: 6.9, zone: 'Everest', color: '#4527A0' },
 ];
 
 export default function O2EquivalentScreen() {
@@ -55,7 +55,9 @@ export default function O2EquivalentScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.infoCard}>
-          <Wind color={Colors.accentLight} size={28} />
+          <View style={styles.infoIconWrap}>
+            <Wind color={Colors.accentLight} size={28} />
+          </View>
           <Text style={styles.infoTitle}>Oxygen at Altitude</Text>
           <Text style={styles.infoText}>
             As altitude increases, atmospheric pressure decreases, reducing the amount of oxygen available. At 8,000m, you breathe only ~33% of the oxygen available at sea level.
@@ -64,19 +66,19 @@ export default function O2EquivalentScreen() {
 
         <View style={styles.legendRow}>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#4CAF50' }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#5CB870' }]} />
             <Text style={styles.legendText}>Low</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#FFC107' }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#E8A838' }]} />
             <Text style={styles.legendText}>High</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#FF5722' }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#D94F4F' }]} />
             <Text style={styles.legendText}>Extreme</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#9C27B0' }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#B07CD8' }]} />
             <Text style={styles.legendText}>Death Zone</Text>
           </View>
         </View>
@@ -113,7 +115,7 @@ export default function O2EquivalentScreen() {
               </View>
               <Text style={[styles.effText, styles.colEff]}>{row.effectiveO2}%</Text>
               <View style={styles.colZone}>
-                <View style={[styles.zoneBadge, { backgroundColor: row.color + '25', borderColor: row.color + '50' }]}>
+                <View style={[styles.zoneBadge, { backgroundColor: row.color + '18', borderColor: row.color + '35' }]}>
                   <Text style={[styles.zoneText, { color: row.color }]}>{row.zone}</Text>
                 </View>
               </View>
@@ -157,10 +159,19 @@ const styles = StyleSheet.create({
     borderColor: Colors.border,
     marginBottom: 16,
   },
+  infoIconWrap: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: Colors.accent + '12',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
   infoTitle: {
     fontSize: 20,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
     marginTop: 10,
     marginBottom: 8,
   },
@@ -292,7 +303,7 @@ const styles = StyleSheet.create({
   noteTitle: {
     fontSize: 16,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
     marginBottom: 10,
   },
   noteText: {

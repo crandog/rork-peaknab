@@ -206,7 +206,7 @@ export default function MountainDetailScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={[Colors.primary, Colors.secondary, Colors.primary]}
+        colors={['#1A1A2E', '#1E2240', '#1A1A2E']}
         style={StyleSheet.absoluteFill}
       />
 
@@ -221,7 +221,7 @@ export default function MountainDetailScreen() {
             onPress={() => router.back()}
             activeOpacity={0.7}
           >
-            <ArrowLeft color={Colors.white} size={22} />
+            <ArrowLeft color={Colors.text} size={22} />
           </TouchableOpacity>
           {summited && (
             <TouchableOpacity
@@ -236,7 +236,7 @@ export default function MountainDetailScreen() {
         </View>
 
         <View style={styles.heroSection}>
-          <View style={[styles.heroIcon, { backgroundColor: categoryColor + '20' }]}>
+          <View style={[styles.heroIcon, { backgroundColor: categoryColor + '15' }]}>
             <MountainIcon mountainId={mountain.id} category={mountain.category} size={40} />
           </View>
           <Text style={styles.heroName}>{mountain.name}</Text>
@@ -515,19 +515,18 @@ const styles = StyleSheet.create({
   scrollContent: { paddingBottom: 40 },
   errorText: { color: Colors.text, fontSize: 16, textAlign: 'center', marginTop: 100 },
   topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8 },
-  backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: Colors.cardBg, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
-  shareButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: Colors.accent, justifyContent: 'center', alignItems: 'center' },
+  backButton: { width: 42, height: 42, borderRadius: 14, backgroundColor: Colors.cardBg, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
+  shareButton: { width: 42, height: 42, borderRadius: 14, backgroundColor: Colors.accent, justifyContent: 'center', alignItems: 'center' },
   heroSection: { alignItems: 'center', paddingHorizontal: 24, paddingTop: 20, paddingBottom: 24 },
   heroIcon: { width: 80, height: 80, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 16 },
-  heroEmoji: { fontSize: 40 },
-  heroName: { fontSize: 26, fontWeight: '800' as const, color: Colors.white, textAlign: 'center', marginBottom: 4 },
+  heroName: { fontSize: 28, fontWeight: '900' as const, color: Colors.text, textAlign: 'center', marginBottom: 4, letterSpacing: -0.5 },
   heroLocation: { fontSize: 15, color: Colors.textSecondary, marginBottom: 20 },
   heroStats: { flexDirection: 'row', backgroundColor: Colors.cardBg, borderRadius: 16, padding: 16, borderWidth: 1, borderColor: Colors.border, width: '100%' },
   heroStat: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   heroStatValue: { fontSize: 18, fontWeight: '800' as const, color: Colors.accentLight, marginBottom: 4, textAlign: 'center' as const },
   heroStatLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const, textAlign: 'center' as const },
   heroDivider: { width: 1, backgroundColor: Colors.border },
-  summitedBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, backgroundColor: Colors.success + '15', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: Colors.success + '30' },
+  summitedBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, backgroundColor: Colors.success + '12', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: Colors.success + '25' },
   summitedText: { color: Colors.success, fontSize: 13, fontWeight: '600' as const },
   tabBar: { flexDirection: 'row', marginHorizontal: 20, backgroundColor: Colors.cardBg, borderRadius: 14, padding: 4, marginBottom: 20, borderWidth: 1, borderColor: Colors.border },
   tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: 10, gap: 6 },
@@ -538,21 +537,21 @@ const styles = StyleSheet.create({
   description: { fontSize: 15, color: Colors.text, lineHeight: 24, marginBottom: 24 },
   infoGrid: { gap: 0, backgroundColor: Colors.cardBg, borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: Colors.border },
   infoRow: { flexDirection: 'row', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  infoIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: Colors.accent + '15', justifyContent: 'center', alignItems: 'center', marginRight: 14 },
+  infoIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: Colors.accent + '12', justifyContent: 'center', alignItems: 'center', marginRight: 14 },
   infoDetail: { flex: 1 },
   infoLabel: { fontSize: 11, color: Colors.textMuted, marginBottom: 2, fontWeight: '500' as const },
   infoValue: { fontSize: 14, color: Colors.text, fontWeight: '600' as const },
   summitContent: { paddingHorizontal: 20 },
   summitQuestion: { alignItems: 'center', backgroundColor: Colors.cardBg, borderRadius: 20, padding: 32, borderWidth: 1, borderColor: Colors.border },
   questionEmoji: { fontSize: 48, marginBottom: 16 },
-  questionTitle: { fontSize: 20, fontWeight: '700' as const, color: Colors.white, textAlign: 'center', marginBottom: 8 },
+  questionTitle: { fontSize: 20, fontWeight: '700' as const, color: Colors.text, textAlign: 'center', marginBottom: 8 },
   questionSubtitle: { fontSize: 14, color: Colors.textSecondary, textAlign: 'center', marginBottom: 28 },
   yesNoRow: { flexDirection: 'row', gap: 12, width: '100%' },
   yesButton: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.success, paddingVertical: 14, borderRadius: 14, gap: 8 },
   yesButtonText: { color: Colors.white, fontSize: 16, fontWeight: '700' as const },
   noButton: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.cardBgLight, paddingVertical: 14, borderRadius: 14, gap: 8, borderWidth: 1, borderColor: Colors.border },
   noButtonText: { color: Colors.textSecondary, fontSize: 16, fontWeight: '600' as const },
-  dateTitle: { fontSize: 18, fontWeight: '700' as const, color: Colors.white, marginTop: 16, marginBottom: 20 },
+  dateTitle: { fontSize: 18, fontWeight: '700' as const, color: Colors.text, marginTop: 16, marginBottom: 20 },
   datePickerRow: { flexDirection: 'row', gap: 10, width: '100%', marginBottom: 12 },
   datePickerCol: { flex: 1 },
   datePickerLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const, marginBottom: 6, textAlign: 'center' },
@@ -561,7 +560,7 @@ const styles = StyleSheet.create({
   pickerList: { width: '100%', backgroundColor: Colors.cardBgLight, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, marginBottom: 12, overflow: 'hidden' },
   pickerScroll: { maxHeight: 180 },
   pickerItem: { paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  pickerItemActive: { backgroundColor: Colors.accent + '20' },
+  pickerItemActive: { backgroundColor: Colors.accent + '15' },
   pickerItemText: { color: Colors.textSecondary, fontSize: 15, textAlign: 'center' },
   pickerItemTextActive: { color: Colors.accent, fontWeight: '700' as const },
   selectedDatePreview: { color: Colors.accentLight, fontSize: 16, fontWeight: '600' as const, marginBottom: 20, textAlign: 'center' },

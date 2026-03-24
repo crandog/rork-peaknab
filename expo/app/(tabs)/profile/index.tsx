@@ -25,6 +25,7 @@ import {
   Layers,
   Target,
   Zap,
+  Compass,
 } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { categoryLabels, MountainCategory } from '@/constants/mountains';
@@ -171,7 +172,7 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
+        colors={['#1A1A2E', '#1E2240', '#1A1A2E']}
         style={StyleSheet.absoluteFill}
       />
       <ScrollView
@@ -195,7 +196,10 @@ export default function ProfileScreen() {
           )}
         </View>
 
-        <View style={styles.completionCard}>
+        <LinearGradient
+          colors={[Colors.accent + '15', Colors.warmGlow + '10', 'transparent']}
+          style={styles.completionCard}
+        >
           <View style={styles.completionTop}>
             <View>
               <Text style={styles.completionLabel}>OVERALL PROGRESS</Text>
@@ -219,18 +223,18 @@ export default function ProfileScreen() {
               ]}
             />
           </View>
-        </View>
+        </LinearGradient>
 
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.accent + '20' }]}>
+            <View style={[styles.statIcon, { backgroundColor: Colors.accent + '18' }]}>
               <Flag color={Colors.accent} size={20} />
             </View>
             <Text style={styles.statNumber}>{summitCount}</Text>
             <Text style={styles.statLabel}>Summits</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.success + '20' }]}>
+            <View style={[styles.statIcon, { backgroundColor: Colors.success + '18' }]}>
               <TrendingUp color={Colors.success} size={20} />
             </View>
             <Text style={styles.statNumber}>
@@ -239,14 +243,14 @@ export default function ProfileScreen() {
             <Text style={styles.statLabel}>Meters</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: '#4DA8DA20' }]}>
-              <Globe color={'#4DA8DA'} size={20} />
+            <View style={[styles.statIcon, { backgroundColor: Colors.ice + '18' }]}>
+              <Globe color={Colors.ice} size={20} />
             </View>
             <Text style={styles.statNumber}>{countriesVisited}</Text>
             <Text style={styles.statLabel}>Countries</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.gold + '20' }]}>
+            <View style={[styles.statIcon, { backgroundColor: Colors.gold + '18' }]}>
               <Layers color={Colors.gold} size={20} />
             </View>
             <Text style={styles.statNumber}>{rangesClimbed}</Text>
@@ -260,6 +264,12 @@ export default function ProfileScreen() {
             onPress={() => router.push(`/mountain/${highestSummit.id}` as any)}
             activeOpacity={0.8}
           >
+            <LinearGradient
+              colors={[Colors.gold + '12', Colors.warmGlow + '08', 'transparent']}
+              style={StyleSheet.absoluteFill}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            />
             <View style={styles.highestLeft}>
               <Award color={Colors.gold} size={24} />
               <View style={styles.highestInfo}>
@@ -288,7 +298,7 @@ export default function ProfileScreen() {
                   diff === 'Moderate' ? Colors.accent :
                   Colors.success;
                 return (
-                  <View key={diff} style={[styles.difficultyChip, { borderColor: diffColor + '40' }]}>
+                  <View key={diff} style={[styles.difficultyChip, { borderColor: diffColor + '30' }]}>
                     <View style={[styles.difficultyDot, { backgroundColor: diffColor }]} />
                     <Text style={[styles.difficultyText, { color: diffColor }]}>{diff}</Text>
                     <Text style={styles.difficultyCount}>{count}</Text>
@@ -365,10 +375,12 @@ export default function ProfileScreen() {
 
         {summitCount === 0 && (
           <View style={styles.emptyState}>
-            <Mountain color={Colors.textMuted} size={48} />
-            <Text style={styles.emptyTitle}>No summits yet</Text>
+            <View style={styles.emptyIconContainer}>
+              <Compass color={Colors.accent} size={48} />
+            </View>
+            <Text style={styles.emptyTitle}>Your journey begins here</Text>
             <Text style={styles.emptyText}>
-              Start exploring peaks and record your first summit!
+              Explore peaks around the world and record your first summit to start tracking your progress.
             </Text>
             <TouchableOpacity
               style={styles.exploreButton}
@@ -376,6 +388,7 @@ export default function ProfileScreen() {
               activeOpacity={0.8}
             >
               <Text style={styles.exploreButtonText}>Explore Peaks</Text>
+              <ChevronRight color={Colors.white} size={18} />
             </TouchableOpacity>
           </View>
         )}
@@ -400,13 +413,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '800' as const,
-    color: Colors.white,
+    fontSize: 30,
+    fontWeight: '900' as const,
+    color: Colors.text,
+    letterSpacing: -0.8,
     marginBottom: 4,
   },
   subtitle: {
-    fontSize: 14,
+    fontSize: 13,
     color: Colors.textSecondary,
   },
   shareStatsButton: {
@@ -418,12 +432,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   completionCard: {
-    backgroundColor: Colors.cardBg,
     borderRadius: 20,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: Colors.accent + '20',
+    overflow: 'hidden',
   },
   completionTop: {
     flexDirection: 'row',
@@ -433,24 +447,26 @@ const styles = StyleSheet.create({
   },
   completionLabel: {
     fontSize: 10,
-    color: Colors.textMuted,
+    color: Colors.accent,
     fontWeight: '700' as const,
-    letterSpacing: 1,
+    letterSpacing: 1.2,
     marginBottom: 4,
   },
   completionPercentage: {
-    fontSize: 36,
+    fontSize: 38,
     fontWeight: '900' as const,
-    color: Colors.white,
+    color: Colors.text,
+    letterSpacing: -1,
   },
   completionCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    borderWidth: 3,
-    borderColor: Colors.accent + '40',
+    width: 66,
+    height: 66,
+    borderRadius: 33,
+    borderWidth: 2,
+    borderColor: Colors.accent + '35',
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: Colors.accent + '08',
   },
   completionFraction: {
     fontSize: 14,
@@ -463,14 +479,14 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
   },
   completionBar: {
-    height: 10,
+    height: 8,
     backgroundColor: Colors.cardBgLight,
-    borderRadius: 5,
+    borderRadius: 4,
     overflow: 'hidden',
   },
   completionFill: {
     height: '100%',
-    borderRadius: 5,
+    borderRadius: 4,
     backgroundColor: Colors.accent,
   },
   statsGrid: {
@@ -498,7 +514,7 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 20,
     fontWeight: '900' as const,
-    color: Colors.white,
+    color: Colors.text,
     marginBottom: 2,
   },
   statLabel: {
@@ -515,8 +531,9 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: Colors.gold + '30',
+    borderColor: Colors.gold + '25',
     marginBottom: 20,
+    overflow: 'hidden',
   },
   highestLeft: {
     flexDirection: 'row',
@@ -537,7 +554,7 @@ const styles = StyleSheet.create({
   highestName: {
     fontSize: 16,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
   },
   highestElev: {
     fontSize: 12,
@@ -556,7 +573,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
   },
   difficultyRow: {
     flexDirection: 'row',
@@ -585,7 +602,7 @@ const styles = StyleSheet.create({
   difficultyCount: {
     fontSize: 15,
     fontWeight: '800' as const,
-    color: Colors.white,
+    color: Colors.text,
   },
   progressRow: {
     marginBottom: 14,
@@ -606,7 +623,7 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
   },
   progressBar: {
-    height: 8,
+    height: 7,
     backgroundColor: Colors.cardBg,
     borderRadius: 4,
     overflow: 'hidden',
@@ -620,7 +637,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.cardBg,
-    borderRadius: 12,
+    borderRadius: 14,
     marginBottom: 8,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -632,12 +649,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 14,
   },
-  recentEmoji: {
-    fontSize: 20,
-    marginRight: 12,
-  },
   recentInfo: {
     flex: 1,
+    marginLeft: 12,
   },
   recentName: {
     fontSize: 14,
@@ -657,26 +671,39 @@ const styles = StyleSheet.create({
   },
   emptyState: {
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: 48,
+    paddingHorizontal: 20,
+  },
+  emptyIconContainer: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    backgroundColor: Colors.accent + '12',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
   },
   emptyTitle: {
-    fontSize: 20,
-    fontWeight: '700' as const,
-    color: Colors.white,
-    marginTop: 16,
-    marginBottom: 8,
+    fontSize: 22,
+    fontWeight: '800' as const,
+    color: Colors.text,
+    marginBottom: 10,
   },
   emptyText: {
     fontSize: 14,
     color: Colors.textSecondary,
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 28,
+    lineHeight: 21,
   },
   exploreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: Colors.accent,
     paddingHorizontal: 28,
     paddingVertical: 14,
     borderRadius: 14,
+    gap: 6,
   },
   exploreButtonText: {
     color: Colors.white,

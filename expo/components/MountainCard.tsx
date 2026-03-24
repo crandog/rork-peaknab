@@ -31,48 +31,70 @@ function MountainCardComponent({ mountain, isSummited, onPress }: MountainCardPr
 
   const categoryColor = Colors.categoryColors[mountain.category] ?? Colors.accent;
 
+  const diffColor =
+    mountain.difficulty === 'Extreme' ? Colors.danger :
+    mountain.difficulty === 'Hard' ? Colors.warning :
+    mountain.difficulty === 'Moderate' ? Colors.accent :
+    Colors.success;
+
+  const elevationIntensity = Math.min(mountain.elevation / 8849, 1);
+
   return (
     <Animated.View style={[styles.cardWrapper, { transform: [{ scale: scaleAnim }] }]}>
       <TouchableOpacity
-        style={[styles.card, isSummited && styles.cardSummited]}
+        style={[
+          styles.card,
+          isSummited && styles.cardSummited,
+        ]}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={0.9}
         testID={`mountain-card-${mountain.id}`}
       >
-        <View style={styles.leftSection}>
-          <View style={[styles.iconContainer, { backgroundColor: categoryColor + '20' }]}>
-            <MountainIcon mountainId={mountain.id} category={mountain.category} size={24} />
-          </View>
-        </View>
+        <View
+          style={[
+            styles.elevationStrip,
+            { backgroundColor: categoryColor, opacity: 0.4 + elevationIntensity * 0.6 },
+          ]}
+        />
 
-        <View style={styles.centerSection}>
-          <View style={styles.nameRow}>
-            <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
-            {isSummited && (
-              <CheckCircle color={Colors.success} size={16} />
-            )}
-          </View>
-          <Text style={styles.location} numberOfLines={1}>
-            {mountain.country} · {mountain.range}
-          </Text>
-          <View style={styles.tagRow}>
-            <View style={[styles.categoryTag, { backgroundColor: categoryColor + '25', borderColor: categoryColor + '40' }]}>
-              <Text style={[styles.categoryTagText, { color: categoryColor }]}>
-                {categoryLabels[mountain.category]}
-              </Text>
-            </View>
-            <View style={styles.difficultyTag}>
-              <Text style={styles.difficultyText}>{mountain.difficulty}</Text>
+        <View style={styles.cardContent}>
+          <View style={styles.leftSection}>
+            <View style={[styles.iconContainer, { backgroundColor: categoryColor + '18' }]}>
+              <MountainIcon mountainId={mountain.id} category={mountain.category} size={26} />
             </View>
           </View>
-        </View>
 
-        <View style={styles.rightSection}>
-          <Text style={styles.elevation}>{mountain.elevation.toLocaleString()}m</Text>
-          <Text style={styles.elevationFt}>{mountain.elevationFt.toLocaleString()}ft</Text>
-          <ChevronRight color={Colors.textMuted} size={16} />
+          <View style={styles.centerSection}>
+            <View style={styles.nameRow}>
+              <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
+              {isSummited && (
+                <CheckCircle color={Colors.success} size={15} />
+              )}
+            </View>
+            <Text style={styles.location} numberOfLines={1}>
+              {mountain.country} · {mountain.range}
+            </Text>
+            <View style={styles.tagRow}>
+              <View style={[styles.categoryTag, { backgroundColor: categoryColor + '18', borderColor: categoryColor + '35' }]}>
+                <Text style={[styles.categoryTagText, { color: categoryColor }]}>
+                  {categoryLabels[mountain.category]}
+                </Text>
+              </View>
+              <View style={[styles.difficultyTag, { borderColor: diffColor + '25' }]}>
+                <View style={[styles.difficultyDot, { backgroundColor: diffColor }]} />
+                <Text style={[styles.difficultyText, { color: diffColor }]}>{mountain.difficulty}</Text>
+              </View>
+            </View>
+          </View>
+
+          <View style={styles.rightSection}>
+            <Text style={styles.elevation}>{mountain.elevation.toLocaleString()}</Text>
+            <Text style={styles.elevationUnit}>meters</Text>
+            <Text style={styles.elevationFt}>{mountain.elevationFt.toLocaleString()}ft</Text>
+            <ChevronRight color={Colors.textMuted} size={14} style={styles.chevron} />
+          </View>
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -83,34 +105,36 @@ export default memo(MountainCardComponent);
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    marginBottom: 8,
+    marginBottom: 10,
   },
   card: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: Colors.cardBg,
-    borderRadius: 14,
-    padding: 14,
+    borderRadius: 16,
+    overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.border,
   },
   cardSummited: {
-    borderColor: Colors.success + '50',
-    borderLeftWidth: 3,
-    borderLeftColor: Colors.success,
+    borderColor: Colors.success + '40',
+  },
+  elevationStrip: {
+    height: 3,
+    width: '100%',
+  },
+  cardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
   },
   leftSection: {
     marginRight: 12,
   },
   iconContainer: {
-    width: 46,
-    height: 46,
-    borderRadius: 12,
+    width: 48,
+    height: 48,
+    borderRadius: 14,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  emoji: {
-    fontSize: 22,
   },
   centerSection: {
     flex: 1,
@@ -120,18 +144,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 2,
+    marginBottom: 3,
   },
   name: {
     fontSize: 15,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
     flexShrink: 1,
   },
   location: {
     fontSize: 12,
     color: Colors.textSecondary,
-    marginBottom: 6,
+    marginBottom: 7,
   },
   tagRow: {
     flexDirection: 'row',
@@ -148,28 +172,46 @@ const styles = StyleSheet.create({
     fontWeight: '700' as const,
   },
   difficultyTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
     backgroundColor: Colors.cardBgLight,
+    borderWidth: 1,
+    gap: 4,
+  },
+  difficultyDot: {
+    width: 5,
+    height: 5,
+    borderRadius: 3,
   },
   difficultyText: {
     fontSize: 10,
     fontWeight: '600' as const,
-    color: Colors.textSecondary,
   },
   rightSection: {
     alignItems: 'flex-end',
-    gap: 2,
+    minWidth: 60,
   },
   elevation: {
-    fontSize: 15,
-    fontWeight: '800' as const,
+    fontSize: 17,
+    fontWeight: '900' as const,
     color: Colors.accentLight,
+    letterSpacing: -0.5,
+  },
+  elevationUnit: {
+    fontSize: 9,
+    color: Colors.textMuted,
+    fontWeight: '500' as const,
+    marginTop: -1,
   },
   elevationFt: {
     fontSize: 11,
     color: Colors.textMuted,
-    marginBottom: 4,
+    marginTop: 2,
+  },
+  chevron: {
+    marginTop: 4,
   },
 });

@@ -107,7 +107,7 @@ export default function AddMountainScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={[Colors.primary, Colors.secondary]}
+        colors={['#1A1A2E', '#1E2240']}
         style={StyleSheet.absoluteFill}
       />
       <KeyboardAvoidingView
@@ -129,7 +129,7 @@ export default function AddMountainScreen() {
               activeOpacity={0.7}
               testID="close-add-mountain"
             >
-              <X color={Colors.white} size={22} />
+              <X color={Colors.text} size={22} />
             </TouchableOpacity>
             <Text style={styles.screenTitle}>Add Peak</Text>
             <TouchableOpacity
@@ -145,7 +145,7 @@ export default function AddMountainScreen() {
           </View>
 
           <View style={styles.heroIcon}>
-            <MountainIcon color={Colors.categoryColors.custom} size={40} />
+            <MountainIcon color={Colors.peach} size={40} />
           </View>
           <Text style={styles.heroLabel}>Add your own mountain or peak</Text>
 
@@ -269,7 +269,7 @@ export default function AddMountainScreen() {
                     key={opt}
                     style={[
                       styles.difficultyChip,
-                      isActive && { backgroundColor: diffColor + '25', borderColor: diffColor },
+                      isActive && { backgroundColor: diffColor + '18', borderColor: diffColor },
                     ]}
                     onPress={() => setDifficulty(opt)}
                     activeOpacity={0.7}
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
   closeButton: {
     width: 42,
     height: 42,
-    borderRadius: 21,
+    borderRadius: 14,
     backgroundColor: Colors.cardBg,
     justifyContent: 'center',
     alignItems: 'center',
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 18,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
   },
   saveButton: {
     flexDirection: 'row',
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 22,
-    backgroundColor: Colors.categoryColors.custom + '20',
+    backgroundColor: Colors.peach + '15',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -399,7 +399,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: Colors.accent + '15',
+    backgroundColor: Colors.accent + '12',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,

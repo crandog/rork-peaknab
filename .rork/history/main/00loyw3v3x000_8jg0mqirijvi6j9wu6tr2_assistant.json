@@ -1,0 +1,18 @@
+{
+  "id": "8jg0mqirijvi6j9wu6tr2",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "xa3q3r1jlgc80oppmlw2t",
+      "text": "\n\nYou're on the Pro plan, which gives you full access to all app building capabilities — code generation, editing, debugging, image generation, and all the tools I use to build your app. \n\n**Rork Max** adds extras focused on **publishing and distribution**, not building:\n\n- **App Store submissions** — automated builds and submissions to Apple/Google\n- **More build minutes** and priority builds\n- **Custom domains** and advanced deployment options\n\nFor actually designing and coding your app, you're not missing anything on Pro.",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "1"
+      },
+      "type": "meta"
+    }
+  ]
+}

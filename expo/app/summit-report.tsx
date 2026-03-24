@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '700' as const,
-    color: Colors.white,
+    color: Colors.text,
   },
   sectionSubtitle: {
     fontSize: 13,
