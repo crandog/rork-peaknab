@@ -34,6 +34,7 @@ import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { mountains, categoryLabels } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
+import MountainIcon from '@/components/MountainIcon';
 
 type TabType = 'info' | 'summit';
 
@@ -209,7 +210,7 @@ export default function MountainDetailScreen() {
 
         <View style={styles.heroSection}>
           <View style={[styles.heroIcon, { backgroundColor: categoryColor + '20' }]}>
-            <Text style={styles.heroEmoji}>{mountain.iconEmoji}</Text>
+            <MountainIcon category={mountain.category} difficulty={mountain.difficulty} size={40} />
           </View>
           <Text style={styles.heroName}>{mountain.name}</Text>
           <Text style={styles.heroLocation}>{mountain.country}</Text>

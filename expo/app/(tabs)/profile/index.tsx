@@ -28,6 +28,7 @@ import {
 } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { mountains, categoryLabels, MountainCategory } from '@/constants/mountains';
+import MountainIcon from '@/components/MountainIcon';
 import { useSummits } from '@/contexts/SummitContext';
 
 export default function ProfileScreen() {
@@ -339,7 +340,7 @@ export default function ProfileScreen() {
                   onPress={() => router.push(`/mountain/${record.mountainId}`)}
                   activeOpacity={0.8}
                 >
-                  <Text style={styles.recentEmoji}>{record.mountain?.iconEmoji ?? '⛰️'}</Text>
+                  <MountainIcon category={record.mountain?.category ?? 'other'} difficulty={record.mountain?.difficulty ?? 'Moderate'} size={20} />
                   <View style={styles.recentInfo}>
                     <Text style={styles.recentName}>{record.mountain?.name ?? 'Unknown'}</Text>
                     <Text style={styles.recentDate}>{record.date}</Text>

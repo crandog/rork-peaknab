@@ -11,6 +11,7 @@ import { MapPin } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { mountains } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
+import MountainIcon from '@/components/MountainIcon';
 import RNMapView, { Marker as RNMarker } from 'react-native-maps';
 
 export default function MapScreen() {
@@ -52,7 +53,7 @@ export default function MapScreen() {
                 <Text style={styles.summitListTitle}>Your Summits</Text>
                 {summitedMountains.map((m) => (
                   <View key={m.id} style={styles.summitItem}>
-                    <Text style={styles.summitEmoji}>{m.iconEmoji}</Text>
+                    <MountainIcon category={m.category} difficulty={m.difficulty} size={20} />
                     <View style={styles.summitInfo}>
                       <Text style={styles.summitName}>{m.name}</Text>
                       <Text style={styles.summitLocation}>{m.country}</Text>

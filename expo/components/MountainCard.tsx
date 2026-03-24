@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native
 import { CheckCircle, ChevronRight } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { Mountain, categoryLabels } from '@/constants/mountains';
+import MountainIcon from '@/components/MountainIcon';
 
 interface MountainCardProps {
   mountain: Mountain;
@@ -42,7 +43,7 @@ function MountainCardComponent({ mountain, isSummited, onPress }: MountainCardPr
       >
         <View style={styles.leftSection}>
           <View style={[styles.iconContainer, { backgroundColor: categoryColor + '20' }]}>
-            <Text style={styles.emoji}>{mountain.iconEmoji}</Text>
+            <MountainIcon category={mountain.category} difficulty={mountain.difficulty} size={24} />
           </View>
         </View>
 
