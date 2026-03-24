@@ -5,10 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  TextInput,
   Alert,
   Animated,
   Platform,
+  FlatList,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,6 +26,8 @@ import {
   CheckCircle,
   XCircle,
   ChevronRight,
+  ChevronDown,
+  Ruler,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
@@ -40,8 +42,13 @@ export default function MountainDetailScreen() {
   const insets = useSafeAreaInsets();
   const { isSummited, getSummit, addSummit, removeSummit } = useSummits();
   const [activeTab, setActiveTab] = useState<TabType>('info');
-  const [summitDate, setSummitDate] = useState('');
   const [showDateInput, setShowDateInput] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
+  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [showMonthPicker, setShowMonthPicker] = useState(false);
+  const [showDayPicker, setShowDayPicker] = useState(false);
+  const [showYearPicker, setShowYearPicker] = useState(false);
   const tabAnim = useRef(new Animated.Value(0)).current;
 
   const mountain = useMemo(() => mountains.find((m) => m.id === id), [id]);
@@ -64,17 +71,38 @@ export default function MountainDetailScreen() {
     setShowDateInput(true);
   }, []);
 
+  const MONTHS = useMemo(() => [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December',
+  ], []);
+
+  const daysInMonth = useMemo(() => {
+    return new Date(selectedYear, selectedMonth + 1, 0).getDate();
+  }, [selectedMonth, selectedYear]);
+
+  const DAYS = useMemo(() => Array.from({ length: daysInMonth }, (_, i) => i + 1), [daysInMonth]);
+
+  const YEARS = useMemo(() => {
+    const currentYear = new Date().getFullYear();
+    return Array.from({ length: 80 }, (_, i) => currentYear - i);
+  }, []);
+
+  const formattedDate = useMemo(() => {
+    return `${MONTHS[selectedMonth]} ${selectedDay}, ${selectedYear}`;
+  }, [MONTHS, selectedMonth, selectedDay, selectedYear]);
+
+  const closePickers = useCallback(() => {
+    setShowMonthPicker(false);
+    setShowDayPicker(false);
+    setShowYearPicker(false);
+  }, []);
+
   const handleConfirmSummit = useCallback(() => {
     if (!id || !mountain) return;
 
-    if (!summitDate.trim()) {
-      Alert.alert('Date Required', 'Please enter the date of your summit.');
-      return;
-    }
-
     addSummit({
       mountainId: id,
-      date: summitDate.trim(),
+      date: formattedDate,
       report: '',
       photoUri: null,
       createdAt: new Date().toISOString(),
@@ -85,13 +113,12 @@ export default function MountainDetailScreen() {
     }
 
     setShowDateInput(false);
-    setSummitDate('');
 
     router.push({
       pathname: '/summit-report',
       params: { mountainId: id, mountainName: mountain.name },
     });
-  }, [id, mountain, summitDate, addSummit, router]);
+  }, [id, mountain, formattedDate, addSummit, router]);
 
   const handleRemoveSummit = useCallback(() => {
     if (!id) return;
@@ -198,6 +225,20 @@ export default function MountainDetailScreen() {
             <Text style={styles.description}>{mountain.description}</Text>
             <View style={styles.infoGrid}>
               <View style={styles.infoRow}>
+                <View style={styles.infoIcon}><Ruler color={Colors.accent} size={18} /></View>
+                <View style={styles.infoDetail}>
+                  <Text style={styles.infoLabel}>Elevation (meters)</Text>
+                  <Text style={styles.infoValue}>{mountain.elevation.toLocaleString()} m</Text>
+                </View>
+              </View>
+              <View style={styles.infoRow}>
+                <View style={styles.infoIcon}><Ruler color={Colors.accent} size={18} /></View>
+                <View style={styles.infoDetail}>
+                  <Text style={styles.infoLabel}>Elevation (feet)</Text>
+                  <Text style={styles.infoValue}>{mountain.elevationFt.toLocaleString()} ft</Text>
+                </View>
+              </View>
+              <View style={styles.infoRow}>
                 <View style={styles.infoIcon}><Mountain color={Colors.accent} size={18} /></View>
                 <View style={styles.infoDetail}>
                   <Text style={styles.infoLabel}>Range</Text>
@@ -281,16 +322,113 @@ export default function MountainDetailScreen() {
                   <>
                     <Calendar color={Colors.accent} size={40} />
                     <Text style={styles.dateTitle}>When did you summit?</Text>
-                    <TextInput
-                      style={styles.dateInput}
-                      placeholder="e.g. July 15, 2024"
-                      placeholderTextColor={Colors.textMuted}
-                      value={summitDate}
-                      onChangeText={setSummitDate}
-                      autoFocus
-                    />
+
+                    <View style={styles.datePickerRow}>
+                      <View style={styles.datePickerCol}>
+                        <Text style={styles.datePickerLabel}>Month</Text>
+                        <TouchableOpacity
+                          style={styles.dateDropdown}
+                          onPress={() => { closePickers(); setShowMonthPicker(!showMonthPicker); }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.dateDropdownText}>{MONTHS[selectedMonth].slice(0, 3)}</Text>
+                          <ChevronDown color={Colors.accent} size={14} />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.datePickerCol}>
+                        <Text style={styles.datePickerLabel}>Day</Text>
+                        <TouchableOpacity
+                          style={styles.dateDropdown}
+                          onPress={() => { closePickers(); setShowDayPicker(!showDayPicker); }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.dateDropdownText}>{selectedDay}</Text>
+                          <ChevronDown color={Colors.accent} size={14} />
+                        </TouchableOpacity>
+                      </View>
+                      <View style={styles.datePickerCol}>
+                        <Text style={styles.datePickerLabel}>Year</Text>
+                        <TouchableOpacity
+                          style={styles.dateDropdown}
+                          onPress={() => { closePickers(); setShowYearPicker(!showYearPicker); }}
+                          activeOpacity={0.7}
+                        >
+                          <Text style={styles.dateDropdownText}>{selectedYear}</Text>
+                          <ChevronDown color={Colors.accent} size={14} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+                    {showMonthPicker && (
+                      <View style={styles.pickerList}>
+                        <FlatList
+                          data={MONTHS}
+                          keyExtractor={(item) => item}
+                          style={styles.pickerScroll}
+                          renderItem={({ item, index }) => (
+                            <TouchableOpacity
+                              style={[styles.pickerItem, selectedMonth === index && styles.pickerItemActive]}
+                              onPress={() => {
+                                setSelectedMonth(index);
+                                setShowMonthPicker(false);
+                                if (selectedDay > new Date(selectedYear, index + 1, 0).getDate()) {
+                                  setSelectedDay(new Date(selectedYear, index + 1, 0).getDate());
+                                }
+                              }}
+                            >
+                              <Text style={[styles.pickerItemText, selectedMonth === index && styles.pickerItemTextActive]}>{item}</Text>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      </View>
+                    )}
+
+                    {showDayPicker && (
+                      <View style={styles.pickerList}>
+                        <FlatList
+                          data={DAYS}
+                          keyExtractor={(item) => item.toString()}
+                          style={styles.pickerScroll}
+                          renderItem={({ item }) => (
+                            <TouchableOpacity
+                              style={[styles.pickerItem, selectedDay === item && styles.pickerItemActive]}
+                              onPress={() => { setSelectedDay(item); setShowDayPicker(false); }}
+                            >
+                              <Text style={[styles.pickerItemText, selectedDay === item && styles.pickerItemTextActive]}>{item}</Text>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      </View>
+                    )}
+
+                    {showYearPicker && (
+                      <View style={styles.pickerList}>
+                        <FlatList
+                          data={YEARS}
+                          keyExtractor={(item) => item.toString()}
+                          style={styles.pickerScroll}
+                          renderItem={({ item }) => (
+                            <TouchableOpacity
+                              style={[styles.pickerItem, selectedYear === item && styles.pickerItemActive]}
+                              onPress={() => {
+                                setSelectedYear(item);
+                                setShowYearPicker(false);
+                                if (selectedDay > new Date(item, selectedMonth + 1, 0).getDate()) {
+                                  setSelectedDay(new Date(item, selectedMonth + 1, 0).getDate());
+                                }
+                              }}
+                            >
+                              <Text style={[styles.pickerItemText, selectedYear === item && styles.pickerItemTextActive]}>{item}</Text>
+                            </TouchableOpacity>
+                          )}
+                        />
+                      </View>
+                    )}
+
+                    <Text style={styles.selectedDatePreview}>{formattedDate}</Text>
+
                     <View style={styles.dateButtonRow}>
-                      <TouchableOpacity style={styles.cancelDateButton} onPress={() => { setShowDateInput(false); setSummitDate(''); }}>
+                      <TouchableOpacity style={styles.cancelDateButton} onPress={() => { setShowDateInput(false); closePickers(); }}>
                         <Text style={styles.cancelDateText}>Cancel</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.confirmDateButton} onPress={handleConfirmSummit}>
@@ -350,7 +488,18 @@ const styles = StyleSheet.create({
   noButton: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.cardBgLight, paddingVertical: 14, borderRadius: 14, gap: 8, borderWidth: 1, borderColor: Colors.border },
   noButtonText: { color: Colors.textSecondary, fontSize: 16, fontWeight: '600' as const },
   dateTitle: { fontSize: 18, fontWeight: '700' as const, color: Colors.white, marginTop: 16, marginBottom: 20 },
-  dateInput: { width: '100%', backgroundColor: Colors.cardBgLight, borderRadius: 12, padding: 16, color: Colors.text, fontSize: 16, borderWidth: 1, borderColor: Colors.border, marginBottom: 16, textAlign: 'center' },
+  datePickerRow: { flexDirection: 'row', gap: 10, width: '100%', marginBottom: 12 },
+  datePickerCol: { flex: 1 },
+  datePickerLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const, marginBottom: 6, textAlign: 'center' },
+  dateDropdown: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.cardBgLight, borderRadius: 12, paddingVertical: 14, paddingHorizontal: 12, borderWidth: 1, borderColor: Colors.border, gap: 6 },
+  dateDropdownText: { color: Colors.text, fontSize: 15, fontWeight: '600' as const },
+  pickerList: { width: '100%', backgroundColor: Colors.cardBgLight, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, marginBottom: 12, overflow: 'hidden' },
+  pickerScroll: { maxHeight: 180 },
+  pickerItem: { paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: Colors.border },
+  pickerItemActive: { backgroundColor: Colors.accent + '20' },
+  pickerItemText: { color: Colors.textSecondary, fontSize: 15, textAlign: 'center' },
+  pickerItemTextActive: { color: Colors.accent, fontWeight: '700' as const },
+  selectedDatePreview: { color: Colors.accentLight, fontSize: 16, fontWeight: '600' as const, marginBottom: 20, textAlign: 'center' },
   dateButtonRow: { flexDirection: 'row', gap: 12, width: '100%' },
   cancelDateButton: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: Colors.cardBgLight, alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
   cancelDateText: { color: Colors.textSecondary, fontSize: 15, fontWeight: '600' as const },
