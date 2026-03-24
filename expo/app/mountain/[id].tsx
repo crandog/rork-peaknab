@@ -220,13 +220,6 @@ export default function MountainDetailScreen() {
             <Text style={styles.description}>{mountain.description}</Text>
             <View style={styles.infoGrid}>
               <View style={styles.infoRow}>
-                <View style={styles.infoIcon}><Ruler color={Colors.accent} size={18} /></View>
-                <View style={styles.infoDetail}>
-                  <Text style={styles.infoLabel}>Elevation</Text>
-                  <Text style={styles.infoValue}>{mountain.elevation.toLocaleString()} m / {mountain.elevationFt.toLocaleString()} ft</Text>
-                </View>
-              </View>
-              <View style={styles.infoRow}>
                 <View style={styles.infoIcon}><Mountain color={Colors.accent} size={18} /></View>
                 <View style={styles.infoDetail}>
                   <Text style={styles.infoLabel}>Range</Text>
@@ -446,9 +439,9 @@ const styles = StyleSheet.create({
   heroName: { fontSize: 26, fontWeight: '800' as const, color: Colors.white, textAlign: 'center', marginBottom: 4 },
   heroLocation: { fontSize: 15, color: Colors.textSecondary, marginBottom: 20 },
   heroStats: { flexDirection: 'row', backgroundColor: Colors.cardBg, borderRadius: 16, padding: 16, borderWidth: 1, borderColor: Colors.border, width: '100%' },
-  heroStat: { flex: 1, alignItems: 'center' },
-  heroStatValue: { fontSize: 18, fontWeight: '800' as const, color: Colors.accentLight, marginBottom: 4 },
-  heroStatLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const },
+  heroStat: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  heroStatValue: { fontSize: 18, fontWeight: '800' as const, color: Colors.accentLight, marginBottom: 4, textAlign: 'center' as const },
+  heroStatLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const, textAlign: 'center' as const },
   heroDivider: { width: 1, backgroundColor: Colors.border },
   summitedBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, backgroundColor: Colors.success + '15', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: Colors.success + '30' },
   summitedText: { color: Colors.success, fontSize: 13, fontWeight: '600' as const },
