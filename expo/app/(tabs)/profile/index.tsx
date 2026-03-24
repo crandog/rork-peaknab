@@ -123,40 +123,38 @@ export default function ProfileScreen() {
     const sortedSummits = summitedMountains
       .map((m) => {
         const record = records.find((r) => r.mountainId === m.id);
-        return { name: m.name, date: record?.date ?? '—', createdAt: record?.createdAt ?? '' };
+        return { name: m.name, elevation: m.elevation, date: record?.date ?? '—', createdAt: record?.createdAt ?? '' };
       })
       .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const tableRows = sortedSummits
-      .map((s, i) =>
-        '<tr>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #eee;color:#888;font-size:13px;width:30px;">' + (i + 1) + '</td>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:14px;font-weight:600;color:#222;">' + s.name + '</td>' +
-        '<td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:13px;color:#666;text-align:right;white-space:nowrap;">' + s.date + '</td>' +
-        '</tr>'
+    const summitListItems = sortedSummits
+      .map((s) =>
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #e8e8e8;">' +
+          '<span style="font-size:15px;color:#1a1a1a;font-weight:500;">' + s.name + '</span>' +
+          '<span style="font-size:13px;color:#888;margin-left:16px;white-space:nowrap;">' + s.date + '</span>' +
+        '</div>'
       )
       .join('');
 
-    const html =
-      '<!DOCTYPE html><html><head><meta charset="utf-8"/>' +
-      '<style>' +
-      '@page{margin:40px;}' +
-      'body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;color:#222;}' +
-      'table{width:100%;border-collapse:collapse;}' +
-      'th{text-align:left;padding:6px 12px;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #222;}' +
-      'th:last-child{text-align:right;}' +
-      '</style></head><body>' +
-      '<div style="padding:20px;">' +
-      '<div style="margin-bottom:24px;">' +
-      '<div style="font-size:28px;font-weight:800;color:#111;margin-bottom:2px;">Summit Log</div>' +
-      '<div style="font-size:12px;color:#aaa;">' + dateStr + ' — ' + sortedSummits.length + ' summit' + (sortedSummits.length !== 1 ? 's' : '') + ' recorded</div>' +
-      '</div>' +
-      '<table><thead><tr><th>#</th><th>Peak</th><th style="text-align:right;">Date</th></tr></thead>' +
-      '<tbody>' + tableRows + '</tbody></table>' +
-      '</div></body></html>';
+    const html = [
+      '<!DOCTYPE html><html><head><meta charset="utf-8"/>',
+      '<style>',
+      '@page { margin: 48px 40px; }',
+      'body { font-family: -apple-system, Helvetica Neue, Helvetica, Arial, sans-serif; margin: 0; padding: 0; color: #1a1a1a; background: #fff; }',
+      '</style></head><body>',
+      '<div style="max-width: 540px; margin: 0 auto; padding: 0 20px;">',
+      '<div style="text-align:center;padding:32px 0 24px;border-bottom:2px solid #1a1a1a;margin-bottom:8px;">',
+      '<div style="font-size:32px;font-weight:700;letter-spacing:-0.5px;margin-bottom:6px;">Summit Log</div>',
+      '<div style="font-size:13px;color:#999;">' + sortedSummits.length + (sortedSummits.length === 1 ? ' summit' : ' summits') + ' &middot; Exported ' + dateStr + '</div>',
+      '</div>',
+      summitListItems,
+      '<div style="text-align:center;padding:24px 0;color:#ccc;font-size:11px;">Summit Tracker</div>',
+      '</div>',
+      '</body></html>',
+    ].join('');
 
     try {
       if (Platform.OS === 'web') {
