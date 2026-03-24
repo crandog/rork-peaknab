@@ -123,30 +123,73 @@ export default function ProfileScreen() {
     const sortedSummits = summitedMountains
       .map((m) => {
         const record = records.find((r) => r.mountainId === m.id);
-        return { name: m.name, date: record?.date ?? '', createdAt: record?.createdAt ?? '' };
+        return {
+          name: m.name,
+          elevation: m.elevation,
+          elevationFt: m.elevationFt,
+          category: m.category,
+          country: m.country,
+          range: m.range,
+          date: record?.date ?? '',
+          createdAt: record?.createdAt ?? '',
+        };
       })
       .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
+    const milestones: string[] = [];
+    const sevenSummitsTotal = allMountains.filter((m) => m.category === '7summits').length;
+    const sevenSummitsDone = allMountains.filter((m) => m.category === '7summits' && isSummited(m.id)).length;
+    if (sevenSummitsDone > 0) {
+      milestones.push(sevenSummitsDone === sevenSummitsTotal
+        ? `All ${sevenSummitsTotal} of the 7 Summits completed!`
+        : `${sevenSummitsDone}/${sevenSummitsTotal} of the 7 Summits completed`);
+    }
+    const eightKTotal = allMountains.filter((m) => m.category === '8000m').length;
+    const eightKDone = allMountains.filter((m) => m.category === '8000m' && isSummited(m.id)).length;
+    if (eightKDone > 0) {
+      milestones.push(eightKDone === eightKTotal
+        ? `All ${eightKTotal} of the 8000m Peaks completed!`
+        : `${eightKDone}/${eightKTotal} of the 8000m Peaks completed`);
+    }
+    const fourteenersTotal = allMountains.filter((m) => m.category === '14ers').length;
+    const fourteenersDone = allMountains.filter((m) => m.category === '14ers' && isSummited(m.id)).length;
+    if (fourteenersDone > 0) {
+      milestones.push(fourteenersDone === fourteenersTotal
+        ? `All ${fourteenersTotal} Colorado 14ers completed!`
+        : `${fourteenersDone}/${fourteenersTotal} Colorado 14ers completed`);
+    }
+
+    const milestoneHtml = milestones.length > 0
+      ? '<div style="margin-bottom:24px;padding:12px 16px;background:#f8f8f8;border-radius:6px;border-left:3px solid #222;">' +
+        '<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#999;margin-bottom:8px;font-weight:bold;">Milestones</div>' +
+        milestones.map((m) => '<div style="font-size:13px;color:#333;padding:3px 0;">' + (m.includes('All ') ? '\u2B50 ' : '\u25CB ') + m + '</div>').join('') +
+        '</div>'
+      : '';
+
     const rows = sortedSummits.map((s, i) =>
-      '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;' +
-      (i < sortedSummits.length - 1 ? 'border-bottom:1px solid #eee;' : '') +
-      '">' +
-      '<span style="font-size:14px;color:#222;">' + s.name + '</span>' +
-      '<span style="font-size:12px;color:#999;flex-shrink:0;margin-left:16px;">' + s.date + '</span>' +
-      '</div>'
+      '<tr style="border-bottom:1px solid #eee;">' +
+      '<td style="padding:10px 8px 10px 0;font-size:13px;color:#222;font-weight:500;">' + s.name + '</td>' +
+      '<td style="padding:10px 8px;font-size:12px;color:#555;text-align:right;white-space:nowrap;">' + s.elevation.toLocaleString() + 'm</td>' +
+      '<td style="padding:10px 8px;font-size:12px;color:#555;text-align:right;white-space:nowrap;">' + s.elevationFt.toLocaleString() + 'ft</td>' +
+      '<td style="padding:10px 0 10px 8px;font-size:12px;color:#999;text-align:right;white-space:nowrap;">' + s.date + '</td>' +
+      '</tr>'
     ).join('');
 
+    const totalElev = sortedSummits.reduce((a, s) => a + s.elevation, 0);
+    const totalElevFt = sortedSummits.reduce((a, s) => a + s.elevationFt, 0);
+
     const html = '<!DOCTYPE html><html><head><meta charset="utf-8"/>' +
-      '<style>@page{margin:50px 45px}body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;color:#222}</style>' +
+      '<style>@page{margin:50px 45px}body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;color:#222}table{width:100%;border-collapse:collapse}th{text-align:left;font-size:10px;color:#999;text-transform:uppercase;letter-spacing:0.5px;padding:0 8px 8px 0;font-weight:600;border-bottom:2px solid #222}th:nth-child(2),th:nth-child(3),th:nth-child(4){text-align:right}th:last-child{padding-right:0}td:first-child{max-width:200px}</style>' +
       '</head><body>' +
-      '<div style="margin-bottom:30px;">' +
-      '<div style="font-size:24px;font-weight:bold;color:#111;">Summit Log</div>' +
-      '<div style="font-size:11px;color:#aaa;margin-top:4px;">' + sortedSummits.length + ' summit' + (sortedSummits.length !== 1 ? 's' : '') + ' \u2022 ' + dateStr + '</div>' +
+      '<div style="margin-bottom:24px;">' +
+      '<div style="font-size:26px;font-weight:bold;color:#111;letter-spacing:-0.5px;">Summit Log</div>' +
+      '<div style="font-size:11px;color:#aaa;margin-top:4px;">' + sortedSummits.length + ' summit' + (sortedSummits.length !== 1 ? 's' : '') + ' \u2022 ' + totalElev.toLocaleString() + 'm / ' + totalElevFt.toLocaleString() + 'ft total \u2022 ' + dateStr + '</div>' +
       '</div>' +
-      '<div style="border-top:2px solid #111;padding-top:12px;">' + rows + '</div>' +
+      milestoneHtml +
+      '<table><thead><tr><th>Mountain</th><th style="text-align:right;padding-right:8px;">Meters</th><th style="text-align:right;padding-right:8px;">Feet</th><th style="text-align:right;padding-right:0;">Date</th></tr></thead><tbody>' + rows + '</tbody></table>' +
       '<div style="margin-top:40px;text-align:center;font-size:9px;color:#ccc;">Summit Tracker</div>' +
       '</body></html>';
 
