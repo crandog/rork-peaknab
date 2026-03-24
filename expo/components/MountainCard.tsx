@@ -70,7 +70,7 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
         <View style={styles.cardContent}>
           <View style={styles.leftSection}>
             <View style={[styles.iconContainer, { backgroundColor: categoryColor + '18' }]}>
-              <MountainIcon mountainId={mountain.id} category={mountain.category} size={26} />
+              <MountainIcon mountainId={mountain.id} category={mountain.category} size={22} />
             </View>
           </View>
 
@@ -118,16 +118,16 @@ export default memo(MountainCardComponent);
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    marginBottom: 10,
+    marginBottom: 8,
   },
   card: {
-    borderRadius: 16,
+    borderRadius: 14,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.15)',
   },
   cardGradient: {
-    borderRadius: 15,
+    borderRadius: 13,
   },
   cardSummited: {
     borderColor: Colors.success + '60',
@@ -139,15 +139,15 @@ const styles = StyleSheet.create({
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 14,
+    padding: 10,
   },
   leftSection: {
-    marginRight: 12,
+    marginRight: 10,
   },
   iconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 40,
+    height: 40,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -162,15 +162,15 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   name: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700' as const,
     color: Colors.text,
     flexShrink: 1,
   },
   location: {
-    fontSize: 12,
+    fontSize: 11,
     color: Colors.textSecondary,
-    marginBottom: 7,
+    marginBottom: 5,
   },
   tagRow: {
     flexDirection: 'row',
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     minWidth: 60,
   },
   elevation: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '900' as const,
     color: Colors.ice,
     letterSpacing: -0.5,
