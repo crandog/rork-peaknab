@@ -103,7 +103,7 @@ export default function MountainsScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80' }}
+        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/5tvlwzt7tfogn2gqqotng' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
@@ -246,20 +246,20 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
-    height: 320,
-    opacity: 0.35,
+    bottom: 0,
+    opacity: 0.18,
   },
   backgroundOverlay: {
     position: 'absolute',
-    bottom: 0,
+    top: 0,
     left: 0,
     right: 0,
-    height: 320,
-    backgroundColor: Colors.ice,
-    opacity: 0.45,
+    bottom: 0,
+    backgroundColor: Colors.snow,
+    opacity: 0.6,
   },
   header: {
     backgroundColor: Colors.snow,
@@ -398,7 +398,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 6,
-    backgroundColor: Colors.white,
   },
   listHeaderRight: {
     flexDirection: 'row' as const,

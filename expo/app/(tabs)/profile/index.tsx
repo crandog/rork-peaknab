@@ -285,7 +285,7 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80' }}
+        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/5tvlwzt7tfogn2gqqotng' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
