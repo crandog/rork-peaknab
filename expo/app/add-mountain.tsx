@@ -24,7 +24,7 @@ import {
   Check,
 } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { MountainCategory } from '@/constants/mountains';
+import { Mountain, MountainCategory } from '@/constants/mountains';
 import { useCustomMountains } from '@/contexts/CustomMountainsContext';
 
 const DIFFICULTY_OPTIONS = ['Easy', 'Moderate', 'Hard', 'Extreme'] as const;
@@ -53,6 +53,7 @@ export default function AddMountainScreen() {
   }, [name, elevation]);
 
   const handleSave = useCallback(() => {
+    console.log('[AddMountain] Save pressed, valid:', isValid());
     if (!isValid()) {
       Alert.alert('Missing Info', 'Please enter at least a name and elevation.');
       return;
@@ -74,7 +75,7 @@ export default function AddMountainScreen() {
 
     const id = `custom_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-    addCustomMountain({
+    const newMountain: Mountain = {
       id,
       name: name.trim(),
       elevation: elevM,
@@ -88,7 +89,16 @@ export default function AddMountainScreen() {
       description: description.trim() || `A custom peak added by you.`,
       firstAscent: 'Unknown',
       iconEmoji: '⛰️',
-    });
+    };
+    console.log('[AddMountain] Saving mountain:', JSON.stringify(newMountain));
+    try {
+      addCustomMountain(newMountain);
+      console.log('[AddMountain] Mountain saved successfully');
+    } catch (err) {
+      console.error('[AddMountain] Error saving mountain:', err);
+      Alert.alert('Error', 'Failed to save mountain. Please try again.');
+      return;
+    }
 
     if (Platform.OS !== 'web') {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
