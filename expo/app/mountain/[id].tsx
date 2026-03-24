@@ -210,7 +210,7 @@ export default function MountainDetailScreen() {
 
         <View style={styles.heroSection}>
           <View style={[styles.heroIcon, { backgroundColor: categoryColor + '20' }]}>
-            <MountainIcon category={mountain.category} difficulty={mountain.difficulty} size={40} />
+            <MountainIcon mountainId={mountain.id} category={mountain.category} size={40} />
           </View>
           <Text style={styles.heroName}>{mountain.name}</Text>
           <Text style={styles.heroLocation}>{mountain.country}</Text>

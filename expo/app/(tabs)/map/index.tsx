@@ -53,7 +53,7 @@ export default function MapScreen() {
                 <Text style={styles.summitListTitle}>Your Summits</Text>
                 {summitedMountains.map((m) => (
                   <View key={m.id} style={styles.summitItem}>
-                    <MountainIcon category={m.category} difficulty={m.difficulty} size={20} />
+                    <MountainIcon mountainId={m.id} category={m.category} size={20} />
                     <View style={styles.summitInfo}>
                       <Text style={styles.summitName}>{m.name}</Text>
                       <Text style={styles.summitLocation}>{m.country}</Text>

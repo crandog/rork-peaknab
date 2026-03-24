@@ -340,7 +340,7 @@ export default function ProfileScreen() {
                   onPress={() => router.push(`/mountain/${record.mountainId}`)}
                   activeOpacity={0.8}
                 >
-                  <MountainIcon category={record.mountain?.category ?? 'other'} difficulty={record.mountain?.difficulty ?? 'Moderate'} size={20} />
+                  <MountainIcon mountainId={record.mountainId} category={record.mountain?.category ?? 'other'} size={20} />
                   <View style={styles.recentInfo}>
                     <Text style={styles.recentName}>{record.mountain?.name ?? 'Unknown'}</Text>
                     <Text style={styles.recentDate}>{record.date}</Text>

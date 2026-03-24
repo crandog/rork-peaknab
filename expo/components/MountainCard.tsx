@@ -43,7 +43,7 @@ function MountainCardComponent({ mountain, isSummited, onPress }: MountainCardPr
       >
         <View style={styles.leftSection}>
           <View style={[styles.iconContainer, { backgroundColor: categoryColor + '20' }]}>
-            <MountainIcon category={mountain.category} difficulty={mountain.difficulty} size={24} />
+            <MountainIcon mountainId={mountain.id} category={mountain.category} size={24} />
           </View>
         </View>
 
