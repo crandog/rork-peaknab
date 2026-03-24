@@ -210,7 +210,7 @@ export default function MountainsScreen() {
       <View style={styles.listContainer}>
         <View style={styles.listHeaderRow}>
           <Text style={styles.resultCount}>
-            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''} to conquer
           </Text>
           <TouchableOpacity
             style={styles.unitToggleBtn}
