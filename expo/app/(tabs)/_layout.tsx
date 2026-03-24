@@ -1,36 +1,25 @@
 import { Tabs } from "expo-router";
 import { Mountain, Map, User } from "lucide-react-native";
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Colors from "@/constants/colors";
 
 export default function TabLayout() {
-  const insets = useSafeAreaInsets();
-
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.accent,
+        tabBarActiveTintColor: Colors.primary,
         tabBarInactiveTintColor: Colors.textMuted,
         tabBarStyle: {
-          position: 'absolute' as const,
-          backgroundColor: 'transparent',
-          borderTopWidth: 0,
+          backgroundColor: Colors.white,
+          borderTopWidth: 1,
+          borderTopColor: Colors.border,
           elevation: 0,
         },
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: '600' as const,
         },
-        tabBarBackground: () => (
-          <LinearGradient
-            colors={['#0A4E68', '#07374A', '#042530']}
-            style={StyleSheet.absoluteFill}
-          />
-        ),
       }}
     >
       <Tabs.Screen

@@ -10,12 +10,11 @@ import {
   Platform,
   Animated,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Stack } from 'expo-router';
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import * as Haptics from 'expo-haptics';
-import { Camera, FileText, Save, X, Mountain } from 'lucide-react-native';
+import { Camera, Save, X } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useSummits } from '@/contexts/SummitContext';
 
@@ -77,17 +76,17 @@ export default function SummitReportScreen() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: '',
-          headerStyle: { backgroundColor: Colors.secondary },
+          title: 'Summit Report',
+          headerStyle: { backgroundColor: Colors.white },
           headerTintColor: Colors.text,
           headerShadowVisible: false,
+          headerTitleStyle: { fontWeight: '700' as const },
         }}
       />
 
       <View style={styles.heroHeader}>
-        <Mountain color={Colors.accent} size={28} />
         <Text style={styles.heroTitle}>{mountainName ?? 'Summit Report'}</Text>
-        <Text style={styles.heroSubtitle}>Document your achievement</Text>
+        <Text style={styles.heroSubtitle}>{summitRecord?.date ?? 'Document your achievement'}</Text>
       </View>
 
       <ScrollView
@@ -97,21 +96,11 @@ export default function SummitReportScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.card}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.iconBadge}>
-              <FileText color={Colors.accent} size={16} />
-            </View>
-            <View>
-              <Text style={styles.sectionTitle}>Summit Notes</Text>
-              <Text style={styles.sectionSubtitle}>
-                Conditions, route, memorable moments
-              </Text>
-            </View>
-          </View>
+          <Text style={styles.sectionTitle}>Notes:</Text>
           <TextInput
             style={styles.reportInput}
-            placeholder="How was the climb?"
-            placeholderTextColor="rgba(160,152,136,0.6)"
+            placeholder="Amazing climb, perfect weather!"
+            placeholderTextColor={Colors.textMuted}
             value={report}
             onChangeText={setReport}
             multiline
@@ -120,18 +109,7 @@ export default function SummitReportScreen() {
         </View>
 
         <View style={styles.card}>
-          <View style={styles.sectionHeader}>
-            <View style={styles.iconBadge}>
-              <Camera color={Colors.accent} size={16} />
-            </View>
-            <View>
-              <Text style={styles.sectionTitle}>Summit Photo</Text>
-              <Text style={styles.sectionSubtitle}>
-                Capture the moment
-              </Text>
-            </View>
-          </View>
-
+          <Text style={styles.sectionTitle}>Photo</Text>
           {photoUri ? (
             <View style={styles.photoContainer}>
               <Image
@@ -152,12 +130,19 @@ export default function SummitReportScreen() {
               onPress={handlePickPhoto}
               activeOpacity={0.7}
             >
-              <View style={styles.photoIconCircle}>
-                <Camera color={Colors.accent} size={24} />
-              </View>
-              <Text style={styles.photoPlaceholderText}>Tap to add a photo</Text>
+              <Camera color={Colors.primary} size={28} />
+              <Text style={styles.photoPlaceholderText}>Upload Photo</Text>
             </TouchableOpacity>
           )}
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Conditions:</Text>
+          <TextInput
+            style={styles.conditionsInput}
+            placeholder="Clear skies, -20°C, Light wind."
+            placeholderTextColor={Colors.textMuted}
+          />
         </View>
 
         <Animated.View style={{ transform: [{ scale: saveScale }] }}>
@@ -180,86 +165,76 @@ export default function SummitReportScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.secondary,
+    backgroundColor: Colors.snow,
   },
   heroHeader: {
-    alignItems: 'center',
     paddingTop: 4,
-    paddingBottom: 20,
-    backgroundColor: Colors.secondary,
-    gap: 6,
+    paddingBottom: 16,
+    paddingHorizontal: 20,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
   },
   heroTitle: {
-    fontSize: 22,
-    fontWeight: '800' as const,
+    fontSize: 20,
+    fontWeight: '700' as const,
     color: Colors.text,
-    marginTop: 6,
-    letterSpacing: 0.3,
+    marginBottom: 2,
   },
   heroSubtitle: {
     fontSize: 13,
     color: Colors.textSecondary,
-    letterSpacing: 0.2,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
     padding: 16,
-    paddingTop: 8,
+    paddingTop: 16,
     gap: 16,
   },
   card: {
-    backgroundColor: Colors.cardBg,
-    borderRadius: 16,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
     padding: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.06)',
-  },
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginBottom: 14,
-  },
-  iconBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: 'rgba(212,168,67,0.12)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    borderColor: Colors.border,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: '700' as const,
+    fontSize: 14,
+    fontWeight: '600' as const,
     color: Colors.text,
-  },
-  sectionSubtitle: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-    marginTop: 2,
+    marginBottom: 10,
   },
   reportInput: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 12,
+    backgroundColor: Colors.frost,
+    borderRadius: 10,
     padding: 14,
     color: Colors.text,
     fontSize: 15,
     lineHeight: 22,
-    minHeight: 160,
+    minHeight: 120,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.05)',
+    borderColor: Colors.border,
+  },
+  conditionsInput: {
+    backgroundColor: Colors.frost,
+    borderRadius: 10,
+    padding: 14,
+    color: Colors.text,
+    fontSize: 15,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   photoContainer: {
     position: 'relative',
-    borderRadius: 12,
+    borderRadius: 10,
     overflow: 'hidden',
   },
   photo: {
     width: '100%',
     height: 200,
-    borderRadius: 12,
+    borderRadius: 10,
   },
   removePhotoButton: {
     position: 'absolute',
@@ -273,47 +248,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   photoPlaceholder: {
-    height: 150,
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 12,
+    height: 120,
+    backgroundColor: Colors.frost,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.08)',
+    borderWidth: 1,
+    borderColor: Colors.border,
     borderStyle: 'dashed',
-    gap: 10,
-  },
-  photoIconCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(212,168,67,0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    gap: 8,
   },
   photoPlaceholderText: {
-    color: Colors.textSecondary,
-    fontSize: 13,
-    fontWeight: '500' as const,
+    color: Colors.primary,
+    fontSize: 14,
+    fontWeight: '600' as const,
   },
   saveButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     paddingVertical: 15,
-    borderRadius: 14,
+    borderRadius: 10,
     gap: 8,
-    shadowColor: Colors.accent,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
   },
   saveButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '700' as const,
-    letterSpacing: 0.3,
   },
 });

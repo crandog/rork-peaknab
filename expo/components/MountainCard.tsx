@@ -1,9 +1,8 @@
 import React, { memo, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { CheckCircle, ChevronRight } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { CheckCircle } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { Mountain, categoryLabels } from '@/constants/mountains';
+import { Mountain } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
 
 interface MountainCardProps {
@@ -33,14 +32,6 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
 
   const categoryColor = Colors.categoryColors[mountain.category] ?? Colors.accent;
 
-  const diffColor =
-    mountain.difficulty === 'Extreme' ? Colors.danger :
-    mountain.difficulty === 'Hard' ? Colors.warning :
-    mountain.difficulty === 'Moderate' ? Colors.accent :
-    Colors.success;
-
-  const elevationIntensity = Math.min(mountain.elevation / 8849, 1);
-
   return (
     <Animated.View style={[styles.cardWrapper, { transform: [{ scale: scaleAnim }] }]}>
       <TouchableOpacity
@@ -54,22 +45,9 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
         activeOpacity={0.9}
         testID={`mountain-card-${mountain.id}`}
       >
-        <LinearGradient
-          colors={['#0D7BA8', '#127EAD', '#169ED0']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.cardGradient}
-        >
-        <View
-          style={[
-            styles.elevationStrip,
-            { backgroundColor: categoryColor, opacity: 0.4 + elevationIntensity * 0.6 },
-          ]}
-        />
-
         <View style={styles.cardContent}>
           <View style={styles.leftSection}>
-            <View style={[styles.iconContainer, { backgroundColor: categoryColor + '18' }]}>
+            <View style={[styles.iconContainer, { backgroundColor: categoryColor + '15' }]}>
               <MountainIcon mountainId={mountain.id} category={mountain.category} size={22} />
             </View>
           </View>
@@ -84,31 +62,21 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
             <Text style={styles.location} numberOfLines={1}>
               {mountain.country} · {mountain.range}
             </Text>
-            <View style={styles.tagRow}>
-              <View style={[styles.categoryTag, { backgroundColor: categoryColor + '18', borderColor: categoryColor + '35' }]}>
-                <Text style={[styles.categoryTagText, { color: categoryColor }]}>
-                  {categoryLabels[mountain.category]}
-                </Text>
-              </View>
-              <View style={[styles.difficultyTag, { borderColor: diffColor + '25' }]}>
-                <View style={[styles.difficultyDot, { backgroundColor: diffColor }]} />
-                <Text style={[styles.difficultyText, { color: diffColor }]}>{mountain.difficulty}</Text>
-              </View>
-            </View>
           </View>
 
           <View style={styles.rightSection}>
             <Text style={styles.elevation}>
-              {useFeet ? mountain.elevationFt.toLocaleString() : mountain.elevation.toLocaleString()}
+              {useFeet
+                ? `${mountain.elevationFt.toLocaleString()} ft`
+                : `${mountain.elevation.toLocaleString()} m`}
             </Text>
-            <Text style={styles.elevationUnit}>{useFeet ? 'feet' : 'meters'}</Text>
-            <Text style={styles.elevationFt}>
-              {useFeet ? `${mountain.elevation.toLocaleString()}m` : `${mountain.elevationFt.toLocaleString()}ft`}
+            <Text style={styles.elevationAlt}>
+              {useFeet
+                ? `${mountain.elevation.toLocaleString()} m`
+                : `${mountain.elevationFt.toLocaleString()} ft`}
             </Text>
-            <ChevronRight color={Colors.textMuted} size={14} style={styles.chevron} />
           </View>
         </View>
-        </LinearGradient>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -118,36 +86,29 @@ export default memo(MountainCardComponent);
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    marginBottom: 8,
+    marginBottom: 2,
   },
   card: {
-    borderRadius: 14,
-    overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
-  },
-  cardGradient: {
-    borderRadius: 13,
+    backgroundColor: Colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border + '60',
   },
   cardSummited: {
-    borderColor: Colors.success + '60',
-  },
-  elevationStrip: {
-    height: 3,
-    width: '100%',
+    backgroundColor: '#F0F8F0',
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
   leftSection: {
-    marginRight: 10,
+    marginRight: 12,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: 38,
+    height: 38,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -159,74 +120,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 3,
+    marginBottom: 2,
   },
   name: {
-    fontSize: 14,
-    fontWeight: '700' as const,
+    fontSize: 15,
+    fontWeight: '600' as const,
     color: Colors.text,
     flexShrink: 1,
   },
   location: {
-    fontSize: 11,
-    color: Colors.ice,
-    marginBottom: 5,
-  },
-  tagRow: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  categoryTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    borderWidth: 1,
-  },
-  categoryTagText: {
-    fontSize: 10,
-    fontWeight: '700' as const,
-  },
-  difficultyTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
-    backgroundColor: Colors.cardBgLight,
-    borderWidth: 1,
-    gap: 4,
-  },
-  difficultyDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 3,
-  },
-  difficultyText: {
-    fontSize: 10,
-    fontWeight: '600' as const,
+    fontSize: 12,
+    color: Colors.textSecondary,
   },
   rightSection: {
     alignItems: 'flex-end',
-    minWidth: 60,
   },
   elevation: {
-    fontSize: 15,
-    fontWeight: '900' as const,
-    color: Colors.ice,
-    letterSpacing: -0.5,
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: Colors.textSecondary,
   },
-  elevationUnit: {
-    fontSize: 9,
-    color: Colors.textMuted,
-    fontWeight: '500' as const,
-    marginTop: -1,
-  },
-  elevationFt: {
+  elevationAlt: {
     fontSize: 11,
     color: Colors.textMuted,
-    marginTop: 2,
-  },
-  chevron: {
-    marginTop: 4,
+    marginTop: 1,
   },
 });

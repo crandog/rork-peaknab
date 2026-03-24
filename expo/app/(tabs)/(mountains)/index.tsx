@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,15 +6,13 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
-  Animated,
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown } from 'lucide-react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
-import { categoryLabels, MountainCategory } from '@/constants/mountains';
+import { MountainCategory } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainCard from '@/components/MountainCard';
@@ -103,10 +101,7 @@ export default function MountainsScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#074E6A', '#0B5D7A', '#0F698A']}
-        style={[styles.header, { paddingTop: insets.top + 8 }]}
-      >
+      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>Summit Tracker</Text>
           <View style={styles.titleActions}>
@@ -123,7 +118,7 @@ export default function MountainsScreen() {
               onPress={handleO2Press}
               activeOpacity={0.7}
             >
-              <Wind color={Colors.accentLight} size={16} />
+              <Wind color={Colors.primary} size={16} />
               <Text style={styles.o2Text}>O₂</Text>
             </TouchableOpacity>
           </View>
@@ -145,35 +140,7 @@ export default function MountainsScreen() {
               </TouchableOpacity>
             )}
           </View>
-          <TouchableOpacity
-            style={styles.sortButton}
-            onPress={() => setShowSort(!showSort)}
-            activeOpacity={0.7}
-          >
-            <ChevronDown color={Colors.accent} size={14} />
-            <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
-          </TouchableOpacity>
         </View>
-
-        {showSort && (
-          <View style={styles.sortDropdown}>
-            {(Object.keys(sortLabels) as SortOption[]).map((key) => (
-              <TouchableOpacity
-                key={key}
-                style={[styles.sortOption, sortBy === key && styles.sortOptionActive]}
-                onPress={() => {
-                  setSortBy(key);
-                  setShowSort(false);
-                }}
-              >
-                <Text style={[styles.sortOptionText, sortBy === key && styles.sortOptionTextActive]}>
-                  {sortLabels[key]}
-                </Text>
-                {sortBy === key && <Check color={Colors.accent} size={14} />}
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
 
         <FlatList
           data={categories}
@@ -183,12 +150,11 @@ export default function MountainsScreen() {
           contentContainerStyle={styles.categoryList}
           renderItem={({ item }) => {
             const isActive = selectedCategory === item.key;
-            const chipColor = item.key !== 'all' ? Colors.categoryColors[item.key] : Colors.accent;
             return (
               <TouchableOpacity
                 style={[
                   styles.categoryChip,
-                  isActive && { backgroundColor: chipColor, borderColor: chipColor },
+                  isActive && styles.categoryChipActive,
                 ]}
                 onPress={() => setSelectedCategory(item.key)}
                 activeOpacity={0.7}
@@ -205,43 +171,62 @@ export default function MountainsScreen() {
             );
           }}
         />
-      </LinearGradient>
+      </View>
 
-      <View style={styles.listContainer}>
-        <LinearGradient
-          colors={['#0F698A', 'transparent']}
-          style={styles.topFade}
-          pointerEvents="none"
-        />
-        <View style={styles.listHeaderRow}>
-          <Text style={styles.resultCount}>
-            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''} to conquer
-          </Text>
+      {showSort && (
+        <View style={styles.sortDropdown}>
+          {(Object.keys(sortLabels) as SortOption[]).map((key) => (
+            <TouchableOpacity
+              key={key}
+              style={[styles.sortOption, sortBy === key && styles.sortOptionActive]}
+              onPress={() => {
+                setSortBy(key);
+                setShowSort(false);
+              }}
+            >
+              <Text style={[styles.sortOptionText, sortBy === key && styles.sortOptionTextActive]}>
+                {sortLabels[key]}
+              </Text>
+              {sortBy === key && <Check color={Colors.primary} size={14} />}
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+
+      <View style={styles.listHeaderRow}>
+        <Text style={styles.resultCount}>
+          {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+        </Text>
+        <View style={styles.listHeaderRight}>
+          <TouchableOpacity
+            style={styles.sortButton}
+            onPress={() => setShowSort(!showSort)}
+            activeOpacity={0.7}
+          >
+            <ChevronDown color={Colors.primary} size={14} />
+            <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.unitToggleBtn}
             onPress={() => setUseFeet(prev => !prev)}
             activeOpacity={0.7}
             testID="unit-toggle-button"
           >
-            <ArrowUpDown color={useFeet ? Colors.accentLight : Colors.ice} size={13} />
+            <ArrowUpDown color={Colors.primary} size={13} />
             <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
           </TouchableOpacity>
         </View>
-        <FlatList
-          data={filteredMountains}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-        />
-        <LinearGradient
-          colors={['transparent', '#0F698A']}
-          style={styles.bottomFade}
-          pointerEvents="none"
-        />
       </View>
+
+      <FlatList
+        data={filteredMountains}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+      />
     </View>
   );
 }
@@ -249,9 +234,12 @@ export default function MountainsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0F698A',
+    backgroundColor: Colors.white,
   },
   header: {
+    backgroundColor: Colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
     paddingBottom: 4,
   },
   titleRow: {
@@ -262,27 +250,10 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   title: {
-    fontSize: 30,
-    fontWeight: '900' as const,
-    color: Colors.text,
-    letterSpacing: -0.8,
-  },
-
-  unitToggleBtn: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    backgroundColor: Colors.cardBg,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    gap: 4,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  unitToggleBtnText: {
-    fontSize: 12,
+    fontSize: 26,
     fontWeight: '700' as const,
-    color: Colors.ice,
+    color: Colors.text,
+    letterSpacing: -0.5,
   },
   titleActions: {
     flexDirection: 'row',
@@ -290,41 +261,38 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   addButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    backgroundColor: Colors.peach,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   o2Button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.cardBg,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 12,
-    gap: 5,
+    backgroundColor: Colors.frost,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 18,
+    gap: 4,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   o2Text: {
-    color: Colors.accentLight,
+    color: Colors.primary,
     fontSize: 13,
-    fontWeight: '700' as const,
+    fontWeight: '600' as const,
   },
   searchRow: {
-    flexDirection: 'row',
     paddingHorizontal: 20,
-    gap: 8,
     marginBottom: 12,
   },
   searchContainer: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.cardBg,
-    borderRadius: 12,
+    backgroundColor: Colors.frost,
+    borderRadius: 10,
     paddingHorizontal: 12,
     gap: 8,
     borderWidth: 1,
@@ -336,29 +304,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     paddingVertical: Platform.OS === 'web' ? 10 : 11,
   },
-  sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.cardBg,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    gap: 4,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  sortLabel: {
-    color: Colors.accent,
-    fontSize: 11,
-    fontWeight: '600' as const,
-  },
   sortDropdown: {
     marginHorizontal: 20,
-    backgroundColor: Colors.cardBgLight,
+    backgroundColor: Colors.white,
     borderRadius: 12,
-    marginBottom: 8,
+    marginBottom: 4,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: Colors.border,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
   },
   sortOption: {
     flexDirection: 'row',
@@ -368,58 +326,41 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   sortOptionActive: {
-    backgroundColor: Colors.accent + '12',
+    backgroundColor: Colors.frost,
   },
   sortOptionText: {
     color: Colors.textSecondary,
     fontSize: 14,
   },
   sortOptionTextActive: {
-    color: Colors.accent,
+    color: Colors.primary,
     fontWeight: '600' as const,
   },
   categoryList: {
     paddingHorizontal: 16,
     gap: 8,
-    paddingBottom: 8,
+    paddingBottom: 10,
   },
   categoryChip: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: Colors.cardBg,
+    paddingVertical: 7,
+    borderRadius: 18,
+    backgroundColor: Colors.frost,
     borderWidth: 1,
     borderColor: Colors.border,
+  },
+  categoryChipActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
   },
   categoryChipText: {
     color: Colors.textSecondary,
     fontSize: 13,
-    fontWeight: '600' as const,
+    fontWeight: '500' as const,
   },
   categoryChipTextActive: {
     color: Colors.white,
-    fontWeight: '700' as const,
-  },
-  listContainer: {
-    flex: 1,
-    backgroundColor: '#0F698A',
-    position: 'relative' as const,
-  },
-  topFade: {
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    height: 20,
-    zIndex: 10,
-  },
-  bottomFade: {
-    position: 'absolute' as const,
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 80,
-    zIndex: 10,
+    fontWeight: '600' as const,
   },
   listHeaderRow: {
     flexDirection: 'row' as const,
@@ -428,13 +369,45 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 10,
     paddingBottom: 6,
+    backgroundColor: Colors.white,
+  },
+  listHeaderRight: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 8,
   },
   resultCount: {
-    color: Colors.ice,
+    color: Colors.textSecondary,
     fontSize: 12,
+    fontWeight: '500' as const,
+  },
+  sortButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  sortLabel: {
+    color: Colors.primary,
+    fontSize: 12,
+    fontWeight: '600' as const,
+  },
+  unitToggleBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: Colors.frost,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  unitToggleBtnText: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.primary,
   },
   list: {
-    paddingHorizontal: 16,
     paddingBottom: 20,
   },
 });

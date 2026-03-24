@@ -13,13 +13,9 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import {
   ArrowLeft,
-  Info,
-  Flag,
   MapPin,
-  Calendar,
   Mountain,
   TrendingUp,
   Globe,
@@ -132,13 +128,13 @@ export default function MountainDetailScreen() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     const lines = [
-      `🏔️ Summit Achievement!`,
+      `Summit Achievement!`,
       ``,
       `${mountain.iconEmoji} I summited ${mountain.name}!`,
-      `📍 ${mountain.country} · ${mountain.range}`,
-      `📏 ${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
-      summitRecord?.date ? `📅 ${summitRecord.date}` : '',
-      summitRecord?.report ? `\n📝 "${summitRecord.report}"` : '',
+      `${mountain.country} · ${mountain.range}`,
+      `${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
+      summitRecord?.date ? `${summitRecord.date}` : '',
+      summitRecord?.report ? `\n"${summitRecord.report}"` : '',
     ].filter(Boolean).join('\n');
     try {
       await Share.share({ message: lines });
@@ -205,11 +201,6 @@ export default function MountainDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#1A1A2E', '#1E2240', '#1A1A2E']}
-        style={StyleSheet.absoluteFill}
-      />
-
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top }]}
@@ -223,6 +214,7 @@ export default function MountainDetailScreen() {
           >
             <ArrowLeft color={Colors.text} size={22} />
           </TouchableOpacity>
+          <Text style={styles.topBarTitle}>{mountain.name}</Text>
           {summited && (
             <TouchableOpacity
               style={styles.shareButton}
@@ -230,9 +222,10 @@ export default function MountainDetailScreen() {
               activeOpacity={0.7}
               testID="share-summit-button"
             >
-              <Share2 color={Colors.white} size={20} />
+              <Share2 color={Colors.white} size={18} />
             </TouchableOpacity>
           )}
+          {!summited && <View style={{ width: 42 }} />}
         </View>
 
         <View style={styles.heroSection}>
@@ -240,10 +233,11 @@ export default function MountainDetailScreen() {
             <MountainIcon mountainId={mountain.id} category={mountain.category} size={40} />
           </View>
           <Text style={styles.heroName}>{mountain.name}</Text>
-          <Text style={styles.heroLocation}>{mountain.country}</Text>
+          <Text style={styles.heroLocation}>{mountain.country} · {mountain.range}</Text>
           <View style={styles.heroStats}>
             <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{mountain.elevation.toLocaleString()}m / {mountain.elevationFt.toLocaleString()}ft</Text>
+              <Text style={styles.heroStatValue}>{mountain.elevation.toLocaleString()}m</Text>
+              <Text style={styles.heroStatSub}>{mountain.elevationFt.toLocaleString()}ft</Text>
               <Text style={styles.heroStatLabel}>Elevation</Text>
             </View>
             <View style={styles.heroDivider} />
@@ -265,14 +259,12 @@ export default function MountainDetailScreen() {
             style={[styles.tab, activeTab === 'info' && styles.tabActive]}
             onPress={() => switchTab('info')}
           >
-            <Info color={activeTab === 'info' ? Colors.accent : Colors.textMuted} size={18} />
             <Text style={[styles.tabText, activeTab === 'info' && styles.tabTextActive]}>Info</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.tab, activeTab === 'summit' && styles.tabActive]}
             onPress={() => switchTab('summit')}
           >
-            <Flag color={activeTab === 'summit' ? Colors.accent : Colors.textMuted} size={18} />
             <Text style={[styles.tabText, activeTab === 'summit' && styles.tabTextActive]}>Did You Summit?</Text>
           </TouchableOpacity>
         </View>
@@ -282,35 +274,35 @@ export default function MountainDetailScreen() {
             <Text style={styles.description}>{mountain.description}</Text>
             <View style={styles.infoGrid}>
               <View style={styles.infoRow}>
-                <View style={styles.infoIcon}><Mountain color={Colors.accent} size={18} /></View>
+                <View style={styles.infoIcon}><Mountain color={Colors.primary} size={18} /></View>
                 <View style={styles.infoDetail}>
                   <Text style={styles.infoLabel}>Range</Text>
                   <Text style={styles.infoValue}>{mountain.range}</Text>
                 </View>
               </View>
               <View style={styles.infoRow}>
-                <View style={styles.infoIcon}><Globe color={Colors.accent} size={18} /></View>
+                <View style={styles.infoIcon}><Globe color={Colors.primary} size={18} /></View>
                 <View style={styles.infoDetail}>
                   <Text style={styles.infoLabel}>Category</Text>
                   <Text style={styles.infoValue}>{categoryLabels[mountain.category]}</Text>
                 </View>
               </View>
               <View style={styles.infoRow}>
-                <View style={styles.infoIcon}><MapPin color={Colors.accent} size={18} /></View>
+                <View style={styles.infoIcon}><MapPin color={Colors.primary} size={18} /></View>
                 <View style={styles.infoDetail}>
                   <Text style={styles.infoLabel}>Coordinates</Text>
                   <Text style={styles.infoValue}>{mountain.latitude.toFixed(4)}°, {mountain.longitude.toFixed(4)}°</Text>
                 </View>
               </View>
               <View style={styles.infoRow}>
-                <View style={styles.infoIcon}><Clock color={Colors.accent} size={18} /></View>
+                <View style={styles.infoIcon}><Clock color={Colors.primary} size={18} /></View>
                 <View style={styles.infoDetail}>
                   <Text style={styles.infoLabel}>First Ascent</Text>
                   <Text style={styles.infoValue}>{mountain.firstAscent}</Text>
                 </View>
               </View>
               <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
-                <View style={styles.infoIcon}><TrendingUp color={Colors.accent} size={18} /></View>
+                <View style={styles.infoIcon}><TrendingUp color={Colors.primary} size={18} /></View>
                 <View style={styles.infoDetail}>
                   <Text style={styles.infoLabel}>O₂ at Summit</Text>
                   <Text style={styles.infoValue}>~{effectiveO2}% effective O₂ ({o2Percentage}% of sea level)</Text>
@@ -336,14 +328,14 @@ export default function MountainDetailScreen() {
                   onPress={() => router.push({ pathname: '/summit-report' as any, params: { mountainId: mountain.id, mountainName: mountain.name } })}
                 >
                   <Text style={styles.editReportText}>{summitRecord?.report ? 'Edit Report & Photo' : 'Add Report & Photo'}</Text>
-                  <ChevronRight color={Colors.accent} size={16} />
+                  <ChevronRight color={Colors.primary} size={16} />
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.shareReportButton}
                   onPress={handleShareSummit}
                   activeOpacity={0.7}
                 >
-                  <Share2 color={Colors.accent} size={16} />
+                  <Share2 color={Colors.primary} size={16} />
                   <Text style={styles.shareReportText}>Share Summit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.removeButton} onPress={handleRemoveSummit}>
@@ -367,57 +359,50 @@ export default function MountainDetailScreen() {
                         <Text style={styles.deleteInlineText}>Delete Peak</Text>
                       </TouchableOpacity>
                     )}
-                    <Text style={styles.questionEmoji}>⛰️</Text>
-                    <Text style={styles.questionTitle}>Did you summit {mountain.name}?</Text>
+                    <Text style={styles.questionTitle}>Did you reach the summit?</Text>
                     <Text style={styles.questionSubtitle}>Record your achievement and share your experience</Text>
                     <View style={styles.yesNoRow}>
                       <TouchableOpacity style={styles.yesButton} onPress={handleSummitYes} activeOpacity={0.8}>
-                        <CheckCircle color={Colors.white} size={22} />
-                        <Text style={styles.yesButtonText}>Yes!</Text>
+                        <Text style={styles.yesButtonText}>Yes</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.noButton} onPress={() => switchTab('info')} activeOpacity={0.8}>
-                        <XCircle color={Colors.textSecondary} size={22} />
-                        <Text style={styles.noButtonText}>Not Yet</Text>
+                        <Text style={styles.noButtonText}>No</Text>
                       </TouchableOpacity>
                     </View>
                   </>
                 ) : (
                   <>
-                    <Calendar color={Colors.accent} size={40} />
-                    <Text style={styles.dateTitle}>When did you summit?</Text>
+                    <Text style={styles.dateTitle}>Select Summit Date</Text>
 
                     <View style={styles.datePickerRow}>
                       <View style={styles.datePickerCol}>
-                        <Text style={styles.datePickerLabel}>Month</Text>
                         <TouchableOpacity
                           style={styles.dateDropdown}
                           onPress={() => { closePickers(); setShowMonthPicker(!showMonthPicker); }}
                           activeOpacity={0.7}
                         >
                           <Text style={styles.dateDropdownText}>{MONTHS[selectedMonth].slice(0, 3)}</Text>
-                          <ChevronDown color={Colors.accent} size={14} />
+                          <ChevronDown color={Colors.primary} size={14} />
                         </TouchableOpacity>
                       </View>
                       <View style={styles.datePickerCol}>
-                        <Text style={styles.datePickerLabel}>Day</Text>
                         <TouchableOpacity
                           style={styles.dateDropdown}
                           onPress={() => { closePickers(); setShowDayPicker(!showDayPicker); }}
                           activeOpacity={0.7}
                         >
                           <Text style={styles.dateDropdownText}>{selectedDay}</Text>
-                          <ChevronDown color={Colors.accent} size={14} />
+                          <ChevronDown color={Colors.primary} size={14} />
                         </TouchableOpacity>
                       </View>
                       <View style={styles.datePickerCol}>
-                        <Text style={styles.datePickerLabel}>Year</Text>
                         <TouchableOpacity
                           style={styles.dateDropdown}
                           onPress={() => { closePickers(); setShowYearPicker(!showYearPicker); }}
                           activeOpacity={0.7}
                         >
                           <Text style={styles.dateDropdownText}>{selectedYear}</Text>
-                          <ChevronDown color={Colors.accent} size={14} />
+                          <ChevronDown color={Colors.primary} size={14} />
                         </TouchableOpacity>
                       </View>
                     </View>
@@ -488,16 +473,13 @@ export default function MountainDetailScreen() {
                       </View>
                     )}
 
-                    <Text style={styles.selectedDatePreview}>{formattedDate}</Text>
+                    <TouchableOpacity style={styles.confirmDateButton} onPress={handleConfirmSummit}>
+                      <Text style={styles.confirmDateText}>Continue</Text>
+                    </TouchableOpacity>
 
-                    <View style={styles.dateButtonRow}>
-                      <TouchableOpacity style={styles.cancelDateButton} onPress={() => { setShowDateInput(false); closePickers(); }}>
-                        <Text style={styles.cancelDateText}>Cancel</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.confirmDateButton} onPress={handleConfirmSummit}>
-                        <Text style={styles.confirmDateText}>Continue →</Text>
-                      </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity style={styles.cancelDateButton} onPress={() => { setShowDateInput(false); closePickers(); }}>
+                      <Text style={styles.cancelDateText}>Cancel</Text>
+                    </TouchableOpacity>
                   </>
                 )}
               </View>
@@ -510,76 +492,74 @@ export default function MountainDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.primary },
+  container: { flex: 1, backgroundColor: Colors.snow },
   scrollView: { flex: 1 },
   scrollContent: { paddingBottom: 40 },
   errorText: { color: Colors.text, fontSize: 16, textAlign: 'center', marginTop: 100 },
-  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8 },
-  backButton: { width: 42, height: 42, borderRadius: 14, backgroundColor: Colors.cardBg, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
-  shareButton: { width: 42, height: 42, borderRadius: 14, backgroundColor: Colors.accent, justifyContent: 'center', alignItems: 'center' },
-  heroSection: { alignItems: 'center', paddingHorizontal: 24, paddingTop: 20, paddingBottom: 24 },
+  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8, marginBottom: 4 },
+  topBarTitle: { fontSize: 17, fontWeight: '700' as const, color: Colors.text, flex: 1, textAlign: 'center' as const },
+  backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: Colors.white, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
+  shareButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: Colors.primary, justifyContent: 'center', alignItems: 'center' },
+  heroSection: { alignItems: 'center', paddingHorizontal: 24, paddingTop: 12, paddingBottom: 24 },
   heroIcon: { width: 80, height: 80, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 16 },
-  heroName: { fontSize: 28, fontWeight: '900' as const, color: Colors.text, textAlign: 'center', marginBottom: 4, letterSpacing: -0.5 },
-  heroLocation: { fontSize: 15, color: Colors.textSecondary, marginBottom: 20 },
-  heroStats: { flexDirection: 'row', backgroundColor: Colors.cardBg, borderRadius: 16, padding: 16, borderWidth: 1, borderColor: Colors.border, width: '100%' },
+  heroName: { fontSize: 26, fontWeight: '700' as const, color: Colors.text, textAlign: 'center', marginBottom: 4, letterSpacing: -0.3 },
+  heroLocation: { fontSize: 14, color: Colors.textSecondary, marginBottom: 20 },
+  heroStats: { flexDirection: 'row', backgroundColor: Colors.white, borderRadius: 16, padding: 16, borderWidth: 1, borderColor: Colors.border, width: '100%' },
   heroStat: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  heroStatValue: { fontSize: 18, fontWeight: '800' as const, color: Colors.accentLight, marginBottom: 4, textAlign: 'center' as const },
+  heroStatValue: { fontSize: 18, fontWeight: '700' as const, color: Colors.text, marginBottom: 2, textAlign: 'center' as const },
+  heroStatSub: { fontSize: 13, color: Colors.textSecondary, marginBottom: 2, textAlign: 'center' as const },
   heroStatLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const, textAlign: 'center' as const },
   heroDivider: { width: 1, backgroundColor: Colors.border },
-  summitedBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, backgroundColor: Colors.success + '12', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: Colors.success + '25' },
+  summitedBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, backgroundColor: Colors.success + '12', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: Colors.success + '30' },
   summitedText: { color: Colors.success, fontSize: 13, fontWeight: '600' as const },
-  tabBar: { flexDirection: 'row', marginHorizontal: 20, backgroundColor: Colors.cardBg, borderRadius: 14, padding: 4, marginBottom: 20, borderWidth: 1, borderColor: Colors.border },
-  tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: 10, gap: 6 },
-  tabActive: { backgroundColor: Colors.cardBgLight },
-  tabText: { fontSize: 14, fontWeight: '600' as const, color: Colors.textMuted },
-  tabTextActive: { color: Colors.accent },
+  tabBar: { flexDirection: 'row', marginHorizontal: 20, backgroundColor: Colors.white, borderRadius: 10, padding: 3, marginBottom: 20, borderWidth: 1, borderColor: Colors.border },
+  tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, borderRadius: 8, gap: 6 },
+  tabActive: { backgroundColor: Colors.primary },
+  tabText: { fontSize: 14, fontWeight: '600' as const, color: Colors.textSecondary },
+  tabTextActive: { color: Colors.white },
   infoContent: { paddingHorizontal: 20 },
   description: { fontSize: 15, color: Colors.text, lineHeight: 24, marginBottom: 24 },
-  infoGrid: { gap: 0, backgroundColor: Colors.cardBg, borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: Colors.border },
+  infoGrid: { backgroundColor: Colors.white, borderRadius: 16, overflow: 'hidden', borderWidth: 1, borderColor: Colors.border },
   infoRow: { flexDirection: 'row', alignItems: 'center', padding: 16, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  infoIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: Colors.accent + '12', justifyContent: 'center', alignItems: 'center', marginRight: 14 },
+  infoIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: Colors.frost, justifyContent: 'center', alignItems: 'center', marginRight: 14 },
   infoDetail: { flex: 1 },
   infoLabel: { fontSize: 11, color: Colors.textMuted, marginBottom: 2, fontWeight: '500' as const },
   infoValue: { fontSize: 14, color: Colors.text, fontWeight: '600' as const },
   summitContent: { paddingHorizontal: 20 },
-  summitQuestion: { alignItems: 'center', backgroundColor: Colors.cardBg, borderRadius: 20, padding: 32, borderWidth: 1, borderColor: Colors.border },
-  questionEmoji: { fontSize: 48, marginBottom: 16 },
+  summitQuestion: { alignItems: 'center', backgroundColor: Colors.white, borderRadius: 20, padding: 32, borderWidth: 1, borderColor: Colors.border },
   questionTitle: { fontSize: 20, fontWeight: '700' as const, color: Colors.text, textAlign: 'center', marginBottom: 8 },
   questionSubtitle: { fontSize: 14, color: Colors.textSecondary, textAlign: 'center', marginBottom: 28 },
   yesNoRow: { flexDirection: 'row', gap: 12, width: '100%' },
-  yesButton: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.success, paddingVertical: 14, borderRadius: 14, gap: 8 },
+  yesButton: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.primary, paddingVertical: 14, borderRadius: 10 },
   yesButtonText: { color: Colors.white, fontSize: 16, fontWeight: '700' as const },
-  noButton: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.cardBgLight, paddingVertical: 14, borderRadius: 14, gap: 8, borderWidth: 1, borderColor: Colors.border },
-  noButtonText: { color: Colors.textSecondary, fontSize: 16, fontWeight: '600' as const },
-  dateTitle: { fontSize: 18, fontWeight: '700' as const, color: Colors.text, marginTop: 16, marginBottom: 20 },
+  noButton: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.white, paddingVertical: 14, borderRadius: 10, borderWidth: 1, borderColor: Colors.border },
+  noButtonText: { color: Colors.text, fontSize: 16, fontWeight: '600' as const },
+  dateTitle: { fontSize: 18, fontWeight: '700' as const, color: Colors.text, marginBottom: 20 },
   datePickerRow: { flexDirection: 'row', gap: 10, width: '100%', marginBottom: 12 },
   datePickerCol: { flex: 1 },
-  datePickerLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const, marginBottom: 6, textAlign: 'center' },
-  dateDropdown: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.cardBgLight, borderRadius: 12, paddingVertical: 14, paddingHorizontal: 12, borderWidth: 1, borderColor: Colors.border, gap: 6 },
+  dateDropdown: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.frost, borderRadius: 10, paddingVertical: 14, paddingHorizontal: 12, borderWidth: 1, borderColor: Colors.border, gap: 6 },
   dateDropdownText: { color: Colors.text, fontSize: 15, fontWeight: '600' as const },
-  pickerList: { width: '100%', backgroundColor: Colors.cardBgLight, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, marginBottom: 12, overflow: 'hidden' },
+  pickerList: { width: '100%', backgroundColor: Colors.white, borderRadius: 12, borderWidth: 1, borderColor: Colors.border, marginBottom: 12, overflow: 'hidden' },
   pickerScroll: { maxHeight: 180 },
   pickerItem: { paddingVertical: 12, paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: Colors.border },
-  pickerItemActive: { backgroundColor: Colors.accent + '15' },
+  pickerItemActive: { backgroundColor: Colors.frost },
   pickerItemText: { color: Colors.textSecondary, fontSize: 15, textAlign: 'center' },
-  pickerItemTextActive: { color: Colors.accent, fontWeight: '700' as const },
-  selectedDatePreview: { color: Colors.accentLight, fontSize: 16, fontWeight: '600' as const, marginBottom: 20, textAlign: 'center' },
-  dateButtonRow: { flexDirection: 'row', gap: 12, width: '100%' },
-  cancelDateButton: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: Colors.cardBgLight, alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
-  cancelDateText: { color: Colors.textSecondary, fontSize: 15, fontWeight: '600' as const },
-  confirmDateButton: { flex: 1, paddingVertical: 14, borderRadius: 12, backgroundColor: Colors.accent, alignItems: 'center' },
+  pickerItemTextActive: { color: Colors.primary, fontWeight: '700' as const },
+  confirmDateButton: { width: '100%', paddingVertical: 14, borderRadius: 10, backgroundColor: Colors.primary, alignItems: 'center', marginTop: 8 },
   confirmDateText: { color: Colors.white, fontSize: 15, fontWeight: '700' as const },
-  summitedSection: { alignItems: 'center', backgroundColor: Colors.cardBg, borderRadius: 20, padding: 32, borderWidth: 1, borderColor: Colors.border },
+  cancelDateButton: { paddingVertical: 12, alignItems: 'center', marginTop: 4 },
+  cancelDateText: { color: Colors.textSecondary, fontSize: 14, fontWeight: '500' as const },
+  summitedSection: { alignItems: 'center', backgroundColor: Colors.white, borderRadius: 20, padding: 32, borderWidth: 1, borderColor: Colors.border },
   summitSuccessIcon: { marginBottom: 16 },
   summitSuccessTitle: { fontSize: 22, fontWeight: '700' as const, color: Colors.success, marginBottom: 8 },
   summitSuccessDate: { fontSize: 15, color: Colors.textSecondary, marginBottom: 20 },
-  reportPreview: { width: '100%', backgroundColor: Colors.cardBgLight, borderRadius: 12, padding: 16, marginBottom: 16 },
+  reportPreview: { width: '100%', backgroundColor: Colors.frost, borderRadius: 12, padding: 16, marginBottom: 16 },
   reportPreviewLabel: { fontSize: 12, color: Colors.textMuted, marginBottom: 6, fontWeight: '600' as const },
   reportPreviewText: { fontSize: 14, color: Colors.text, lineHeight: 20 },
   editReportButton: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 12 },
-  editReportText: { color: Colors.accent, fontSize: 15, fontWeight: '600' as const },
+  editReportText: { color: Colors.primary, fontSize: 15, fontWeight: '600' as const },
   shareReportButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 4 },
-  shareReportText: { color: Colors.accent, fontSize: 14, fontWeight: '600' as const },
+  shareReportText: { color: Colors.primary, fontSize: 14, fontWeight: '600' as const },
   removeButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 8 },
   deleteButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 4, borderTopWidth: 1, borderTopColor: Colors.border, width: '100%', justifyContent: 'center' },
   deleteInlineButton: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-end', paddingVertical: 8, paddingHorizontal: 12, marginBottom: 8 },

@@ -17,8 +17,9 @@ function RootLayoutNav() {
     <Stack
       screenOptions={{
         headerBackTitle: "Back",
-        headerStyle: { backgroundColor: Colors.primary },
+        headerStyle: { backgroundColor: Colors.white },
         headerTintColor: Colors.text,
+        headerTitleStyle: { fontWeight: '700' as const },
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -34,7 +35,7 @@ function RootLayoutNav() {
         options={{
           title: "O₂ Equivalent",
           presentation: "modal",
-          headerStyle: { backgroundColor: Colors.secondary },
+          headerStyle: { backgroundColor: Colors.white },
           headerTintColor: Colors.text,
         }}
       />
@@ -43,7 +44,7 @@ function RootLayoutNav() {
         options={{
           title: "Summit Report",
           presentation: "modal",
-          headerStyle: { backgroundColor: Colors.secondary },
+          headerStyle: { backgroundColor: Colors.white },
           headerTintColor: Colors.text,
         }}
       />

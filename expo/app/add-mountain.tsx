@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import {
   X,
@@ -106,10 +105,6 @@ export default function AddMountainScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#1A1A2E', '#1E2240']}
-        style={StyleSheet.absoluteFill}
-      />
       <KeyboardAvoidingView
         style={styles.flex}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -145,14 +140,14 @@ export default function AddMountainScreen() {
           </View>
 
           <View style={styles.heroIcon}>
-            <MountainIcon color={Colors.peach} size={40} />
+            <MountainIcon color={Colors.primary} size={40} />
           </View>
           <Text style={styles.heroLabel}>Add your own mountain or peak</Text>
 
           <View style={styles.section}>
             <View style={styles.fieldRow}>
               <View style={styles.fieldIcon}>
-                <MountainIcon color={Colors.accent} size={18} />
+                <MountainIcon color={Colors.primary} size={18} />
               </View>
               <View style={styles.fieldContent}>
                 <Text style={styles.fieldLabel}>Name *</Text>
@@ -169,7 +164,7 @@ export default function AddMountainScreen() {
 
             <View style={styles.fieldRow}>
               <View style={styles.fieldIcon}>
-                <TrendingUp color={Colors.accent} size={18} />
+                <TrendingUp color={Colors.primary} size={18} />
               </View>
               <View style={styles.fieldContent}>
                 <Text style={styles.fieldLabel}>Elevation (meters) *</Text>
@@ -187,7 +182,7 @@ export default function AddMountainScreen() {
 
             <View style={styles.fieldRow}>
               <View style={styles.fieldIcon}>
-                <Globe color={Colors.accent} size={18} />
+                <Globe color={Colors.primary} size={18} />
               </View>
               <View style={styles.fieldContent}>
                 <Text style={styles.fieldLabel}>Country</Text>
@@ -204,7 +199,7 @@ export default function AddMountainScreen() {
 
             <View style={styles.fieldRow}>
               <View style={styles.fieldIcon}>
-                <Layers color={Colors.accent} size={18} />
+                <Layers color={Colors.primary} size={18} />
               </View>
               <View style={styles.fieldContent}>
                 <Text style={styles.fieldLabel}>Mountain Range</Text>
@@ -222,7 +217,7 @@ export default function AddMountainScreen() {
             <View style={styles.coordRow}>
               <View style={styles.coordField}>
                 <View style={styles.fieldIcon}>
-                  <MapPin color={Colors.accent} size={18} />
+                  <MapPin color={Colors.primary} size={18} />
                 </View>
                 <View style={styles.fieldContent}>
                   <Text style={styles.fieldLabel}>Latitude</Text>
@@ -262,14 +257,14 @@ export default function AddMountainScreen() {
                 const diffColor =
                   opt === 'Extreme' ? Colors.danger :
                   opt === 'Hard' ? Colors.warning :
-                  opt === 'Moderate' ? Colors.accent :
+                  opt === 'Moderate' ? Colors.primary :
                   Colors.success;
                 return (
                   <TouchableOpacity
                     key={opt}
                     style={[
                       styles.difficultyChip,
-                      isActive && { backgroundColor: diffColor + '18', borderColor: diffColor },
+                      isActive && { backgroundColor: diffColor + '15', borderColor: diffColor },
                     ]}
                     onPress={() => setDifficulty(opt)}
                     activeOpacity={0.7}
@@ -312,7 +307,7 @@ export default function AddMountainScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.snow,
   },
   flex: {
     flex: 1,
@@ -329,8 +324,8 @@ const styles = StyleSheet.create({
   closeButton: {
     width: 42,
     height: 42,
-    borderRadius: 14,
-    backgroundColor: Colors.cardBg,
+    borderRadius: 21,
+    backgroundColor: Colors.white,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
@@ -344,10 +339,10 @@ const styles = StyleSheet.create({
   saveButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     paddingHorizontal: 16,
     paddingVertical: 10,
-    borderRadius: 14,
+    borderRadius: 10,
     gap: 6,
   },
   saveButtonDisabled: {
@@ -362,7 +357,7 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 22,
-    backgroundColor: Colors.peach + '15',
+    backgroundColor: Colors.frost,
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
@@ -388,8 +383,8 @@ const styles = StyleSheet.create({
   fieldRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: Colors.cardBg,
-    borderRadius: 14,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
     padding: 14,
     marginBottom: 10,
     borderWidth: 1,
@@ -399,7 +394,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: Colors.accent + '12',
+    backgroundColor: Colors.frost,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -422,8 +417,8 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.border,
   },
   textArea: {
-    backgroundColor: Colors.cardBg,
-    borderRadius: 14,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: Colors.border,
     borderBottomWidth: 1,
@@ -438,8 +433,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: Colors.cardBg,
-    borderRadius: 14,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
     padding: 14,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -452,8 +447,8 @@ const styles = StyleSheet.create({
   difficultyChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.cardBg,
-    borderRadius: 12,
+    backgroundColor: Colors.white,
+    borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderWidth: 1,

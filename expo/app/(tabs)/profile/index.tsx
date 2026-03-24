@@ -10,12 +10,9 @@ import {
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
-  Trophy,
-  Mountain,
   TrendingUp,
   Flag,
   ChevronRight,
@@ -238,15 +235,15 @@ export default function ProfileScreen() {
       .join('\n');
 
     const message = [
-      `🏔️ My Summit Tracker Stats`,
+      `My Summit Tracker Stats`,
       ``,
-      `⛰️ Summits: ${summitCount}`,
-      `📈 Elevation Gained: ${totalElevation.toLocaleString()}m / ${totalElevationFt.toLocaleString()}ft`,
-      `🌍 Countries: ${countriesVisited}`,
-      `🗻 Ranges: ${rangesClimbed}`,
-      highestSummit ? `🏆 Highest: ${highestSummit.name} (${highestSummit.elevation.toLocaleString()}m)` : '',
+      `Summits: ${summitCount}`,
+      `Elevation Gained: ${totalElevation.toLocaleString()}m / ${totalElevationFt.toLocaleString()}ft`,
+      `Countries: ${countriesVisited}`,
+      `Ranges: ${rangesClimbed}`,
+      highestSummit ? `Highest: ${highestSummit.name} (${highestSummit.elevation.toLocaleString()}m)` : '',
       ``,
-      topCategories ? `📊 Progress:\n${topCategories}` : '',
+      topCategories ? `Progress:\n${topCategories}` : '',
       ``,
       `${overallCompletion}% of all peaks completed!`,
     ].filter(Boolean).join('\n');
@@ -268,13 +265,13 @@ export default function ProfileScreen() {
     if (!mountain || !record) return;
 
     const message = [
-      `🏔️ Summit Achievement!`,
+      `Summit Achievement!`,
       ``,
       `${mountain.iconEmoji} I summited ${mountain.name}!`,
-      `📍 ${mountain.country} · ${mountain.range}`,
-      `📏 ${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
-      `📅 ${record.date}`,
-      record.report ? `\n📝 "${record.report}"` : '',
+      `${mountain.country} · ${mountain.range}`,
+      `${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
+      `${record.date}`,
+      record.report ? `\n"${record.report}"` : '',
     ].filter(Boolean).join('\n');
 
     try {
@@ -286,17 +283,13 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#1A1A2E', '#1E2240', '#1A1A2E']}
-        style={StyleSheet.absoluteFill}
-      />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 16 }]}
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerRow}>
           <View>
-            <Text style={styles.title}>Dashboard</Text>
+            <Text style={styles.title}>My Summits</Text>
             <Text style={styles.subtitle}>Your mountaineering journey</Text>
           </View>
           {summitCount > 0 && (
@@ -307,7 +300,7 @@ export default function ProfileScreen() {
                 activeOpacity={0.7}
                 testID="export-pdf-button"
               >
-                <FileDown color={Colors.white} size={18} />
+                <FileDown color={Colors.primary} size={18} />
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.shareStatsButton}
@@ -321,10 +314,7 @@ export default function ProfileScreen() {
           )}
         </View>
 
-        <LinearGradient
-          colors={[Colors.accent + '15', Colors.warmGlow + '10', 'transparent']}
-          style={styles.completionCard}
-        >
+        <View style={styles.completionCard}>
           <View style={styles.completionTop}>
             <View>
               <Text style={styles.completionLabel}>OVERALL PROGRESS</Text>
@@ -348,18 +338,18 @@ export default function ProfileScreen() {
               ]}
             />
           </View>
-        </LinearGradient>
+        </View>
 
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.accent + '18' }]}>
-              <Flag color={Colors.accent} size={20} />
+            <View style={[styles.statIcon, { backgroundColor: Colors.primary + '15' }]}>
+              <Flag color={Colors.primary} size={20} />
             </View>
             <Text style={styles.statNumber}>{summitCount}</Text>
             <Text style={styles.statLabel}>Summits</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.success + '18' }]}>
+            <View style={[styles.statIcon, { backgroundColor: Colors.success + '15' }]}>
               <TrendingUp color={Colors.success} size={20} />
             </View>
             <Text style={styles.statNumber}>
@@ -368,14 +358,14 @@ export default function ProfileScreen() {
             <Text style={styles.statLabel}>Meters</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.ice + '18' }]}>
-              <Globe color={Colors.ice} size={20} />
+            <View style={[styles.statIcon, { backgroundColor: '#4A7FB5' + '15' }]}>
+              <Globe color={'#4A7FB5'} size={20} />
             </View>
             <Text style={styles.statNumber}>{countriesVisited}</Text>
             <Text style={styles.statLabel}>Countries</Text>
           </View>
           <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.gold + '18' }]}>
+            <View style={[styles.statIcon, { backgroundColor: Colors.gold + '15' }]}>
               <Layers color={Colors.gold} size={20} />
             </View>
             <Text style={styles.statNumber}>{rangesClimbed}</Text>
@@ -389,12 +379,6 @@ export default function ProfileScreen() {
             onPress={() => router.push(`/mountain/${highestSummit.id}` as any)}
             activeOpacity={0.8}
           >
-            <LinearGradient
-              colors={[Colors.gold + '12', Colors.warmGlow + '08', 'transparent']}
-              style={StyleSheet.absoluteFill}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-            />
             <View style={styles.highestLeft}>
               <Award color={Colors.gold} size={24} />
               <View style={styles.highestInfo}>
@@ -420,7 +404,7 @@ export default function ProfileScreen() {
                 const diffColor =
                   diff === 'Extreme' ? Colors.danger :
                   diff === 'Hard' ? Colors.warning :
-                  diff === 'Moderate' ? Colors.accent :
+                  diff === 'Moderate' ? Colors.primary :
                   Colors.success;
                 return (
                   <View key={diff} style={[styles.difficultyChip, { borderColor: diffColor + '30' }]}>
@@ -436,12 +420,12 @@ export default function ProfileScreen() {
 
         <View style={styles.section}>
           <View style={styles.sectionHeaderRow}>
-            <Target color={Colors.accent} size={18} />
+            <Target color={Colors.primary} size={18} />
             <Text style={styles.sectionTitle}>Category Progress</Text>
           </View>
           {categoryProgress.map((cat) => {
             const percentage = cat.total > 0 ? (cat.done / cat.total) * 100 : 0;
-            const catColor = Colors.categoryColors[cat.category] ?? Colors.accent;
+            const catColor = Colors.categoryColors[cat.category] ?? Colors.primary;
             return (
               <View key={cat.category} style={styles.progressRow}>
                 <View style={styles.progressHeader}>
@@ -501,7 +485,7 @@ export default function ProfileScreen() {
         {summitCount === 0 && (
           <View style={styles.emptyState}>
             <View style={styles.emptyIconContainer}>
-              <Compass color={Colors.accent} size={48} />
+              <Compass color={Colors.primary} size={48} />
             </View>
             <Text style={styles.emptyTitle}>Your journey begins here</Text>
             <Text style={styles.emptyText}>
@@ -525,7 +509,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.snow,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -538,10 +522,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 30,
-    fontWeight: '900' as const,
+    fontSize: 26,
+    fontWeight: '700' as const,
     color: Colors.text,
-    letterSpacing: -0.8,
+    letterSpacing: -0.5,
     marginBottom: 4,
   },
   subtitle: {
@@ -553,30 +537,30 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   exportButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: Colors.secondary,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.white,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: Colors.border,
   },
   shareStatsButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
-    backgroundColor: Colors.accent,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
   completionCard: {
-    borderRadius: 20,
+    borderRadius: 16,
     padding: 20,
     marginBottom: 16,
+    backgroundColor: Colors.white,
     borderWidth: 1,
-    borderColor: Colors.accent + '20',
-    overflow: 'hidden',
+    borderColor: Colors.border,
   },
   completionTop: {
     flexDirection: 'row',
@@ -586,14 +570,14 @@ const styles = StyleSheet.create({
   },
   completionLabel: {
     fontSize: 10,
-    color: Colors.accent,
+    color: Colors.primary,
     fontWeight: '700' as const,
     letterSpacing: 1.2,
     marginBottom: 4,
   },
   completionPercentage: {
     fontSize: 38,
-    fontWeight: '900' as const,
+    fontWeight: '800' as const,
     color: Colors.text,
     letterSpacing: -1,
   },
@@ -602,15 +586,15 @@ const styles = StyleSheet.create({
     height: 66,
     borderRadius: 33,
     borderWidth: 2,
-    borderColor: Colors.accent + '35',
+    borderColor: Colors.primary + '35',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: Colors.accent + '08',
+    backgroundColor: Colors.frost,
   },
   completionFraction: {
     fontSize: 14,
-    fontWeight: '800' as const,
-    color: Colors.accentLight,
+    fontWeight: '700' as const,
+    color: Colors.primary,
   },
   completionPeaks: {
     fontSize: 9,
@@ -619,14 +603,14 @@ const styles = StyleSheet.create({
   },
   completionBar: {
     height: 8,
-    backgroundColor: Colors.cardBgLight,
+    backgroundColor: Colors.frost,
     borderRadius: 4,
     overflow: 'hidden',
   },
   completionFill: {
     height: '100%',
     borderRadius: 4,
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
   },
   statsGrid: {
     flexDirection: 'row',
@@ -635,8 +619,8 @@ const styles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: Colors.cardBg,
-    borderRadius: 16,
+    backgroundColor: Colors.white,
+    borderRadius: 14,
     padding: 14,
     alignItems: 'center',
     borderWidth: 1,
@@ -652,7 +636,7 @@ const styles = StyleSheet.create({
   },
   statNumber: {
     fontSize: 20,
-    fontWeight: '900' as const,
+    fontWeight: '800' as const,
     color: Colors.text,
     marginBottom: 2,
   },
@@ -666,13 +650,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: Colors.cardBg,
-    borderRadius: 16,
+    backgroundColor: Colors.white,
+    borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: Colors.gold + '25',
+    borderColor: Colors.gold + '30',
     marginBottom: 20,
-    overflow: 'hidden',
   },
   highestLeft: {
     flexDirection: 'row',
@@ -722,8 +705,8 @@ const styles = StyleSheet.create({
   difficultyChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.cardBg,
-    borderRadius: 12,
+    backgroundColor: Colors.white,
+    borderRadius: 10,
     paddingVertical: 10,
     paddingHorizontal: 14,
     borderWidth: 1,
@@ -763,7 +746,7 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 7,
-    backgroundColor: Colors.cardBg,
+    backgroundColor: Colors.frost,
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -775,8 +758,8 @@ const styles = StyleSheet.create({
   recentItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.cardBg,
-    borderRadius: 14,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
     marginBottom: 8,
     borderWidth: 1,
     borderColor: Colors.border,
@@ -817,14 +800,14 @@ const styles = StyleSheet.create({
     width: 88,
     height: 88,
     borderRadius: 44,
-    backgroundColor: Colors.accent + '12',
+    backgroundColor: Colors.frost,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
   },
   emptyTitle: {
     fontSize: 22,
-    fontWeight: '800' as const,
+    fontWeight: '700' as const,
     color: Colors.text,
     marginBottom: 10,
   },
@@ -838,10 +821,10 @@ const styles = StyleSheet.create({
   exploreButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.accent,
+    backgroundColor: Colors.primary,
     paddingHorizontal: 28,
     paddingVertical: 14,
-    borderRadius: 14,
+    borderRadius: 10,
     gap: 6,
   },
   exploreButtonText: {

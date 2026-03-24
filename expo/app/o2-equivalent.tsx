@@ -6,7 +6,6 @@ import {
   ScrollView,
 } from 'react-native';
 import { Stack } from 'expo-router';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Wind } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 
@@ -20,11 +19,11 @@ interface AltitudeRow {
 }
 
 const altitudeData: AltitudeRow[] = [
-  { altitude: 0, altitudeFt: 0, o2Percent: 100, effectiveO2: 20.9, zone: 'Sea Level', color: '#5CB870' },
-  { altitude: 1000, altitudeFt: 3281, o2Percent: 88, effectiveO2: 18.4, zone: 'Low', color: '#5CB870' },
-  { altitude: 2000, altitudeFt: 6562, o2Percent: 78, effectiveO2: 16.3, zone: 'Moderate', color: '#8BC34A' },
-  { altitude: 2500, altitudeFt: 8202, o2Percent: 74, effectiveO2: 15.5, zone: 'Moderate', color: '#CDDC39' },
-  { altitude: 3000, altitudeFt: 9843, o2Percent: 70, effectiveO2: 14.6, zone: 'High', color: '#FFD166' },
+  { altitude: 0, altitudeFt: 0, o2Percent: 100, effectiveO2: 20.9, zone: 'Sea Level', color: '#3A9E5C' },
+  { altitude: 1000, altitudeFt: 3281, o2Percent: 88, effectiveO2: 18.4, zone: 'Low', color: '#3A9E5C' },
+  { altitude: 2000, altitudeFt: 6562, o2Percent: 78, effectiveO2: 16.3, zone: 'Moderate', color: '#6BAA4A' },
+  { altitude: 2500, altitudeFt: 8202, o2Percent: 74, effectiveO2: 15.5, zone: 'Moderate', color: '#9BB63A' },
+  { altitude: 3000, altitudeFt: 9843, o2Percent: 70, effectiveO2: 14.6, zone: 'High', color: '#D4A843' },
   { altitude: 3500, altitudeFt: 11483, o2Percent: 66, effectiveO2: 13.8, zone: 'High', color: '#E8A838' },
   { altitude: 4000, altitudeFt: 13123, o2Percent: 62, effectiveO2: 13.0, zone: 'Very High', color: '#E8915A' },
   { altitude: 4500, altitudeFt: 14764, o2Percent: 58, effectiveO2: 12.1, zone: 'Very High', color: '#E8915A' },
@@ -32,11 +31,11 @@ const altitudeData: AltitudeRow[] = [
   { altitude: 5500, altitudeFt: 18045, o2Percent: 50, effectiveO2: 10.5, zone: 'Extreme', color: '#D94F4F' },
   { altitude: 6000, altitudeFt: 19685, o2Percent: 47, effectiveO2: 9.8, zone: 'Extreme', color: '#D94F4F' },
   { altitude: 6500, altitudeFt: 21325, o2Percent: 44, effectiveO2: 9.2, zone: 'Extreme', color: '#C2185B' },
-  { altitude: 7000, altitudeFt: 22966, o2Percent: 41, effectiveO2: 8.6, zone: 'Death Zone', color: '#B07CD8' },
-  { altitude: 7500, altitudeFt: 24606, o2Percent: 38, effectiveO2: 7.9, zone: 'Death Zone', color: '#B07CD8' },
-  { altitude: 8000, altitudeFt: 26247, o2Percent: 36, effectiveO2: 7.5, zone: 'Death Zone', color: '#7E57C2' },
-  { altitude: 8500, altitudeFt: 27887, o2Percent: 33, effectiveO2: 6.9, zone: 'Death Zone', color: '#5E35B1' },
-  { altitude: 8849, altitudeFt: 29032, o2Percent: 33, effectiveO2: 6.9, zone: 'Everest', color: '#4527A0' },
+  { altitude: 7000, altitudeFt: 22966, o2Percent: 41, effectiveO2: 8.6, zone: 'Death Zone', color: '#7B68AE' },
+  { altitude: 7500, altitudeFt: 24606, o2Percent: 38, effectiveO2: 7.9, zone: 'Death Zone', color: '#7B68AE' },
+  { altitude: 8000, altitudeFt: 26247, o2Percent: 36, effectiveO2: 7.5, zone: 'Death Zone', color: '#6652A0' },
+  { altitude: 8500, altitudeFt: 27887, o2Percent: 33, effectiveO2: 6.9, zone: 'Death Zone', color: '#5E4095' },
+  { altitude: 8849, altitudeFt: 29032, o2Percent: 33, effectiveO2: 6.9, zone: 'Everest', color: '#4A2D82' },
 ];
 
 export default function O2EquivalentScreen() {
@@ -45,8 +44,9 @@ export default function O2EquivalentScreen() {
       <Stack.Screen
         options={{
           title: 'O₂ Equivalent',
-          headerStyle: { backgroundColor: Colors.secondary },
+          headerStyle: { backgroundColor: Colors.white },
           headerTintColor: Colors.text,
+          headerTitleStyle: { fontWeight: '700' as const },
         }}
       />
       <ScrollView
@@ -56,9 +56,9 @@ export default function O2EquivalentScreen() {
       >
         <View style={styles.infoCard}>
           <View style={styles.infoIconWrap}>
-            <Wind color={Colors.accentLight} size={28} />
+            <Wind color={Colors.primary} size={28} />
           </View>
-          <Text style={styles.infoTitle}>Oxygen at Altitude</Text>
+          <Text style={styles.infoTitle}>Oxygen Equivalent at Altitudes</Text>
           <Text style={styles.infoText}>
             As altitude increases, atmospheric pressure decreases, reducing the amount of oxygen available. At 8,000m, you breathe only ~33% of the oxygen available at sea level.
           </Text>
@@ -66,7 +66,7 @@ export default function O2EquivalentScreen() {
 
         <View style={styles.legendRow}>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#5CB870' }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#3A9E5C' }]} />
             <Text style={styles.legendText}>Low</Text>
           </View>
           <View style={styles.legendItem}>
@@ -78,7 +78,7 @@ export default function O2EquivalentScreen() {
             <Text style={styles.legendText}>Extreme</Text>
           </View>
           <View style={styles.legendItem}>
-            <View style={[styles.legendDot, { backgroundColor: '#B07CD8' }]} />
+            <View style={[styles.legendDot, { backgroundColor: '#7B68AE' }]} />
             <Text style={styles.legendText}>Death Zone</Text>
           </View>
         </View>
@@ -115,7 +115,7 @@ export default function O2EquivalentScreen() {
               </View>
               <Text style={[styles.effText, styles.colEff]}>{row.effectiveO2}%</Text>
               <View style={styles.colZone}>
-                <View style={[styles.zoneBadge, { backgroundColor: row.color + '18', borderColor: row.color + '35' }]}>
+                <View style={[styles.zoneBadge, { backgroundColor: row.color + '15', borderColor: row.color + '35' }]}>
                   <Text style={[styles.zoneText, { color: row.color }]}>{row.zone}</Text>
                 </View>
               </View>
@@ -141,7 +141,7 @@ export default function O2EquivalentScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.snow,
   },
   scrollView: {
     flex: 1,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   infoCard: {
-    backgroundColor: Colors.cardBg,
+    backgroundColor: Colors.white,
     borderRadius: 16,
     padding: 20,
     alignItems: 'center',
@@ -163,13 +163,13 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: Colors.accent + '12',
+    backgroundColor: Colors.frost,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 4,
   },
   infoTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '700' as const,
     color: Colors.text,
     marginTop: 10,
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
   },
   tableContainer: {
-    backgroundColor: Colors.cardBg,
+    backgroundColor: Colors.white,
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 14,
     paddingVertical: 12,
-    backgroundColor: Colors.cardBgLight,
+    backgroundColor: Colors.frost,
     borderBottomWidth: 1,
     borderBottomColor: Colors.border,
   },
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   tableRowAlt: {
-    backgroundColor: Colors.cardBgLight + '30',
+    backgroundColor: Colors.frost + '50',
   },
   colAlt: {
     width: 80,
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   altPrimary: {
     fontSize: 13,
     fontWeight: '700' as const,
-    color: Colors.accentLight,
+    color: Colors.text,
   },
   altSecondary: {
     fontSize: 10,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   o2BarContainer: {
     flex: 1,
     height: 6,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.frost,
     borderRadius: 3,
     overflow: 'hidden',
   },
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
     fontWeight: '700' as const,
   },
   noteCard: {
-    backgroundColor: Colors.cardBg,
+    backgroundColor: Colors.white,
     borderRadius: 16,
     padding: 20,
     borderWidth: 1,

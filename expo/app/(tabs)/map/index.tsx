@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { MapPin } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useSummits } from '@/contexts/SummitContext';
@@ -40,13 +39,10 @@ export default function MapScreen() {
   if (Platform.OS === 'web') {
     return (
       <View style={styles.container}>
-        <LinearGradient
-          colors={['#1A1A2E', '#1E2240']}
-          style={[styles.fallbackContainer, { paddingTop: insets.top }]}
-        >
+        <View style={[styles.fallbackContainer, { paddingTop: insets.top }]}>
           <View style={styles.fallbackContent}>
             <View style={styles.fallbackIconWrap}>
-              <MapPin color={Colors.accent} size={40} />
+              <MapPin color={Colors.primary} size={40} />
             </View>
             <Text style={styles.fallbackTitle}>Summit Map</Text>
             <Text style={styles.fallbackSubtitle}>
@@ -74,7 +70,7 @@ export default function MapScreen() {
               </View>
             )}
           </View>
-        </LinearGradient>
+        </View>
       </View>
     );
   }
@@ -132,7 +128,7 @@ export default function MapScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: Colors.snow,
   },
   mapHeader: {
     position: 'absolute',
@@ -149,21 +145,21 @@ const styles = StyleSheet.create({
   },
   mapTitle: {
     fontSize: 22,
-    fontWeight: '800' as const,
+    fontWeight: '700' as const,
     color: Colors.text,
   },
   mapBadge: {
-    backgroundColor: Colors.accent + '20',
+    backgroundColor: Colors.frost,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: Colors.accent + '35',
+    borderColor: Colors.border,
   },
   mapBadgeText: {
-    color: Colors.accentLight,
+    color: Colors.primary,
     fontSize: 12,
-    fontWeight: '700' as const,
+    fontWeight: '600' as const,
   },
   map: {
     flex: 1,
@@ -178,6 +174,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   legendItem: {
     flexDirection: 'row',
@@ -196,6 +194,7 @@ const styles = StyleSheet.create({
   },
   fallbackContainer: {
     flex: 1,
+    backgroundColor: Colors.snow,
   },
   fallbackContent: {
     flex: 1,
@@ -207,13 +206,13 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: Colors.accent + '12',
+    backgroundColor: Colors.frost,
     justifyContent: 'center',
     alignItems: 'center',
   },
   fallbackTitle: {
     fontSize: 24,
-    fontWeight: '800' as const,
+    fontWeight: '700' as const,
     color: Colors.text,
     marginTop: 16,
     marginBottom: 8,
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   statsCard: {
-    backgroundColor: Colors.cardBg,
+    backgroundColor: Colors.white,
     borderRadius: 16,
     padding: 24,
     alignItems: 'center',
@@ -237,8 +236,8 @@ const styles = StyleSheet.create({
   },
   statsNumber: {
     fontSize: 48,
-    fontWeight: '900' as const,
-    color: Colors.accentLight,
+    fontWeight: '800' as const,
+    color: Colors.primary,
   },
   statsLabel: {
     fontSize: 14,
@@ -247,7 +246,7 @@ const styles = StyleSheet.create({
   },
   summitList: {
     width: '100%',
-    backgroundColor: Colors.cardBg,
+    backgroundColor: Colors.white,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
@@ -281,7 +280,7 @@ const styles = StyleSheet.create({
   },
   summitElev: {
     fontSize: 13,
-    fontWeight: '700' as const,
-    color: Colors.accentLight,
+    fontWeight: '600' as const,
+    color: Colors.primary,
   },
 });
