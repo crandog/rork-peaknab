@@ -116,6 +116,8 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'rakaposhi': 'https://r2-pub.rork.com/generated-images/9f685480-5888-406f-a7da-85a1eb9d0d00.png',
   'khan-tengri': 'https://r2-pub.rork.com/generated-images/48572674-6a1a-428f-a95b-8c5f7bb19abc.png',
   'pobeda-peak': 'https://r2-pub.rork.com/generated-images/a373ff34-5731-4b43-b31e-1ac010bf289f.png',
+  'popocatepetl': 'https://r2-pub.rork.com/generated-images/d5aa6292-a5f6-49ac-bd42-16dbdc0cb1f8.png',
+  'mt-st-helens': 'https://r2-pub.rork.com/generated-images/c35527d0-5466-4611-b213-db4ab38b32d0.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/43aa48aa-e898-4ce0-a22d-7bbd53a3411e.png';
