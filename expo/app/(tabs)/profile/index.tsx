@@ -154,7 +154,24 @@ export default function ProfileScreen() {
 
     try {
       if (Platform.OS === 'web') {
-        await Print.printAsync({ html });
+        const printWindow = window.open('', '_blank');
+        if (printWindow) {
+          printWindow.document.write(html);
+          printWindow.document.close();
+          printWindow.focus();
+          setTimeout(() => {
+            printWindow.print();
+          }, 300);
+        } else {
+          console.log('Popup blocked — falling back to blob download');
+          const blob = new Blob([html], { type: 'text/html' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'summit-log.html';
+          a.click();
+          URL.revokeObjectURL(url);
+        }
       } else {
         const { uri } = await Print.printToFileAsync({ html });
         console.log('PDF saved to:', uri);
