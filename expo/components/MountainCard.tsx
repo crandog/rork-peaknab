@@ -1,6 +1,7 @@
 import React, { memo, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { CheckCircle, ChevronRight } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
 import { Mountain, categoryLabels } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
@@ -53,6 +54,12 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
         activeOpacity={0.9}
         testID={`mountain-card-${mountain.id}`}
       >
+        <LinearGradient
+          colors={['#0D7BA8', '#127EAD', '#169ED0']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.cardGradient}
+        >
         <View
           style={[
             styles.elevationStrip,
@@ -101,6 +108,7 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
             <ChevronRight color={Colors.textMuted} size={14} style={styles.chevron} />
           </View>
         </View>
+        </LinearGradient>
       </TouchableOpacity>
     </Animated.View>
   );
@@ -113,14 +121,16 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   card: {
-    backgroundColor: Colors.cardBg,
     borderRadius: 16,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.15)',
+  },
+  cardGradient: {
+    borderRadius: 15,
   },
   cardSummited: {
-    borderColor: Colors.success + '40',
+    borderColor: Colors.success + '60',
   },
   elevationStrip: {
     height: 3,

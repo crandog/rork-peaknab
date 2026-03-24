@@ -210,7 +210,7 @@ export default function MountainsScreen() {
       <View style={styles.listContainer}>
         <View style={styles.listHeaderRow}>
           <Text style={styles.resultCount}>
-            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''} to conquer
+            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
           </Text>
           <TouchableOpacity
             style={styles.unitToggleBtn}
@@ -239,7 +239,7 @@ export default function MountainsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary,
+    backgroundColor: '#169ED0',
   },
   header: {
     paddingBottom: 4,
@@ -392,6 +392,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
+    backgroundColor: '#169ED0',
   },
   listHeaderRow: {
     flexDirection: 'row' as const,
