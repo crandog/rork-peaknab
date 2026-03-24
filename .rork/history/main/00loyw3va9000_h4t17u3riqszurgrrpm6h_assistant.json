@@ -1,0 +1,19 @@
+{
+  "id": "h4t17u3riqszurgrrpm6h",
+  "role": "assistant",
+  "snapshotId": "h4t17u3riqszurgrrpm6h",
+  "responseMessageContents": [
+    {
+      "id": "dfsnzxmgiiuetv73kzujq",
+      "text": "Rork Max gives you access to enhanced features within this same interface — you're already using it! There's nothing extra to set up. Just keep building your app here as you have been, and you'll benefit from the Max tier capabilities automatically.\n\nIs there anything you'd like to improve or add to your mountain app?",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "0.9"
+      },
+      "type": "meta"
+    }
+  ]
+}
