@@ -181,13 +181,8 @@ export default function MountainDetailScreen() {
           <Text style={styles.heroLocation}>{mountain.country}</Text>
           <View style={styles.heroStats}>
             <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{mountain.elevation.toLocaleString()}m</Text>
+              <Text style={styles.heroStatValue}>{mountain.elevation.toLocaleString()}m / {mountain.elevationFt.toLocaleString()}ft</Text>
               <Text style={styles.heroStatLabel}>Elevation</Text>
-            </View>
-            <View style={styles.heroDivider} />
-            <View style={styles.heroStat}>
-              <Text style={styles.heroStatValue}>{mountain.elevationFt.toLocaleString()}ft</Text>
-              <Text style={styles.heroStatLabel}>Feet</Text>
             </View>
             <View style={styles.heroDivider} />
             <View style={styles.heroStat}>
@@ -227,15 +222,8 @@ export default function MountainDetailScreen() {
               <View style={styles.infoRow}>
                 <View style={styles.infoIcon}><Ruler color={Colors.accent} size={18} /></View>
                 <View style={styles.infoDetail}>
-                  <Text style={styles.infoLabel}>Elevation (meters)</Text>
-                  <Text style={styles.infoValue}>{mountain.elevation.toLocaleString()} m</Text>
-                </View>
-              </View>
-              <View style={styles.infoRow}>
-                <View style={styles.infoIcon}><Ruler color={Colors.accent} size={18} /></View>
-                <View style={styles.infoDetail}>
-                  <Text style={styles.infoLabel}>Elevation (feet)</Text>
-                  <Text style={styles.infoValue}>{mountain.elevationFt.toLocaleString()} ft</Text>
+                  <Text style={styles.infoLabel}>Elevation</Text>
+                  <Text style={styles.infoValue}>{mountain.elevation.toLocaleString()} m / {mountain.elevationFt.toLocaleString()} ft</Text>
                 </View>
               </View>
               <View style={styles.infoRow}>
