@@ -16,7 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import {
   X,
-  Mountain,
+  Mountain as MountainIcon,
   MapPin,
   TrendingUp,
   Globe,
@@ -24,7 +24,7 @@ import {
   Check,
 } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { Mountain, MountainCategory } from '@/constants/mountains';
+import { Mountain as MountainType, MountainCategory } from '@/constants/mountains';
 import { useCustomMountains } from '@/contexts/CustomMountainsContext';
 
 const DIFFICULTY_OPTIONS = ['Easy', 'Moderate', 'Hard', 'Extreme'] as const;
@@ -75,7 +75,7 @@ export default function AddMountainScreen() {
 
     const id = `custom_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-    const newMountain: Mountain = {
+    const newMountain: MountainType = {
       id,
       name: name.trim(),
       elevation: elevM,
@@ -148,14 +148,14 @@ export default function AddMountainScreen() {
           </View>
 
           <View style={styles.heroIcon}>
-            <Mountain color={Colors.categoryColors.custom} size={40} />
+            <MountainIcon color={Colors.categoryColors.custom} size={40} />
           </View>
           <Text style={styles.heroLabel}>Add your own mountain or peak</Text>
 
           <View style={styles.section}>
             <View style={styles.fieldRow}>
               <View style={styles.fieldIcon}>
-                <Mountain color={Colors.accent} size={18} />
+                <MountainIcon color={Colors.accent} size={18} />
               </View>
               <View style={styles.fieldContent}>
                 <Text style={styles.fieldLabel}>Name *</Text>
