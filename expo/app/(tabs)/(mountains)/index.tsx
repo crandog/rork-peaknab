@@ -126,14 +126,14 @@ export default function MountainsScreen() {
               activeOpacity={0.7}
               testID="add-mountain-button"
             >
-              <Plus color={Colors.white} size={18} />
+              <Plus color="#1A3350" size={18} />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.o2Button}
               onPress={handleO2Press}
               activeOpacity={0.7}
             >
-              <Wind color={Colors.white} size={16} />
+              <Wind color="#1A3350" size={16} />
               <Text style={styles.o2Text}>O₂</Text>
             </TouchableOpacity>
           </View>
@@ -250,7 +250,7 @@ export default function MountainsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.snow,
+    backgroundColor: '#FFFFFF',
   },
 
   backgroundImage: {
@@ -269,19 +269,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(180, 205, 230, 0.25)',
   },
   bottomBackground: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '60%',
+    display: 'none',
   },
   bottomOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '60%',
-    backgroundColor: 'rgba(235, 242, 250, 0.55)',
+    display: 'none',
   },
   header: {
     paddingBottom: 4,
@@ -315,7 +306,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(255,255,255,0.35)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
@@ -324,7 +315,7 @@ const styles = StyleSheet.create({
   o2Button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.3)',
+    backgroundColor: 'rgba(255,255,255,0.35)',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 18,
@@ -333,9 +324,9 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.5)',
   },
   o2Text: {
-    color: Colors.white,
+    color: '#1A3350',
     fontSize: 13,
-    fontWeight: '600' as const,
+    fontWeight: '700' as const,
   },
   searchRow: {
     paddingHorizontal: 20,
