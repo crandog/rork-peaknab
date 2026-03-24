@@ -103,6 +103,13 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'iliniza-norte': 'https://r2-pub.rork.com/generated-images/76cce3e6-b62d-4d2a-a046-732def7c6453.png',
   'cayambe': 'https://r2-pub.rork.com/generated-images/d9d3482c-082e-4278-8271-ebe65ebf73e5.png',
   'lenin-peak': 'https://r2-pub.rork.com/generated-images/d9fa836d-79f8-4a1b-8abb-90559eadefd8.png',
+  'meru-sharks-fin': 'https://r2-pub.rork.com/generated-images/006dc245-dd27-4327-b4d5-7d8d0e839001.png',
+  'shivling': 'https://r2-pub.rork.com/generated-images/cc5837b5-307f-48a3-9cd9-82ed71af59f2.png',
+  'aiguille-du-dru': 'https://r2-pub.rork.com/generated-images/18f6fed4-b080-479f-b212-d98dfd92a592.png',
+  'piz-badile': 'https://r2-pub.rork.com/generated-images/85d299d0-7168-48c5-a915-cfd203887eba.png',
+  'mt-hunter': 'https://r2-pub.rork.com/generated-images/5a5655e3-978b-403b-b59b-6015d1795131.png',
+  'mt-waddington': 'https://r2-pub.rork.com/generated-images/13afd72a-4802-4ee2-af85-86837082f6a6.png',
+  'grand-teton': 'https://r2-pub.rork.com/generated-images/db994a86-2444-40be-9a6e-3ac6b7ffc5e7.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/43aa48aa-e898-4ce0-a22d-7bbd53a3411e.png';
