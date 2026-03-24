@@ -9,6 +9,7 @@ import {
   Animated,
   Platform,
   FlatList,
+  Share,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -27,7 +28,7 @@ import {
   XCircle,
   ChevronRight,
   ChevronDown,
-  Ruler,
+  Share2,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
@@ -120,6 +121,27 @@ export default function MountainDetailScreen() {
     });
   }, [id, mountain, formattedDate, addSummit, router]);
 
+  const handleShareSummit = useCallback(async () => {
+    if (!mountain) return;
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    const lines = [
+      `🏔️ Summit Achievement!`,
+      ``,
+      `${mountain.iconEmoji} I summited ${mountain.name}!`,
+      `📍 ${mountain.country} · ${mountain.range}`,
+      `📏 ${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
+      summitRecord?.date ? `📅 ${summitRecord.date}` : '',
+      summitRecord?.report ? `\n📝 "${summitRecord.report}"` : '',
+    ].filter(Boolean).join('\n');
+    try {
+      await Share.share({ message: lines });
+    } catch (e) {
+      console.log('Share cancelled or failed', e);
+    }
+  }, [mountain, summitRecord]);
+
   const handleRemoveSummit = useCallback(() => {
     if (!id) return;
     Alert.alert(
@@ -165,13 +187,25 @@ export default function MountainDetailScreen() {
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top }]}
         showsVerticalScrollIndicator={false}
       >
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => router.back()}
-          activeOpacity={0.7}
-        >
-          <ArrowLeft color={Colors.white} size={22} />
-        </TouchableOpacity>
+        <View style={styles.topBar}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => router.back()}
+            activeOpacity={0.7}
+          >
+            <ArrowLeft color={Colors.white} size={22} />
+          </TouchableOpacity>
+          {summited && (
+            <TouchableOpacity
+              style={styles.shareButton}
+              onPress={handleShareSummit}
+              activeOpacity={0.7}
+              testID="share-summit-button"
+            >
+              <Share2 color={Colors.white} size={20} />
+            </TouchableOpacity>
+          )}
+        </View>
 
         <View style={styles.heroSection}>
           <View style={[styles.heroIcon, { backgroundColor: categoryColor + '20' }]}>
@@ -275,6 +309,14 @@ export default function MountainDetailScreen() {
                 >
                   <Text style={styles.editReportText}>{summitRecord?.report ? 'Edit Report & Photo' : 'Add Report & Photo'}</Text>
                   <ChevronRight color={Colors.accent} size={16} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.shareReportButton}
+                  onPress={handleShareSummit}
+                  activeOpacity={0.7}
+                >
+                  <Share2 color={Colors.accent} size={16} />
+                  <Text style={styles.shareReportText}>Share Summit</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.removeButton} onPress={handleRemoveSummit}>
                   <XCircle color={Colors.danger} size={16} />
@@ -432,7 +474,9 @@ const styles = StyleSheet.create({
   scrollView: { flex: 1 },
   scrollContent: { paddingBottom: 40 },
   errorText: { color: Colors.text, fontSize: 16, textAlign: 'center', marginTop: 100 },
-  backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: Colors.cardBg, justifyContent: 'center', alignItems: 'center', marginLeft: 16, marginTop: 8, borderWidth: 1, borderColor: Colors.border },
+  topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8 },
+  backButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: Colors.cardBg, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: Colors.border },
+  shareButton: { width: 42, height: 42, borderRadius: 21, backgroundColor: Colors.accent, justifyContent: 'center', alignItems: 'center' },
   heroSection: { alignItems: 'center', paddingHorizontal: 24, paddingTop: 20, paddingBottom: 24 },
   heroIcon: { width: 80, height: 80, borderRadius: 24, justifyContent: 'center', alignItems: 'center', marginBottom: 16 },
   heroEmoji: { fontSize: 40 },
@@ -495,6 +539,8 @@ const styles = StyleSheet.create({
   reportPreviewText: { fontSize: 14, color: Colors.text, lineHeight: 20 },
   editReportButton: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 12 },
   editReportText: { color: Colors.accent, fontSize: 15, fontWeight: '600' as const },
+  shareReportButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 4 },
+  shareReportText: { color: Colors.accent, fontSize: 14, fontWeight: '600' as const },
   removeButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 8 },
   removeButtonText: { color: Colors.danger, fontSize: 14, fontWeight: '500' as const },
 });
