@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -101,6 +102,12 @@ export default function MountainsScreen() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80' }}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      />
+      <View style={styles.backgroundOverlay} />
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>Summit Tracker</Text>
@@ -226,6 +233,7 @@ export default function MountainsScreen() {
         showsVerticalScrollIndicator={false}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
+        style={styles.flatList}
       />
     </View>
   );
@@ -234,13 +242,34 @@ export default function MountainsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.snow,
+  },
+  backgroundImage: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 320,
+    opacity: 0.35,
+  },
+  backgroundOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 320,
+    backgroundColor: Colors.ice,
+    opacity: 0.45,
   },
   header: {
-    backgroundColor: Colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
+    backgroundColor: Colors.snow,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.border + '80',
     paddingBottom: 4,
+    zIndex: 2,
+  },
+  flatList: {
+    zIndex: 1,
   },
   titleRow: {
     flexDirection: 'row',
@@ -408,6 +437,6 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   list: {
-    paddingBottom: 20,
+    paddingBottom: 120,
   },
 });

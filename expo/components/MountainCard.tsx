@@ -30,8 +30,6 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
     }).start();
   };
 
-  const categoryColor = Colors.categoryColors[mountain.category] ?? Colors.accent;
-
   return (
     <Animated.View style={[styles.cardWrapper, { transform: [{ scale: scaleAnim }] }]}>
       <TouchableOpacity
@@ -47,21 +45,16 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
       >
         <View style={styles.cardContent}>
           <View style={styles.leftSection}>
-            <View style={[styles.iconContainer, { backgroundColor: categoryColor + '15' }]}>
-              <MountainIcon mountainId={mountain.id} category={mountain.category} size={22} />
-            </View>
+            <MountainIcon mountainId={mountain.id} category={mountain.category} size={26} />
           </View>
 
           <View style={styles.centerSection}>
             <View style={styles.nameRow}>
               <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
               {isSummited && (
-                <CheckCircle color={Colors.success} size={15} />
+                <CheckCircle color={Colors.success} size={14} />
               )}
             </View>
-            <Text style={styles.location} numberOfLines={1}>
-              {mountain.country} · {mountain.range}
-            </Text>
           </View>
 
           <View style={styles.rightSection}>
@@ -86,30 +79,25 @@ export default memo(MountainCardComponent);
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    marginBottom: 2,
+    marginBottom: 0,
   },
   card: {
-    backgroundColor: Colors.white,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border + '60',
+    backgroundColor: 'transparent',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.border + '50',
   },
   cardSummited: {
-    backgroundColor: '#F0F8F0',
+    backgroundColor: 'rgba(58, 158, 92, 0.04)',
   },
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 13,
+    paddingHorizontal: 18,
   },
   leftSection: {
-    marginRight: 12,
-  },
-  iconContainer: {
-    width: 38,
-    height: 38,
-    borderRadius: 10,
-    justifyContent: 'center',
+    marginRight: 14,
+    width: 28,
     alignItems: 'center',
   },
   centerSection: {
@@ -120,7 +108,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 2,
   },
   name: {
     fontSize: 15,
@@ -128,16 +115,12 @@ const styles = StyleSheet.create({
     color: Colors.text,
     flexShrink: 1,
   },
-  location: {
-    fontSize: 12,
-    color: Colors.textSecondary,
-  },
   rightSection: {
     alignItems: 'flex-end',
   },
   elevation: {
     fontSize: 13,
-    fontWeight: '600' as const,
+    fontWeight: '500' as const,
     color: Colors.textSecondary,
   },
   elevationAlt: {

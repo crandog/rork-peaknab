@@ -13,7 +13,7 @@ interface MountainIconProps {
 }
 
 function MountainIconComponent({ mountainId, category, size = 24, color }: MountainIconProps) {
-  const baseColor = color ?? Colors.categoryColors[category] ?? Colors.accent;
+  const baseColor = color ?? Colors.mountainIcon;
   const silhouette = getSilhouette(mountainId ?? '');
 
   return (
@@ -26,13 +26,13 @@ function MountainIconComponent({ mountainId, category, size = 24, color }: Mount
         <Path
           d={silhouette.path}
           fill={baseColor}
-          opacity={0.85}
+          opacity={0.9}
         />
         {silhouette.snowPath && (
           <Path
             d={silhouette.snowPath}
             fill="#FFFFFF"
-            opacity={0.75}
+            opacity={0.85}
           />
         )}
       </Svg>

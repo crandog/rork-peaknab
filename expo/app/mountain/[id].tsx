@@ -10,6 +10,7 @@ import {
   Platform,
   FlatList,
   Share,
+  Image,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -201,6 +202,12 @@ export default function MountainDetailScreen() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80' }}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      />
+      <View style={styles.backgroundOverlay} />
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top }]}
@@ -493,8 +500,10 @@ export default function MountainDetailScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.snow },
+  backgroundImage: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 300, opacity: 0.3 },
+  backgroundOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 300, backgroundColor: Colors.ice, opacity: 0.4 },
   scrollView: { flex: 1 },
-  scrollContent: { paddingBottom: 40 },
+  scrollContent: { paddingBottom: 60 },
   errorText: { color: Colors.text, fontSize: 16, textAlign: 'center', marginTop: 100 },
   topBar: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, marginTop: 8, marginBottom: 4 },
   topBarTitle: { fontSize: 17, fontWeight: '700' as const, color: Colors.text, flex: 1, textAlign: 'center' as const },

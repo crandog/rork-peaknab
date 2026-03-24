@@ -8,6 +8,7 @@ import {
   Share,
   Animated,
   Platform,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -283,6 +284,12 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80' }}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      />
+      <View style={styles.backgroundOverlay} />
       <ScrollView
         contentContainerStyle={[styles.scrollContent, { paddingTop: insets.top + 16 }]}
         showsVerticalScrollIndicator={false}
@@ -511,9 +518,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.snow,
   },
+  backgroundImage: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 300,
+    opacity: 0.3,
+  },
+  backgroundOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 300,
+    backgroundColor: Colors.ice,
+    opacity: 0.4,
+  },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingBottom: 60,
   },
   headerRow: {
     flexDirection: 'row',
