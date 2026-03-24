@@ -119,6 +119,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'popocatepetl': 'https://r2-pub.rork.com/generated-images/d5aa6292-a5f6-49ac-bd42-16dbdc0cb1f8.png',
   'mt-st-helens': 'https://r2-pub.rork.com/generated-images/c35527d0-5466-4611-b213-db4ab38b32d0.png',
   'tre-cime': 'https://r2-pub.rork.com/generated-images/df30defb-c2f2-4e0b-8648-11e3fd5a2706.png',
+  'mt-meru-tanzania': 'https://r2-pub.rork.com/generated-images/5f27b446-3c8f-4151-a187-8148797fdbdf.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/43aa48aa-e898-4ce0-a22d-7bbd53a3411e.png';

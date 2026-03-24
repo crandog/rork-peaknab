@@ -302,6 +302,7 @@ export const mountainSilhouetteMap: Record<string, string> = {
   'gerlachovsky': 'pyramid_classic',
   'mt-baker': 'volcano_cone',
   'volcano-teide': 'volcano_cone',
+  'mt-meru-tanzania': 'volcano_cone',
 };
 
 export function getSilhouette(mountainId: string): SilhouetteData {
