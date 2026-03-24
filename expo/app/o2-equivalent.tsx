@@ -4,10 +4,13 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Image,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { Wind } from 'lucide-react-native';
 import Colors from '@/constants/colors';
+
+const IMAGE_URL = 'https://r2-pub.rork.com/attachments/37ju8kn02uoq9cuh159tp';
 
 interface AltitudeRow {
   altitude: number;
@@ -54,14 +57,21 @@ export default function O2EquivalentScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.infoCard}>
-          <View style={styles.infoIconWrap}>
-            <Wind color={Colors.primary} size={28} />
+        <View style={styles.heroImageContainer}>
+          <Image
+            source={{ uri: IMAGE_URL }}
+            style={styles.heroImage}
+            resizeMode="cover"
+          />
+          <View style={styles.heroOverlay}>
+            <View style={styles.heroIconWrap}>
+              <Wind color="#fff" size={24} />
+            </View>
+            <Text style={styles.heroTitle}>O₂ at Altitude</Text>
+            <Text style={styles.heroSubtitle}>
+              As altitude increases, atmospheric pressure drops — reducing available oxygen. At 8,000m you breathe only ~33% of sea-level O₂.
+            </Text>
           </View>
-          <Text style={styles.infoTitle}>Oxygen Equivalent at Altitudes</Text>
-          <Text style={styles.infoText}>
-            As altitude increases, atmospheric pressure decreases, reducing the amount of oxygen available. At 8,000m, you breathe only ~33% of the oxygen available at sea level.
-          </Text>
         </View>
 
         <View style={styles.legendRow}>
@@ -150,34 +160,40 @@ const styles = StyleSheet.create({
     padding: 16,
     paddingBottom: 40,
   },
-  infoCard: {
-    backgroundColor: Colors.white,
+  heroImageContainer: {
     borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
+    overflow: 'hidden',
+    marginBottom: 16,
     borderWidth: 1,
     borderColor: Colors.border,
-    marginBottom: 16,
+    backgroundColor: '#0D1F38',
   },
-  infoIconWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: Colors.frost,
+  heroImage: {
+    width: '100%',
+    height: 200,
+  },
+  heroOverlay: {
+    padding: 18,
+    alignItems: 'center',
+  },
+  heroIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(59,111,160,0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 4,
-  },
-  infoTitle: {
-    fontSize: 18,
-    fontWeight: '700' as const,
-    color: Colors.text,
-    marginTop: 10,
     marginBottom: 8,
   },
-  infoText: {
+  heroTitle: {
+    fontSize: 20,
+    fontWeight: '800' as const,
+    color: '#fff',
+    marginBottom: 6,
+  },
+  heroSubtitle: {
     fontSize: 13,
-    color: Colors.textSecondary,
+    color: 'rgba(255,255,255,0.75)',
     textAlign: 'center',
     lineHeight: 20,
   },
