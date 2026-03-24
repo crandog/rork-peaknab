@@ -27,7 +27,6 @@ import {
   FileDown,
 } from 'lucide-react-native';
 import * as Print from 'expo-print';
-import { shareAsync } from 'expo-sharing';
 import Colors from '@/constants/colors';
 import { categoryLabels, MountainCategory } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
@@ -48,11 +47,11 @@ export default function ProfileScreen() {
       duration: 800,
       useNativeDriver: false,
     }).start();
-  }, [records]);
+  }, [records, progressAnim]);
 
   const summitedMountains = useMemo(() => {
     return allMountains.filter((m) => isSummited(m.id));
-  }, [records, isSummited, allMountains]);
+  }, [isSummited, allMountains]);
 
   const highestSummit = useMemo(() => {
     if (summitedMountains.length === 0) return null;
@@ -97,7 +96,7 @@ export default function ProfileScreen() {
         return { category: cat, total, done, label: categoryLabels[cat] };
       })
       .filter((cat) => cat.total > 0);
-  }, [records, isSummited, allMountains]);
+  }, [isSummited, allMountains]);
 
   const recentSummits = useMemo(() => {
     return [...records]
@@ -115,7 +114,7 @@ export default function ProfileScreen() {
 
   const handleExportPDF = useCallback(async () => {
     if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
 
     const sortedSummits = summitedMountains
@@ -167,7 +166,7 @@ export default function ProfileScreen() {
         '</div>'
       : '';
 
-    const rows = sortedSummits.map((s, i) =>
+    const rows = sortedSummits.map((s) =>
       '<tr style="border-bottom:1px solid #eee;">' +
       '<td style="padding:10px 8px 10px 0;font-size:13px;color:#222;font-weight:500;">' + s.name + '</td>' +
       '<td style="padding:10px 8px;font-size:12px;color:#555;white-space:nowrap;">' + s.country + '</td>' +
@@ -218,16 +217,17 @@ export default function ProfileScreen() {
       } else {
         const { uri } = await Print.printToFileAsync({ html });
         console.log('PDF saved to:', uri);
-        await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+        const Sharing = await import('expo-sharing');
+        await Sharing.shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
       }
     } catch (e) {
       console.log('Export cancelled or failed', e);
     }
-  }, [summitedMountains, records]);
+  }, [summitedMountains, records, allMountains, isSummited]);
 
   const handleShareStats = useCallback(async () => {
     if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
     const topCategories = categoryProgress
@@ -258,7 +258,7 @@ export default function ProfileScreen() {
 
   const handleShareSummit = useCallback(async (mountainId: string) => {
     if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
     const mountain = allMountains.find((m) => m.id === mountainId);
@@ -280,7 +280,7 @@ export default function ProfileScreen() {
     } catch (e) {
       console.log('Share cancelled or failed', e);
     }
-  }, [records]);
+  }, [records, allMountains]);
 
   return (
     <View style={styles.container}>

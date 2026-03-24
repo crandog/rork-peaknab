@@ -1,9 +1,8 @@
-import { useEffect, useMemo } from 'react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
-import { mountains } from '@/constants/mountains';
+import { mountains, Mountain } from '@/constants/mountains';
 
 export interface SummitRecord {
   mountainId: string;
@@ -43,44 +42,54 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
     },
   });
 
-  const addSummit = (record: SummitRecord) => {
-    const updated = [...records, record];
-    setRecords(updated);
-    saveMutation.mutate(updated);
-  };
+  const addSummit = useCallback((record: SummitRecord) => {
+    setRecords((prev) => {
+      const updated = [...prev, record];
+      saveMutation.mutate(updated);
+      return updated;
+    });
+  }, [saveMutation]);
 
-  const removeSummit = (mountainId: string) => {
-    const updated = records.filter((r) => r.mountainId !== mountainId);
-    setRecords(updated);
-    saveMutation.mutate(updated);
-  };
+  const removeSummit = useCallback((mountainId: string) => {
+    setRecords((prev) => {
+      const updated = prev.filter((r) => r.mountainId !== mountainId);
+      saveMutation.mutate(updated);
+      return updated;
+    });
+  }, [saveMutation]);
 
-  const updateSummit = (mountainId: string, updates: Partial<SummitRecord>) => {
-    const updated = records.map((r) =>
-      r.mountainId === mountainId ? { ...r, ...updates } : r
-    );
-    setRecords(updated);
-    saveMutation.mutate(updated);
-  };
+  const updateSummit = useCallback((mountainId: string, updates: Partial<SummitRecord>) => {
+    setRecords((prev) => {
+      const updated = prev.map((r) =>
+        r.mountainId === mountainId ? { ...r, ...updates } : r
+      );
+      saveMutation.mutate(updated);
+      return updated;
+    });
+  }, [saveMutation]);
 
-  const getSummit = (mountainId: string): SummitRecord | undefined => {
+  const getSummit = useCallback((mountainId: string): SummitRecord | undefined => {
     return records.find((r) => r.mountainId === mountainId);
-  };
+  }, [records]);
 
-  const isSummited = (mountainId: string): boolean => {
+  const isSummited = useCallback((mountainId: string): boolean => {
     return records.some((r) => r.mountainId === mountainId);
-  };
+  }, [records]);
 
   const summitCount = useMemo(() => records.length, [records]);
 
+  const findMountain = useCallback((id: string): Mountain | undefined => {
+    return mountains.find((m) => m.id === id);
+  }, []);
+
   const totalElevation = useMemo(() => {
     return records.reduce((acc, record) => {
-      const mountain = mountains.find((m) => m.id === record.mountainId);
+      const mountain = findMountain(record.mountainId);
       return acc + (mountain?.elevation ?? 0);
     }, 0);
-  }, [records]);
+  }, [records, findMountain]);
 
-  return {
+  return useMemo(() => ({
     records,
     addSummit,
     removeSummit,
@@ -90,5 +99,5 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
     summitCount,
     totalElevation,
     isLoading: summitsQuery.isLoading,
-  };
+  }), [records, addSummit, removeSummit, updateSummit, getSummit, isSummited, summitCount, totalElevation, summitsQuery.isLoading]);
 });

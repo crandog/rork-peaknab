@@ -7,7 +7,7 @@ import { SummitProvider } from "@/contexts/SummitContext";
 import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
 import Colors from "@/constants/colors";
 
-SplashScreen.preventAutoHideAsync();
+void SplashScreen.preventAutoHideAsync();
 
 
 const queryClient = new QueryClient();
@@ -63,12 +63,12 @@ function RootLayoutNav() {
 
 export default function RootLayout() {
   useEffect(() => {
-    SplashScreen.hideAsync();
+    void SplashScreen.hideAsync();
   }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView>
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <CustomMountainsProvider>
           <SummitProvider>
             <RootLayoutNav />
