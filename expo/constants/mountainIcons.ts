@@ -109,6 +109,8 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'piz-badile': 'https://r2-pub.rork.com/generated-images/85d299d0-7168-48c5-a915-cfd203887eba.png',
   'mt-hunter': 'https://r2-pub.rork.com/generated-images/5a5655e3-978b-403b-b59b-6015d1795131.png',
   'mt-waddington': 'https://r2-pub.rork.com/generated-images/13afd72a-4802-4ee2-af85-86837082f6a6.png',
+  'torres-del-paine': 'https://r2-pub.rork.com/generated-images/ddd23719-3c91-4902-b65a-293c06337a95.png',
+  'paine-grande': 'https://r2-pub.rork.com/generated-images/a18f85bf-4f35-49dc-8af1-6dc51c6f7d78.png',
   'grand-teton': 'https://r2-pub.rork.com/generated-images/db994a86-2444-40be-9a6e-3ac6b7ffc5e7.png',
 };
 
