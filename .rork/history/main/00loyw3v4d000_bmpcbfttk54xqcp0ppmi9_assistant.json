@@ -1,0 +1,18 @@
+{
+  "id": "bmpcbfttk54xqcp0ppmi9",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "bmd3lmqtutmiq5mlrjtev",
+      "text": "\n\nThe version history feature is available in the Rork web interface — look for a **clock/history icon** in the top toolbar area of the editor (near the project name or settings). It's not inside the app itself, but part of the Rork builder UI.\n\nIf you're not seeing it, it may be a feature available on the Max plan. You can check your plan details or reach out to Rork support for clarification.",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "0.9"
+      },
+      "type": "meta"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "id": "guq0c9l0rf393movvslpo",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "bmd3lmqtutmiq5mlrjtev",
+      "text": "The version history / clock icon feature is part of the Rork platform interface, not something I build into your app. It should appear in the top area of the Rork editor/builder UI — typically near the project name or in a toolbar.\n\nIf you're not seeing it, I'd recommend reaching out to **Rork support** directly, as they can help troubleshoot your account/UI access. Since you're on the Max plan, you should have full access to version history.",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "0.4"
+      },
+      "type": "meta"
+    }
+  ]
+}

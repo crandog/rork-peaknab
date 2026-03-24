@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   elevation: {
     fontSize: 17,
     fontWeight: '900' as const,
-    color: Colors.accentLight,
+    color: Colors.ice,
     letterSpacing: -0.5,
   },
   elevationUnit: {
