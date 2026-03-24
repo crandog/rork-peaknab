@@ -35,7 +35,7 @@ type SortOption = 'name' | 'elevation_desc' | 'elevation_asc';
 export default function MountainsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { isSummited } = useSummits();
+  const { isSummited, getSummit } = useSummits();
   const allMountains = useAllMountains();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MountainCategory | 'all'>('all');
@@ -88,11 +88,12 @@ export default function MountainsScreen() {
       <MountainCard
         mountain={item}
         isSummited={isSummited(item.id)}
+        summitDate={getSummit(item.id)?.date}
         onPress={() => handleMountainPress(item.id)}
         useFeet={useFeet}
       />
     );
-  }, [isSummited, handleMountainPress, useFeet]);
+  }, [isSummited, getSummit, handleMountainPress, useFeet]);
 
   const sortLabels: Record<SortOption, string> = {
     name: 'Name A-Z',

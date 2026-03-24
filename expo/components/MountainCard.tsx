@@ -8,11 +8,12 @@ import MountainIcon from '@/components/MountainIcon';
 interface MountainCardProps {
   mountain: Mountain;
   isSummited: boolean;
+  summitDate?: string;
   onPress: () => void;
   useFeet?: boolean;
 }
 
-function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false }: MountainCardProps) {
+function MountainCardComponent({ mountain, isSummited, summitDate, onPress, useFeet = false }: MountainCardProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -49,18 +50,24 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
           </View>
 
           <View style={styles.centerSection}>
-            <View style={styles.nameRow}>
-              <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
-              {isSummited && (
-                <View style={styles.summitBadge}>
-                  <Text style={styles.summitBadgeText}>SUMMITED</Text>
-                </View>
-              )}
-            </View>
+            <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
             <Text style={styles.locationText} numberOfLines={1}>
               {mountain.country} · {mountain.range}
             </Text>
           </View>
+
+          {isSummited && (
+            <View style={styles.summitCenter}>
+              <View style={styles.summitBadge}>
+                <Text style={styles.summitBadgeText}>SUMMITED</Text>
+              </View>
+              {summitDate && (
+                <View style={styles.dateBox}>
+                  <Text style={styles.dateText}>{formatSummitDate(summitDate)}</Text>
+                </View>
+              )}
+            </View>
+          )}
 
           <View style={styles.rightSection}>
             <Text style={[styles.elevation, isSummited && styles.elevationSummited]}>
@@ -78,6 +85,18 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
       </TouchableOpacity>
     </Animated.View>
   );
+}
+
+function formatSummitDate(dateStr: string): string {
+  try {
+    const date = new Date(dateStr);
+    const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+  } catch {
+    return dateStr;
+  }
 }
 
 export default memo(MountainCardComponent);
@@ -109,30 +128,42 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 8,
   },
-  nameRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
   name: {
     fontSize: 15,
     fontWeight: '600' as const,
     color: Colors.text,
     flexShrink: 1,
   },
+  summitCenter: {
+    alignItems: 'center',
+    marginRight: 12,
+  },
   summitBadge: {
-    borderWidth: 1.5,
+    borderWidth: 2,
     borderColor: '#C0392B',
     borderRadius: 3,
-    paddingHorizontal: 5,
-    paddingVertical: 1,
-    transform: [{ rotate: '-3deg' }],
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    transform: [{ rotate: '-4deg' }],
   },
   summitBadgeText: {
-    fontSize: 7,
+    fontSize: 8,
     fontWeight: '900' as const,
     color: '#C0392B',
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+  },
+  dateBox: {
+    backgroundColor: '#2E86C1',
+    borderRadius: 3,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    marginTop: 4,
+  },
+  dateText: {
+    fontSize: 7,
+    fontWeight: '700' as const,
+    color: '#FFFFFF',
+    letterSpacing: 0.5,
   },
   locationText: {
     fontSize: 12,
