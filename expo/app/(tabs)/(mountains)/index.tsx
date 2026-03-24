@@ -104,7 +104,7 @@ export default function MountainsScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#0B1926', '#0F2235', '#132D42']}
+        colors={['#081D30', '#0C2840', '#103550']}
         style={[styles.header, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleRow}>
