@@ -101,6 +101,8 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'mt-sneffels': 'https://r2-pub.rork.com/generated-images/42ebd11a-9684-41c0-8506-32a8adace0b9.png',
   'iliniza-sur': 'https://r2-pub.rork.com/generated-images/804e6601-0dc2-4cd9-9078-63fcb9766fe0.png',
   'iliniza-norte': 'https://r2-pub.rork.com/generated-images/76cce3e6-b62d-4d2a-a046-732def7c6453.png',
+  'cayambe': 'https://r2-pub.rork.com/generated-images/d9d3482c-082e-4278-8271-ebe65ebf73e5.png',
+  'lenin-peak': 'https://r2-pub.rork.com/generated-images/d9fa836d-79f8-4a1b-8abb-90559eadefd8.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/43aa48aa-e898-4ce0-a22d-7bbd53a3411e.png';
