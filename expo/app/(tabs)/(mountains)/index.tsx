@@ -109,6 +109,13 @@ export default function MountainsScreen() {
       />
       <View style={styles.backgroundOverlay} />
 
+      <Image
+        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ce56ixcq6dwvfeks1eq19' }}
+        style={styles.bottomBackground}
+        resizeMode="cover"
+      />
+      <View style={styles.bottomOverlay} />
+
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.titleRow}>
           <Text style={styles.title}>Summit Tracker</Text>
@@ -251,15 +258,30 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 200,
+    height: 220,
   },
   backgroundOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 200,
+    height: 220,
     backgroundColor: 'rgba(180, 205, 230, 0.25)',
+  },
+  bottomBackground: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '60%',
+  },
+  bottomOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '60%',
+    backgroundColor: 'rgba(235, 242, 250, 0.55)',
   },
   header: {
     paddingBottom: 4,
