@@ -1,0 +1,359 @@
+{
+  "id": "gey332it2pkd98qerrsl2",
+  "role": "assistant",
+  "snapshotId": "gey332it2pkd98qerrsl2",
+  "responseMessageContents": [
+    {
+      "id": "0ob2bdw7rfjvc1de8tcp3",
+      "text": "The user is asking me to check if the mountain images look correct. Let me look at the mountain images constants file to see what URLs are being used.",
+      "type": "reasoning",
+      "createdAt": 1772768252557,
+      "completedAt": 1772768253128
+    },
+    {
+      "id": "4sncef0sc5ydfxzvg11ur",
+      "text": "Let me check what mountain images we're currently using.",
+      "type": "text"
+    },
+    {
+      "id": "toolu_01HXhU2R6FwmML8YFbj1VxZ1",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "filePath": "constants/mountainImages.ts"
+      },
+      "output": {
+        "path": "constants/mountainImages.ts",
+        "content": "     1|export const mountainImages: Record<string, string> = {\n     2|  'everest': 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80',\n     3|  'aconcagua': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n     4|  'denali': 'https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=800&q=80',\n     5|  'kilimanjaro': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=800&q=80',\n     6|  'elbrus': 'https://images.unsplash.com/photo-1570168007204-dfb528c6958f?w=800&q=80',\n     7|  'vinson': 'https://images.unsplash.com/photo-1509041322357-8a3f9757a475?w=800&q=80',\n     8|  'carstensz': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n     9|  'k2': 'https://images.unsplash.com/photo-1611956425642-d5a8169abd72?w=800&q=80',\n    10|  'kangchenjunga': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n    11|  'lhotse': 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80',\n    12|  'makalu': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n    13|  'cho-oyu': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n    14|  'dhaulagiri': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n    15|  'manaslu': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n    16|  'nanga-parbat': 'https://images.unsplash.com/photo-1611956425642-d5a8169abd72?w=800&q=80',\n    17|  'annapurna': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    18|  'gasherbrum1': 'https://images.unsplash.com/photo-1611956425642-d5a8169abd72?w=800&q=80',\n    19|  'broad-peak': 'https://images.unsplash.com/photo-1611956425642-d5a8169abd72?w=800&q=80',\n    20|  'gasherbrum2': 'https://images.unsplash.com/photo-1611956425642-d5a8169abd72?w=800&q=80',\n    21|  'shishapangma': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n    22|  'mt-elbert': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    23|  'mt-massive': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    24|  'mt-harvard': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    25|  'blanca-peak': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    26|  'la-plata': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    27|  'uncompahgre': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',\n    28|  'crestone-peak': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',\n    29|  'mt-lincoln': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    30|  'grays-peak': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    31|  'torreys-peak': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    32|  'quandary-peak': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    33|  'longs-peak': 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=800&q=80',\n    34|  'pikes-peak': 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=800&q=80',\n    35|  'capitol-peak': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',\n    36|  'maroon-peak': 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=800&q=80',\n    37|  'mont-blanc': 'https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80',\n    38|  'matterhorn': 'https://images.unsplash.com/photo-1529973625058-a665431e23f0?w=800&q=80',\n    39|  'eiger': 'https://images.unsplash.com/photo-1531973819741-e27a5ae2cc7b?w=800&q=80',\n    40|  'jungfrau': 'https://images.unsplash.com/photo-1531973819741-e27a5ae2cc7b?w=800&q=80',\n    41|  'gran-paradiso': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n    42|  'monte-rosa': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n    43|  'weisshorn': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n    44|  'dom': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n    45|  'grossglockner': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    46|  'zugspitze': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    47|  'dent-blanche': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n    48|  'aiguille-verte': 'https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80',\n    49|  'grandes-jorasses': 'https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80',\n    50|  'triglav': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    51|  'ojos-del-salado': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n    52|  'huascaran': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n    53|  'chimborazo': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n    54|  'cotopaxi': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n    55|  'illimani': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n    56|  'huayna-potosi': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n    57|  'alpamayo': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n    58|  'fitz-roy': 'https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=80',\n    59|  'cerro-torre': 'https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=80',\n    60|  'sajama': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n    61|  'volcan-lanin': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n    62|  'mercedario': 'https://images.unsplash.com/photo-1609220136736-443140cffec6?w=800&q=80',\n    63|  'ama-dablam': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    64|  'island-peak': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    65|  'mera-peak': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    66|  'pumori': 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80',\n    67|  'baruntse': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    68|  'lobuche-east': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    69|  'annapurna-south': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    70|  'machapuchare': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    71|  'tilicho-peak': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n    72|  'mt-rainier': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',\n    73|  'mt-hood': 'https://images.unsplash.com/photo-1579003593419-98f949b9398f?w=800&q=80',\n    74|  'mt-shasta': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    75|  'mt-whitney': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n    76|  'mt-fuji': 'https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=800&q=80',\n    77|  'aoraki': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    78|  'mt-kenya': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=800&q=80',\n    79|  'mt-stanley': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=800&q=80',\n    80|  'toubkal': 'https://images.unsplash.com/photo-1489493887464-892be6d1daae?w=800&q=80',\n    81|  'mt-olympus': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    82|  'ben-nevis': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    83|  'mt-elbrus-west': 'https://images.unsplash.com/photo-1489493887464-892be6d1daae?w=800&q=80',\n    84|  'mt-kinabalu': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    85|  'orizaba': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n    86|  'iztaccihuatl': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n    87|  'mt-cook': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    88|  'mt-blanc-du-tacul': 'https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80',\n    89|  'lyskamm': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n    90|  'mt-temple': 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=800&q=80',\n    91|  'mt-robson': 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=800&q=80',\n    92|  'mt-logan': 'https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=800&q=80',\n    93|  'mt-elbrus-traverse': 'https://images.unsplash.com/photo-1489493887464-892be6d1daae?w=800&q=80',\n    94|  'musala': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    95|  'gerlachovsky': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',\n    96|  'mt-blanc-chamomix': 'https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80',\n    97|  'mt-baker': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',\n    98|  'volcano-teide': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n    99|  'cascade-14er-1': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n   100|  'mt-bierstadt': 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80',\n   101|  'mt-sneffels': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',\n   102|  'iliniza-sur': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n   103|  'cayambe': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n   104|  'lenin-peak': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n   105|  'iliniza-norte': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n   106|  'meru-sharks-fin': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n   107|  'shivling': 'https://images.unsplash.com/photo-1486911278844-a81c5267e227?w=800&q=80',\n   108|  'aiguille-du-dru': 'https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80',\n   109|  'piz-badile': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n   110|  'mt-hunter': 'https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=800&q=80',\n   111|  'mt-waddington': 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=800&q=80',\n   112|  'torres-del-paine': 'https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=80',\n   113|  'paine-grande': 'https://images.unsplash.com/photo-1589802829985-817e51171b92?w=800&q=80',\n   114|  'nuptse': 'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80',\n   115|  'rakaposhi': 'https://images.unsplash.com/photo-1611956425642-d5a8169abd72?w=800&q=80',\n   116|  'khan-tengri': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n   117|  'pobeda-peak': 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?w=800&q=80',\n   118|  'popocatepetl': 'https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80',\n   119|  'mt-st-helens': 'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80',\n   120|  'grand-teton': 'https://images.unsplash.com/photo-1500534623283-312aade485b7?w=800&q=80',\n   121|  'tre-cime': 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',\n   122|  'mt-meru-tanzania': 'https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=800&q=80',\n   123|};\n   124|\n   125|export const defaultMountainImage = 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80';\n   126|\n   127|export function getMountainImage(mountainId: string): string {\n   128|  return mountainImages[mountainId] ?? defaultMountainImage;\n   129|}\n   130|\n\n(End of file - total 130 lines)"
+      },
+      "toolName": "read",
+      "createdAt": 1772768253290,
+      "completedAt": 1772768253294,
+      "inputArgsStr": "{\"filePath\": \"constants/mountainImages.ts\"}"
+    },
+    {
+      "id": "z7ei6erw5rrsrp1de0374",
+      "text": "The user is asking if the mountain pictures look correct to me. Let me check a few of the key ones by actually viewing them.\n\nLet me spot-check a few of the most iconic/recognizable mountains to see if the Unsplash photos actually match.",
+      "type": "reasoning",
+      "createdAt": 1772768263365,
+      "completedAt": 1772768264228
+    },
+    {
+      "id": "shfl2yb5lcp9vs1kcu4ce",
+      "text": "Let me spot-check a few of the most recognizable mountains to verify the images are accurate.",
+      "type": "text"
+    },
+    {
+      "id": "toolu_01F8W2wjwguYwSZ15f37aeFs",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80",
+        "prompt": "What mountain is this a photo of?"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768264535,
+      "completedAt": 1772768264562,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=800&q=80\", \"prompt\": \"What mountain is this a photo of?\"}"
+    },
+    {
+      "id": "toolu_01JP8DBPHtWGaGvjwdQeCWaX",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1529973625058-a665431e23f0?w=800&q=80",
+        "prompt": "What mountain is this a photo of?"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1529973625058-a665431e23f0?w=800&q=80",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768264539,
+      "completedAt": 1772768264825,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1529973625058-a665431e23f0?w=800&q=80\", \"prompt\": \"What mountain is this a photo of?\"}"
+    },
+    {
+      "id": "toolu_013sY6YEUt3ER3q81ymEDwLu",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=800&q=80",
+        "prompt": "What mountain is this a photo of?"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=800&q=80",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768264544,
+      "completedAt": 1772768264798,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=800&q=80\", \"prompt\": \"What mountain is this a photo of?\"}"
+    },
+    {
+      "id": "toolu_01Jw2CieMmcq8rqCBY6aAMb8",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=800&q=80",
+        "prompt": "What mountain is this a photo of?"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=800&q=80",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768264548,
+      "completedAt": 1772768265119,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=800&q=80\", \"prompt\": \"What mountain is this a photo of?\"}"
+    },
+    {
+      "id": "toolu_0198MuxKTdt6nyjw4jXX63Ve",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=800&q=80",
+        "prompt": "What mountain is this a photo of?"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=800&q=80",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768264551,
+      "completedAt": 1772768264804,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=800&q=80\", \"prompt\": \"What mountain is this a photo of?\"}"
+    },
+    {
+      "id": "toolu_01PHWtQV6DFTvMhEamfUFxNH",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80",
+        "prompt": "What mountain is this a photo of?"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768264555,
+      "completedAt": 1772768264562,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1522199710521-72d69614c702?w=800&q=80\", \"prompt\": \"What mountain is this a photo of?\"}"
+    },
+    {
+      "id": "toolu_01FaLFkKogmX9G5XB4Tt5e1e",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80",
+        "prompt": "What mountain is this a photo of?"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768264558,
+      "completedAt": 1772768264562,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80\", \"prompt\": \"What mountain is this a photo of?\"}"
+    },
+    {
+      "id": "mdc00ep6v0zv6sieqbrau",
+      "text": "Let me try fetching the images directly to view them.",
+      "type": "reasoning",
+      "createdAt": 1772768271813,
+      "completedAt": 1772768271993
+    },
+    {
+      "id": "jjb122avtffo2cvgkl2mz",
+      "text": "Let me try viewing the actual images directly.",
+      "type": "text"
+    },
+    {
+      "id": "toolu_01A7rLmfW9Wgoea28PJMr1wi",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=400&q=60"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=400&q=60",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768272135,
+      "completedAt": 1772768274011,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?w=400&q=60\"}"
+    },
+    {
+      "id": "toolu_016sYg1U7Gh6mejanDR4wSLM",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1529973625058-a665431e23f0?w=400&q=60"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1529973625058-a665431e23f0?w=400&q=60",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768272139,
+      "completedAt": 1772768272981,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1529973625058-a665431e23f0?w=400&q=60\"}"
+    },
+    {
+      "id": "toolu_015eEwsbGoyuoQbseZUAsQcj",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=400&q=60"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=400&q=60",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768272141,
+      "completedAt": 1772768272792,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=400&q=60\"}"
+    },
+    {
+      "id": "toolu_01TV83ySdnXkSAnKhfnaJNd6",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=400&q=60"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=400&q=60",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768272144,
+      "completedAt": 1772768273138,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1574073015404-81596a1e5a09?w=400&q=60\"}"
+    },
+    {
+      "id": "toolu_011bQmaAQW5NqC6VCmUaGDhK",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=400&q=60"
+      },
+      "output": {
+        "url": "https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=400&q=60",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768272147,
+      "completedAt": 1772768273851,
+      "inputArgsStr": "{\"url\": \"https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?w=400&q=60\"}"
+    },
+    {
+      "id": "sqjrqx2gab73wl1y9u2fr",
+      "text": "Let me try to look up these Unsplash photos by their IDs to verify what they actually show.",
+      "type": "reasoning",
+      "createdAt": 1772768279903,
+      "completedAt": 1772768280247
+    },
+    {
+      "id": "boygqatslech0z9bfafxl",
+      "text": "Let me try looking up the Unsplash photo pages to verify what they actually depict.",
+      "type": "text"
+    },
+    {
+      "id": "toolu_01PWT4WE8EFjTjA9qgcVeZCq",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://unsplash.com/photos/fcc3c50ae61f",
+        "prompt": "What mountain or scene is shown in this photo?"
+      },
+      "output": {
+        "url": "https://unsplash.com/photos/fcc3c50ae61f",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768280533,
+      "completedAt": 1772768283344,
+      "inputArgsStr": "{\"url\": \"https://unsplash.com/photos/fcc3c50ae61f\", \"prompt\": \"What mountain or scene is shown in this photo?\"}"
+    },
+    {
+      "id": "toolu_01GA3ze6c9vWaahi3FDHBHVu",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://unsplash.com/photos/a665431e23f0",
+        "prompt": "What mountain or scene is shown in this photo?"
+      },
+      "output": {
+        "url": "https://unsplash.com/photos/a665431e23f0",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768280536,
+      "completedAt": 1772768281648,
+      "inputArgsStr": "{\"url\": \"https://unsplash.com/photos/a665431e23f0\", \"prompt\": \"What mountain or scene is shown in this photo?\"}"
+    },
+    {
+      "id": "toolu_01BcpjnwqvCuusUxPB7sdQHt",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://unsplash.com/photos/31f4c9a91c65",
+        "prompt": "What mountain or scene is shown in this photo?"
+      },
+      "output": {
+        "url": "https://unsplash.com/photos/31f4c9a91c65",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768280540,
+      "completedAt": 1772768281086,
+      "inputArgsStr": "{\"url\": \"https://unsplash.com/photos/31f4c9a91c65\", \"prompt\": \"What mountain or scene is shown in this photo?\"}"
+    },
+    {
+      "id": "toolu_01J36r9cf3uhaV37MpcGFNQi",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "url": "https://unsplash.com/photos/81596a1e5a09",
+        "prompt": "What mountain or scene is shown in this photo?"
+      },
+      "output": {
+        "url": "https://unsplash.com/photos/81596a1e5a09",
+        "error": "No summary found"
+      },
+      "toolName": "webFetch",
+      "createdAt": 1772768280542,
+      "completedAt": 1772768281484,
+      "inputArgsStr": "{\"url\": \"https://unsplash.com/photos/81596a1e5a09\", \"prompt\": \"What mountain or scene is shown in this photo?\"}"
+    },
+    {
+      "id": "us647yuj9vsvjkve5k1kx",
+      "text": "I can't actually view the images through my tools. Let me be honest with the user about what I can see and what the issues are based on analyzing the code.",
+      "type": "reasoning",
+      "createdAt": 1772768297496,
+      "completedAt": 1772768298103
+    },
+    {
+      "id": "e9h9jc1sv31pbwdb5rhad",
+      "text": "Unfortunately I'm unable to actually view the Unsplash images through my tools right now. But I can tell you some issues I spotted just from analyzing the URLs in the code:\n\n1. **Heavy reuse of the same photos** — Many mountains share identical URLs. For example:\n   - `photo-1585409677983-0f6c41ca9c3b` is used for Kangchenjunga, Makalu, Cho Oyu, Dhaulagiri, Manaslu, Shishapangma, Lenin Peak, Khan Tengri, and Pobeda Peak — that's 9 mountains with the same image.\n   - `photo-1464822759023-fed622ff2c3b` is used for ~10 different Colorado 14ers.\n   - `photo-1486911278844-a81c5267e227` is used for ~8 Nepal/Himalaya peaks.\n   - `photo-1611956425642-d5a8169abd72` is used for K2, Nanga Parbat, Gasherbrum I, II, Broad Peak, and Rakaposhi.\n\n2. **Generic photos likely used** — These Unsplash IDs were probably chosen as \"generic mountain\" shots rather than actual photos of each specific mountain. For iconic peaks like Everest, Matterhorn, Mt. Fuji, and Denali, the photos are *probably* close since those are commonly photographed. But for less famous peaks, they're almost certainly just generic mountain scenery.\n\n3. **Lhotse and Pumori share Everest's image** — which might actually be fine since they're all in the Everest region, but they'd all look the same.\n\n**Bottom line:** The images are likely \"good enough\" generic mountain photos, but many are duplicated and most probably don't show the *actual* specific mountain. If accuracy matters to you, I'd recommend:\n- Sourcing specific photos for the most popular/iconic mountains (Everest, K2, Matterhorn, Denali, Fuji, Kilimanjaro, etc.)\n- At minimum, using *different* generic photos for each mountain so they don't all look the same\n\nWant me to search for more accurate Unsplash URLs for the key mountains?",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "1.2",
+        "tscErrorsCount": 0,
+        "hasCriticalTscErrors": false
+      },
+      "type": "meta"
+    }
+  ]
+}
