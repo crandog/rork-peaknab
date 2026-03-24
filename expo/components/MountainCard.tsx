@@ -88,15 +88,17 @@ function MountainCardComponent({ mountain, isSummited, summitDate, onPress, useF
 }
 
 function formatSummitDate(dateStr: string): string {
-  try {
-    const date = new Date(dateStr);
-    const month = date.toLocaleString('en-US', { month: 'short' }).toUpperCase();
-    const day = date.getDate();
-    const year = date.getFullYear();
-    return `${month} ${day}, ${year}`;
-  } catch {
-    return dateStr;
+  const MONTHS: Record<string, string> = {
+    'January': 'JAN', 'February': 'FEB', 'March': 'MAR', 'April': 'APR',
+    'May': 'MAY', 'June': 'JUN', 'July': 'JUL', 'August': 'AUG',
+    'September': 'SEP', 'October': 'OCT', 'November': 'NOV', 'December': 'DEC',
+  };
+  const parts = dateStr.match(/^(\w+)\s+(\d+),\s+(\d+)$/);
+  if (parts) {
+    const monthAbbr = MONTHS[parts[1]] ?? parts[1].slice(0, 3).toUpperCase();
+    return `${monthAbbr} ${parts[2]}, ${parts[3]}`;
   }
+  return dateStr;
 }
 
 export default memo(MountainCardComponent);
