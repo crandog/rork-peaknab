@@ -112,6 +112,10 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'torres-del-paine': 'https://r2-pub.rork.com/generated-images/ddd23719-3c91-4902-b65a-293c06337a95.png',
   'paine-grande': 'https://r2-pub.rork.com/generated-images/a18f85bf-4f35-49dc-8af1-6dc51c6f7d78.png',
   'grand-teton': 'https://r2-pub.rork.com/generated-images/db994a86-2444-40be-9a6e-3ac6b7ffc5e7.png',
+  'nuptse': 'https://r2-pub.rork.com/generated-images/84ea3b31-3a43-4fd3-b592-4d8979d7dbbe.png',
+  'rakaposhi': 'https://r2-pub.rork.com/generated-images/9f685480-5888-406f-a7da-85a1eb9d0d00.png',
+  'khan-tengri': 'https://r2-pub.rork.com/generated-images/48572674-6a1a-428f-a95b-8c5f7bb19abc.png',
+  'pobeda-peak': 'https://r2-pub.rork.com/generated-images/a373ff34-5731-4b43-b31e-1ac010bf289f.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/43aa48aa-e898-4ce0-a22d-7bbd53a3411e.png';
