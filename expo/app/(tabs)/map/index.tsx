@@ -9,25 +9,26 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MapPin } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { mountains } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
+import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
 import RNMapView, { Marker as RNMarker } from 'react-native-maps';
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const { records, isSummited } = useSummits();
+  const allMountains = useAllMountains();
 
   const summitedMountains = useMemo(() => {
-    return mountains.filter((m) => isSummited(m.id));
-  }, [records, isSummited]);
+    return allMountains.filter((m) => isSummited(m.id));
+  }, [records, isSummited, allMountains]);
 
   const allMountainMarkers = useMemo(() => {
-    return mountains.map((m) => ({
+    return allMountains.map((m) => ({
       ...m,
       summited: isSummited(m.id),
     }));
-  }, [records, isSummited]);
+  }, [records, isSummited, allMountains]);
 
   if (Platform.OS === 'web') {
     return (
@@ -75,7 +76,7 @@ export default function MapScreen() {
         <Text style={styles.mapTitle}>Summit Map</Text>
         <View style={styles.mapBadge}>
           <Text style={styles.mapBadgeText}>
-            {summitedMountains.length} / {mountains.length} Summited
+            {summitedMountains.length} / {allMountains.length} Summited
           </Text>
         </View>
       </View>

@@ -29,6 +29,7 @@ const Colors = {
     'andes': '#F39C12',
     'himalaya': '#9B59B6',
     'other': '#7EC8E3',
+    'custom': '#E88D67',
   } as Record<string, string>,
 };
 

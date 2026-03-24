@@ -29,11 +29,14 @@ import {
   ChevronRight,
   ChevronDown,
   Share2,
+  Trash2,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
-import { mountains, categoryLabels } from '@/constants/mountains';
+import { categoryLabels } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
+import { useCustomMountains } from '@/contexts/CustomMountainsContext';
+import { useFindMountain } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
 
 type TabType = 'info' | 'summit';
@@ -43,6 +46,7 @@ export default function MountainDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { isSummited, getSummit, addSummit, removeSummit } = useSummits();
+  const { isCustom, removeCustomMountain } = useCustomMountains();
   const [activeTab, setActiveTab] = useState<TabType>('info');
   const [showDateInput, setShowDateInput] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
@@ -53,7 +57,7 @@ export default function MountainDetailScreen() {
   const [showYearPicker, setShowYearPicker] = useState(false);
   const tabAnim = useRef(new Animated.Value(0)).current;
 
-  const mountain = useMemo(() => mountains.find((m) => m.id === id), [id]);
+  const mountain = useFindMountain(id);
   const summitRecord = useMemo(() => (id ? getSummit(id) : undefined), [id, getSummit]);
   const summited = id ? isSummited(id) : false;
 
@@ -163,6 +167,29 @@ export default function MountainDetailScreen() {
       ]
     );
   }, [id, removeSummit]);
+
+  const handleDeleteMountain = useCallback(() => {
+    if (!id) return;
+    Alert.alert(
+      'Delete Peak',
+      'This will permanently delete this custom peak and any summit record. Continue?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            removeSummit(id);
+            removeCustomMountain(id);
+            if (Platform.OS !== 'web') {
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+            }
+            router.back();
+          },
+        },
+      ]
+    );
+  }, [id, removeSummit, removeCustomMountain, router]);
 
   if (!mountain) {
     return (
@@ -323,11 +350,23 @@ export default function MountainDetailScreen() {
                   <XCircle color={Colors.danger} size={16} />
                   <Text style={styles.removeButtonText}>Remove Summit</Text>
                 </TouchableOpacity>
+                {id && isCustom(id) && (
+                  <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteMountain}>
+                    <Trash2 color={Colors.danger} size={16} />
+                    <Text style={styles.removeButtonText}>Delete Peak</Text>
+                  </TouchableOpacity>
+                )}
               </View>
             ) : (
               <View style={styles.summitQuestion}>
                 {!showDateInput ? (
                   <>
+                    {id && isCustom(id) && (
+                      <TouchableOpacity style={styles.deleteInlineButton} onPress={handleDeleteMountain}>
+                        <Trash2 color={Colors.danger} size={14} />
+                        <Text style={styles.deleteInlineText}>Delete Peak</Text>
+                      </TouchableOpacity>
+                    )}
                     <Text style={styles.questionEmoji}>⛰️</Text>
                     <Text style={styles.questionTitle}>Did you summit {mountain.name}?</Text>
                     <Text style={styles.questionSubtitle}>Record your achievement and share your experience</Text>
@@ -543,5 +582,8 @@ const styles = StyleSheet.create({
   shareReportButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 4 },
   shareReportText: { color: Colors.accent, fontSize: 14, fontWeight: '600' as const },
   removeButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 8 },
+  deleteButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 4, borderTopWidth: 1, borderTopColor: Colors.border, width: '100%', justifyContent: 'center' },
+  deleteInlineButton: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-end', paddingVertical: 8, paddingHorizontal: 12, marginBottom: 8 },
+  deleteInlineText: { color: Colors.danger, fontSize: 12, fontWeight: '500' as const },
   removeButtonText: { color: Colors.danger, fontSize: 14, fontWeight: '500' as const },
 });

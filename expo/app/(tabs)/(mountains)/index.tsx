@@ -11,11 +11,12 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Search, Wind, X, ChevronDown, Check } from 'lucide-react-native';
+import { Search, Wind, X, ChevronDown, Check, Plus } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
-import { mountains, categoryLabels, MountainCategory } from '@/constants/mountains';
+import { categoryLabels, MountainCategory } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
+import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainCard from '@/components/MountainCard';
 
 const categories: Array<{ key: MountainCategory | 'all'; label: string }> = [
@@ -27,6 +28,7 @@ const categories: Array<{ key: MountainCategory | 'all'; label: string }> = [
   { key: 'andes', label: 'Andes' },
   { key: 'himalaya', label: 'Himalaya' },
   { key: 'other', label: 'World' },
+  { key: 'custom', label: 'My Peaks' },
 ];
 
 type SortOption = 'name' | 'elevation_desc' | 'elevation_asc';
@@ -35,13 +37,14 @@ export default function MountainsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { isSummited } = useSummits();
+  const allMountains = useAllMountains();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MountainCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<SortOption>('elevation_desc');
   const [showSort, setShowSort] = useState(false);
 
   const filteredMountains = useMemo(() => {
-    let filtered = mountains;
+    let filtered = allMountains;
 
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((m) => m.category === selectedCategory);
@@ -66,7 +69,7 @@ export default function MountainsScreen() {
       default:
         return [...filtered].sort((a, b) => b.elevation - a.elevation);
     }
-  }, [search, selectedCategory, sortBy]);
+  }, [search, selectedCategory, sortBy, allMountains]);
 
   const handleMountainPress = useCallback((id: string) => {
     router.push(`/mountain/${id}` as any);
@@ -76,7 +79,11 @@ export default function MountainsScreen() {
     router.push('/o2-equivalent' as any);
   }, [router]);
 
-  const renderItem = useCallback(({ item }: { item: typeof mountains[0] }) => {
+  const handleAddMountain = useCallback(() => {
+    router.push('/add-mountain' as any);
+  }, [router]);
+
+  const renderItem = useCallback(({ item }: { item: typeof allMountains[0] }) => {
     return (
       <MountainCard
         mountain={item}
@@ -100,14 +107,24 @@ export default function MountainsScreen() {
       >
         <View style={styles.titleRow}>
           <Text style={styles.title}>Summit Tracker</Text>
-          <TouchableOpacity
-            style={styles.o2Button}
-            onPress={handleO2Press}
-            activeOpacity={0.7}
-          >
-            <Wind color={Colors.accentLight} size={18} />
-            <Text style={styles.o2Text}>O₂</Text>
-          </TouchableOpacity>
+          <View style={styles.titleActions}>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={handleAddMountain}
+              activeOpacity={0.7}
+              testID="add-mountain-button"
+            >
+              <Plus color={Colors.white} size={18} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.o2Button}
+              onPress={handleO2Press}
+              activeOpacity={0.7}
+            >
+              <Wind color={Colors.accentLight} size={18} />
+              <Text style={styles.o2Text}>O₂</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.searchRow}>
@@ -222,6 +239,19 @@ const styles = StyleSheet.create({
     fontWeight: '800' as const,
     color: Colors.white,
     letterSpacing: -0.5,
+  },
+  titleActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  addButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: Colors.categoryColors.custom,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   o2Button: {
     flexDirection: 'row',

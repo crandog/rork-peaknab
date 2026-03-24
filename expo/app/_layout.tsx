@@ -4,6 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SummitProvider } from "@/contexts/SummitContext";
+import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
 import Colors from "@/constants/colors";
 
 SplashScreen.preventAutoHideAsync();
@@ -45,6 +46,14 @@ function RootLayoutNav() {
           headerTintColor: Colors.text,
         }}
       />
+      <Stack.Screen
+        name="add-mountain"
+        options={{
+          title: "Add Peak",
+          presentation: "modal",
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
   );
@@ -58,9 +67,11 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView>
-        <SummitProvider>
-          <RootLayoutNav />
-        </SummitProvider>
+        <CustomMountainsProvider>
+          <SummitProvider>
+            <RootLayoutNav />
+          </SummitProvider>
+        </CustomMountainsProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

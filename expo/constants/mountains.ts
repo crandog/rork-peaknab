@@ -1,4 +1,4 @@
-export type MountainCategory = '7summits' | '8000m' | '14ers' | 'alps' | 'andes' | 'himalaya' | 'other';
+export type MountainCategory = '7summits' | '8000m' | '14ers' | 'alps' | 'andes' | 'himalaya' | 'other' | 'custom';
 
 export interface Mountain {
   id: string;
@@ -24,6 +24,7 @@ export const categoryLabels: Record<MountainCategory, string> = {
   'andes': 'The Andes',
   'himalaya': 'Himalaya',
   'other': 'World Classics',
+  'custom': 'My Peaks',
 };
 
 export const categoryDescriptions: Record<MountainCategory, string> = {
@@ -34,6 +35,7 @@ export const categoryDescriptions: Record<MountainCategory, string> = {
   'andes': 'Great peaks of South America',
   'himalaya': 'Notable Himalayan peaks below 8000m',
   'other': 'Famous climbs around the world',
+  'custom': 'Your personally added peaks',
 };
 
 export const mountains: Mountain[] = [

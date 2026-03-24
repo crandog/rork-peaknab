@@ -27,14 +27,16 @@ import {
   Zap,
 } from 'lucide-react-native';
 import Colors from '@/constants/colors';
-import { mountains, categoryLabels, MountainCategory } from '@/constants/mountains';
+import { categoryLabels, MountainCategory } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
 import { useSummits } from '@/contexts/SummitContext';
+import { useAllMountains } from '@/hooks/useAllMountains';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { records, summitCount, totalElevation, isSummited } = useSummits();
+  const allMountains = useAllMountains();
 
   const progressAnim = useRef(new Animated.Value(0)).current;
 
@@ -47,8 +49,8 @@ export default function ProfileScreen() {
   }, [records]);
 
   const summitedMountains = useMemo(() => {
-    return mountains.filter((m) => isSummited(m.id));
-  }, [records, isSummited]);
+    return allMountains.filter((m) => isSummited(m.id));
+  }, [records, isSummited, allMountains]);
 
   const highestSummit = useMemo(() => {
     if (summitedMountains.length === 0) return null;
@@ -57,10 +59,10 @@ export default function ProfileScreen() {
 
   const totalElevationFt = useMemo(() => {
     return records.reduce((acc, record) => {
-      const mountain = mountains.find((m) => m.id === record.mountainId);
+      const mountain = allMountains.find((m) => m.id === record.mountainId);
       return acc + (mountain?.elevationFt ?? 0);
     }, 0);
-  }, [records]);
+  }, [records, allMountains]);
 
   const countriesVisited = useMemo(() => {
     const countries = new Set<string>();
@@ -85,27 +87,29 @@ export default function ProfileScreen() {
   }, [summitedMountains]);
 
   const categoryProgress = useMemo(() => {
-    const cats: MountainCategory[] = ['7summits', '8000m', '14ers', 'alps', 'andes', 'himalaya', 'other'];
-    return cats.map((cat) => {
-      const total = mountains.filter((m) => m.category === cat).length;
-      const done = mountains.filter((m) => m.category === cat && isSummited(m.id)).length;
-      return { category: cat, total, done, label: categoryLabels[cat] };
-    });
-  }, [records, isSummited]);
+    const cats: MountainCategory[] = ['7summits', '8000m', '14ers', 'alps', 'andes', 'himalaya', 'other', 'custom'];
+    return cats
+      .map((cat) => {
+        const total = allMountains.filter((m) => m.category === cat).length;
+        const done = allMountains.filter((m) => m.category === cat && isSummited(m.id)).length;
+        return { category: cat, total, done, label: categoryLabels[cat] };
+      })
+      .filter((cat) => cat.total > 0);
+  }, [records, isSummited, allMountains]);
 
   const recentSummits = useMemo(() => {
     return [...records]
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       .slice(0, 5)
       .map((r) => {
-        const mountain = mountains.find((m) => m.id === r.mountainId);
+        const mountain = allMountains.find((m) => m.id === r.mountainId);
         return { ...r, mountain };
       });
-  }, [records]);
+  }, [records, allMountains]);
 
   const overallCompletion = useMemo(() => {
-    return Math.round((summitCount / mountains.length) * 100);
-  }, [summitCount]);
+    return allMountains.length > 0 ? Math.round((summitCount / allMountains.length) * 100) : 0;
+  }, [summitCount, allMountains]);
 
   const handleShareStats = useCallback(async () => {
     if (Platform.OS !== 'web') {
@@ -143,7 +147,7 @@ export default function ProfileScreen() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
-    const mountain = mountains.find((m) => m.id === mountainId);
+    const mountain = allMountains.find((m) => m.id === mountainId);
     const record = records.find((r) => r.mountainId === mountainId);
     if (!mountain || !record) return;
 
@@ -198,7 +202,7 @@ export default function ProfileScreen() {
               <Text style={styles.completionPercentage}>{overallCompletion}%</Text>
             </View>
             <View style={styles.completionCircle}>
-              <Text style={styles.completionFraction}>{summitCount}/{mountains.length}</Text>
+              <Text style={styles.completionFraction}>{summitCount}/{allMountains.length}</Text>
               <Text style={styles.completionPeaks}>peaks</Text>
             </View>
           </View>
