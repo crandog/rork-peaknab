@@ -239,7 +239,7 @@ export default function MountainsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#169ED0',
+    backgroundColor: '#0F698A',
   },
   header: {
     paddingBottom: 4,
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     flex: 1,
-    backgroundColor: '#169ED0',
+    backgroundColor: '#0F698A',
   },
   listHeaderRow: {
     flexDirection: 'row' as const,
