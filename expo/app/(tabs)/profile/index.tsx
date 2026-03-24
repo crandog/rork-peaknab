@@ -130,39 +130,33 @@ export default function ProfileScreen() {
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const listItems = sortedSummits
-      .map((s, i) => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
-          <span style="font-size: 14px; color: #1f2937; font-weight: 500;">${i + 1}. ${s.name}</span>
-          <span style="font-size: 13px; color: #6b7280; white-space: nowrap; margin-left: 16px;">${s.date}</span>
-        </div>`)
+    const tableRows = sortedSummits
+      .map((s, i) =>
+        '<tr>' +
+        '<td style="padding:8px 12px;border-bottom:1px solid #eee;color:#888;font-size:13px;width:30px;">' + (i + 1) + '</td>' +
+        '<td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:14px;font-weight:600;color:#222;">' + s.name + '</td>' +
+        '<td style="padding:8px 12px;border-bottom:1px solid #eee;font-size:13px;color:#666;text-align:right;white-space:nowrap;">' + s.date + '</td>' +
+        '</tr>'
+      )
       .join('');
 
-    const html = `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <style>
-            @page { margin: 48px 40px; }
-            body {
-              font-family: -apple-system, Helvetica Neue, Arial, sans-serif;
-              color: #1f2937;
-              margin: 0;
-              padding: 0;
-              background: #fff;
-            }
-          </style>
-        </head>
-        <body>
-          <div style="padding: 0 8px;">
-            <h1 style="font-size: 22px; font-weight: 700; margin: 0 0 4px 0; color: #111827;">Summit Log</h1>
-            <p style="font-size: 12px; color: #9ca3af; margin: 0 0 24px 0;">${dateStr} · ${sortedSummits.length} summit${sortedSummits.length !== 1 ? 's' : ''}</p>
-            ${listItems}
-          </div>
-        </body>
-      </html>
-    `;
+    const html =
+      '<!DOCTYPE html><html><head><meta charset="utf-8"/>' +
+      '<style>' +
+      '@page{margin:40px;}' +
+      'body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;color:#222;}' +
+      'table{width:100%;border-collapse:collapse;}' +
+      'th{text-align:left;padding:6px 12px;font-size:11px;color:#999;text-transform:uppercase;letter-spacing:0.5px;border-bottom:2px solid #222;}' +
+      'th:last-child{text-align:right;}' +
+      '</style></head><body>' +
+      '<div style="padding:20px;">' +
+      '<div style="margin-bottom:24px;">' +
+      '<div style="font-size:28px;font-weight:800;color:#111;margin-bottom:2px;">Summit Log</div>' +
+      '<div style="font-size:12px;color:#aaa;">' + dateStr + ' — ' + sortedSummits.length + ' summit' + (sortedSummits.length !== 1 ? 's' : '') + ' recorded</div>' +
+      '</div>' +
+      '<table><thead><tr><th>#</th><th>Peak</th><th style="text-align:right;">Date</th></tr></thead>' +
+      '<tbody>' + tableRows + '</tbody></table>' +
+      '</div></body></html>';
 
     try {
       if (Platform.OS === 'web') {
