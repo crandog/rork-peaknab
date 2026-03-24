@@ -77,7 +77,7 @@ export default function MountainDetailScreen() {
 
   const handleSummitYes = useCallback(() => {
     if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
     setShowDateInput(true);
   }, []);
@@ -120,7 +120,7 @@ export default function MountainDetailScreen() {
     });
 
     if (Platform.OS !== 'web') {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
 
     setShowDateInput(false);
@@ -134,7 +134,7 @@ export default function MountainDetailScreen() {
   const handleShareSummit = useCallback(async () => {
     if (!mountain) return;
     if (Platform.OS !== 'web') {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     const lines = [
       `Summit Achievement!`,
@@ -165,7 +165,7 @@ export default function MountainDetailScreen() {
           onPress: () => {
             removeSummit(id);
             if (Platform.OS !== 'web') {
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
             }
           },
         },
@@ -187,7 +187,7 @@ export default function MountainDetailScreen() {
             removeSummit(id);
             removeCustomMountain(id);
             if (Platform.OS !== 'web') {
-              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
             }
             router.back();
           },
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.15)',
   },
   scrollView: { flex: 1, zIndex: 2 },
-  scrollContent: { paddingBottom: 120 },
+  scrollContent: { paddingBottom: 40 },
   heroSpacer: { height: HERO_HEIGHT - 80 },
   heroOverlay: {
     paddingHorizontal: 24,
@@ -633,8 +633,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.snow,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    minHeight: 500,
     paddingTop: 24,
+    paddingBottom: 60,
   },
   statsRow: {
     flexDirection: 'row',
