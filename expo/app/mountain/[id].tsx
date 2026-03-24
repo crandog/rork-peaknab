@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.15)',
   },
   scrollView: { flex: 1, zIndex: 2 },
-  scrollContent: { paddingBottom: 40 },
+  scrollContent: { paddingBottom: 120 },
   heroSpacer: { height: HERO_HEIGHT - 80 },
   heroOverlay: {
     paddingHorizontal: 24,
@@ -634,7 +634,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 24,
-    paddingBottom: 60,
+    paddingBottom: 80,
   },
   statsRow: {
     flexDirection: 'row',
