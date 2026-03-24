@@ -1,0 +1,244 @@
+{
+  "id": "ns0es5f1zadkyivl4vmvi",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "id": "2yb1sbs02420vd3yv3rx4",
+      "text": "The user wants me to generate images showing different visual concepts for the \"summited\" indicator on mountain cards. Let me recall what was discussed - they currently have a green circle with a checkmark for summited mountains, and were discussing alternatives like a red stamp saying \"Summited.\"\n\nLet me read the project skill first to understand image generation guidelines, then generate mockup images for each idea.",
+      "type": "reasoning",
+      "createdAt": 1772427490542,
+      "completedAt": 1772427491853
+    },
+    {
+      "id": "toolu_012rNBkrFoyZaQrEdjAFMwYq",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "filePath": "skills/project/SKILL.md"
+      },
+      "output": {
+        "path": "skills/project/SKILL.md",
+        "content": "     1|---\n     2|name: project\n     3|description: To generate icons, thumbnails, and App Store screenshots. You have to open this skill before generating an image.\n     4|---\n     5|\n     6|Don't forget to explore the app's code to match the image with the app design and idea.\n     7|\n     8|## How to generate app icons\n     9|You just unlocked the image generation tool with \"icon\" type.\n    10|\n    11|\n    12|## How to generate thumbnails\n    13|You just unlocked the image generation tool with \"thumbnail\" type.\n    14|\n    15|Generate a horizontal youtube-like thumbnail for the app, like an ad poster. Match the app design by looking in its codebase.\n    16|\n    17|1. Read the code\n    18|2. Generate the thumbnail\n    19|\n    20|Image configuration that you need to pass to the tool:\n    21|size: 1536x1024\n    22|background: opaque\n    23|type: thumbnail\n    24|\n    25|## How to generate App Store screenshots\n    26|\n    27|The goal is to create stunning, high-converting App Store screenshots that make users want to download the app. Think of these as marketing assets — they should highlight the app's best features, look polished and professional, and stand out in the App Store.\n    28|\n    29|### iPhone screenshots\n    30|Use `type: iphone-screenshot`. Automatically resized to iPhone 6.9\" (1320x2868).\n    31|\n    32|### iPad screenshots\n    33|Use `type: ipad-screenshot`. Automatically resized to iPad 13\" (2048x2732).\n    34|\n    35|### How to create great screenshots\n    36|\n    37|1. Read the app's code to understand the design, colors, layout, and most impressive screens\n    38|2. Write a detailed prompt — describe the screen content, UI elements, colors, background, and overall composition. The prompt should produce a visually striking image that sells the app\n    39|3. Generate with the appropriate type\n    40|\n    41|Unless the user specifically asks for a plain fullscreen screenshot, default to a **marketing-style composition**: a device mockup showing the app screen, surrounded by a styled background with a headline, subtitle, or feature callout text. Think App Store featured screenshots — they almost never show a raw screen. Instead, they use gradients or solid color backgrounds, place the phone/tablet at an angle or centered, and add short punchy text like \"Track your habits\", \"Beautiful dark mode\", or \"Plan your day\". Decide what text and composition fits best based on the app's purpose and design.\n    42|\n    43|Screenshots work best when the model has a real app screenshot as reference. If the user did NOT already attach a screenshot, use the `requestAsset` tool to ask them to provide one before generating. Set `mimeFilter: \"image/*\"`, `minFiles: 1`, `maxFiles: 5`. Once they attach screenshots, use the \"edit\" prompt type and pass the screenshot URLs in `inputImages`.\n    44|\n    45|The size and background are set automatically — you only need to provide the prompt and type.\n    46|\n\n(End of file - total 46 lines)"
+      },
+      "toolName": "read",
+      "createdAt": 1772427491853,
+      "completedAt": 1772427491861,
+      "inputArgsStr": "{\"filePath\": \"skills/project/SKILL.md\"}"
+    },
+    {
+      "id": "toolu_01FEuc1pdaRFofekTBUZr3Pw",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "filePath": ".rork/history/dm74sgf256bn4b71lftm4.json"
+      },
+      "output": {
+        "path": ".rork/history/dm74sgf256bn4b71lftm4.json",
+        "content": "{\n  \"id\": \"dm74sgf256bn4b71lftm4\",\n  \"role\": \"assistant\",\n  \"responseMessageContents\": [\n    {\n      \"id\": \"znbvwzrucx6tagktzd8bd\",\n      \"text\": \"Here are a few ideas beyond the green checkmark:\\n\\n1. **Stamp/Badge overlay** — A tilted \\\"SUMMITED\\\" stamp in a bold color (red, gold, or dark) with a rough/distressed border, like a passport stamp. Feels tactile and rewarding. This is your idea and I think it's solid — it's immediately recognizable and adds character.\\n\\n2. **Flag planted icon** — A small flag icon on the mountain card/silhouette, like planting a flag on the summit. Very on-theme and intuitive for mountaineering.\\n\\n3. **Gold/amber banner ribbon** — A diagonal ribbon across the corner of the card (like \\\"SALE\\\" ribbons on products) that says \\\"Summited\\\" — clean, doesn't obscure the card content.\\n\\n4. **Elevation badge with date** — Instead of just a checkmark, show the summit date in a styled badge (e.g., \\\"Summited Mar 2024\\\") — more informative and personal.\\n\\n5. **Overlay tint + icon** — Subtle color overlay on the entire card (warm gold or sepia tone) with a summit icon, making summited mountains visually distinct at a glance when scrolling.\\n\\nMy top pick would be **#1 (the stamp)** or a combo of **#1 + #5**. The stamp is visceral and satisfying — like collecting passport stamps for peaks. You could angle it ~15° with a slightly rough edge for authenticity. Red or dark ink-style works great against the card backgrounds.\\n\\nWhat direction appeals to you?\",\n      \"type\": \"text\"\n    }\n  ]\n}"
+      },
+      "toolName": "read",
+      "createdAt": 1772427491857,
+      "completedAt": 1772427491859,
+      "inputArgsStr": "{\"filePath\": \".rork/history/dm74sgf256bn4b71lftm4.json\"}"
+    },
+    {
+      "id": "j4trwo4hq5vrr8hhgkgsy",
+      "text": "\n\nLet me read the current mountain card design to understand the style, then generate mockup images for each concept.",
+      "type": "text"
+    },
+    {
+      "id": "toolu_01NQTa3ZAamMfs5YLbydvjSA",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "filePath": "components/MountainCard.tsx"
+      },
+      "output": {
+        "path": "components/MountainCard.tsx",
+        "content": "     1|import React, { memo, useRef } from 'react';\n     2|import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';\n     3|import { CheckCircle } from 'lucide-react-native';\n     4|import Colors from '@/constants/colors';\n     5|import { Mountain } from '@/constants/mountains';\n     6|import MountainIcon from '@/components/MountainIcon';\n     7|\n     8|interface MountainCardProps {\n     9|  mountain: Mountain;\n    10|  isSummited: boolean;\n    11|  onPress: () => void;\n    12|  useFeet?: boolean;\n    13|}\n    14|\n    15|function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false }: MountainCardProps) {\n    16|  const scaleAnim = useRef(new Animated.Value(1)).current;\n    17|\n    18|  const handlePressIn = () => {\n    19|    Animated.spring(scaleAnim, {\n    20|      toValue: 0.97,\n    21|      useNativeDriver: true,\n    22|    }).start();\n    23|  };\n    24|\n    25|  const handlePressOut = () => {\n    26|    Animated.spring(scaleAnim, {\n    27|      toValue: 1,\n    28|      friction: 3,\n    29|      useNativeDriver: true,\n    30|    }).start();\n    31|  };\n    32|\n    33|  return (\n    34|    <Animated.View style={[styles.cardWrapper, { transform: [{ scale: scaleAnim }] }]}>\n    35|      <TouchableOpacity\n    36|        style={[\n    37|          styles.card,\n    38|          isSummited && styles.cardSummited,\n    39|        ]}\n    40|        onPress={onPress}\n    41|        onPressIn={handlePressIn}\n    42|        onPressOut={handlePressOut}\n    43|        activeOpacity={0.9}\n    44|        testID={`mountain-card-${mountain.id}`}\n    45|      >\n    46|        <View style={styles.cardContent}>\n    47|          <View style={styles.leftSection}>\n    48|            <MountainIcon mountainId={mountain.id} category={mountain.category} size={34} />\n    49|          </View>\n    50|\n    51|          <View style={styles.centerSection}>\n    52|            <View style={styles.nameRow}>\n    53|              <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>\n    54|              {isSummited && (\n    55|                <CheckCircle color={Colors.success} size={14} />\n    56|              )}\n    57|            </View>\n    58|          </View>\n    59|\n    60|          <View style={styles.rightSection}>\n    61|            <Text style={styles.elevation}>\n    62|              {useFeet\n    63|                ? `${mountain.elevationFt.toLocaleString()} ft`\n    64|                : `${mountain.elevation.toLocaleString()} m`}\n    65|            </Text>\n    66|            <Text style={styles.elevationAlt}>\n    67|              {useFeet\n    68|                ? `${mountain.elevation.toLocaleString()} m`\n    69|                : `${mountain.elevationFt.toLocaleString()} ft`}\n    70|            </Text>\n    71|          </View>\n    72|        </View>\n    73|      </TouchableOpacity>\n    74|    </Animated.View>\n    75|  );\n    76|}\n    77|\n    78|export default memo(MountainCardComponent);\n    79|\n    80|const styles = StyleSheet.create({\n    81|  cardWrapper: {\n    82|    marginBottom: 0,\n    83|  },\n    84|  card: {\n    85|    backgroundColor: 'transparent',\n    86|    borderBottomWidth: StyleSheet.hairlineWidth,\n    87|    borderBottomColor: Colors.border + '50',\n    88|  },\n    89|  cardSummited: {\n    90|    backgroundColor: 'rgba(58, 158, 92, 0.04)',\n    91|  },\n    92|  cardContent: {\n    93|    flexDirection: 'row',\n    94|    alignItems: 'center',\n    95|    paddingVertical: 13,\n    96|    paddingHorizontal: 18,\n    97|  },\n    98|  leftSection: {\n    99|    marginRight: 14,\n   100|    width: 36,\n   101|    alignItems: 'center',\n   102|  },\n   103|  centerSection: {\n   104|    flex: 1,\n   105|    marginRight: 8,\n   106|  },\n   107|  nameRow: {\n   108|    flexDirection: 'row',\n   109|    alignItems: 'center',\n   110|    gap: 6,\n   111|  },\n   112|  name: {\n   113|    fontSize: 15,\n   114|    fontWeight: '600' as const,\n   115|    color: Colors.text,\n   116|    flexShrink: 1,\n   117|  },\n   118|  rightSection: {\n   119|    alignItems: 'flex-end',\n   120|  },\n   121|  elevation: {\n   122|    fontSize: 13,\n   123|    fontWeight: '500' as const,\n   124|    color: Colors.textSecondary,\n   125|  },\n   126|  elevationAlt: {\n   127|    fontSize: 11,\n   128|    color: Colors.textMuted,\n   129|    marginTop: 1,\n   130|  },\n   131|});\n   132|\n\n(End of file - total 132 lines)"
+      },
+      "toolName": "read",
+      "createdAt": 1772427495817,
+      "completedAt": 1772427495824,
+      "inputArgsStr": "{\"filePath\": \"components/MountainCard.tsx\"}"
+    },
+    {
+      "id": "toolu_01GmgZYnpa7AF5SQyELu8BXv",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "filePath": "constants/colors.ts"
+      },
+      "output": {
+        "path": "constants/colors.ts",
+        "content": "     1|const Colors = {\n     2|  primary: '#3B6FA0',\n     3|  secondary: '#2E5A85',\n     4|  accent: '#3B6FA0',\n     5|  accentLight: '#5B8EC2',\n     6|  accentDark: '#2E5A85',\n     7|  ice: '#C5DAF0',\n     8|  frost: '#E4EEF8',\n     9|  snow: '#EFF4FA',\n    10|  white: '#FFFFFF',\n    11|  text: '#1A3350',\n    12|  textSecondary: '#5C7FA3',\n    13|  textDark: '#0D1F38',\n    14|  textMuted: '#8BA5C0',\n    15|  cardBg: '#FFFFFF',\n    16|  cardBgLight: '#E4EEF8',\n    17|  border: '#BCCFE3',\n    18|  success: '#3A9E5C',\n    19|  danger: '#D94F4F',\n    20|  warning: '#E8A838',\n    21|  gold: '#D4A843',\n    22|  peach: '#E8915A',\n    23|  warmGlow: '#E8915A',\n    24|  tabBar: '#FFFFFF',\n    25|  tabBarBorder: '#C5DAF0',\n    26|  overlay: 'rgba(239, 244, 250, 0.95)',\n    27|  background: '#E4EEF8',\n    28|  backgroundGradientTop: '#C5DAF0',\n    29|  backgroundGradientMid: '#D6E4F2',\n    30|  backgroundGradientBottom: '#E4EEF8',\n    31|  mountainIcon: '#2E5A85',\n    32|  mountainIconLight: '#4A7FB5',\n    33|  categoryColors: {\n    34|    '7summits': '#2E5A85',\n    35|    '8000m': '#1A3350',\n    36|    '14ers': '#3B6FA0',\n    37|    'alps': '#4A7FB5',\n    38|    'andes': '#2E5A85',\n    39|    'himalaya': '#1A3350',\n    40|    'other': '#3B6FA0',\n    41|    'custom': '#5C7FA3',\n    42|  } as Record<string, string>,\n    43|};\n    44|\n    45|export default Colors;\n    46|\n\n(End of file - total 46 lines)"
+      },
+      "toolName": "read",
+      "createdAt": 1772427495820,
+      "completedAt": 1772427495825,
+      "inputArgsStr": "{\"filePath\": \"constants/colors.ts\"}"
+    },
+    {
+      "id": "1q5ll4bimit0npuela9wp",
+      "text": "\n\nGreat idea! Let me generate mockup images for each of the 5 concepts so you can compare them visually.",
+      "type": "text"
+    },
+    {
+      "id": "toolu_019yf2uWZGdiNFbSWAqxXLyS",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "size": "1024x1024",
+        "type": "asset",
+        "prompt": {
+          "type": "generate",
+          "prompt": "A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. Overlaid on the card is a tilted red passport-style stamp that says 'SUMMITED' in bold uppercase letters, rotated about 15 degrees, with a distressed/rough circular border like an ink stamp. The stamp is semi-transparent red (#D94F4F) so the card content is still visible underneath. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design."
+        },
+        "background": "opaque",
+        "runInBackground": false
+      },
+      "output": {
+        "imageUrl": "https://r2-pub.rork.com/generated-images/ddeac883-065b-4ff2-8dd1-4ddf7f11e705.png"
+      },
+      "toolName": "generateImage",
+      "createdAt": 1772427516709,
+      "completedAt": 1772427540580,
+      "inputArgsStr": "{\"prompt\": {\"type\":\"generate\",\"prompt\":\"A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. Overlaid on the card is a tilted red passport-style stamp that says 'SUMMITED' in bold uppercase letters, rotated about 15 degrees, with a distressed/rough circular border like an ink stamp. The stamp is semi-transparent red (#D94F4F) so the card content is still visible underneath. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design.\"}, \"size\": \"1024x1024\", \"type\": \"asset\", \"background\": \"opaque\"}"
+    },
+    {
+      "id": "toolu_01LBjNwRxAP6AXmu9VsJuHHE",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "size": "1024x1024",
+        "type": "asset",
+        "prompt": {
+          "type": "generate",
+          "prompt": "A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. On the mountain silhouette/icon area, there is a small planted flag icon in red/gold, like a summit flag planted on top of the peak. The flag is small but clearly visible, symbolizing conquering the summit. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design."
+        },
+        "background": "opaque",
+        "runInBackground": false
+      },
+      "output": {
+        "imageUrl": "https://r2-pub.rork.com/generated-images/7af97da4-42ac-4445-b8cf-79587d56912b.png"
+      },
+      "toolName": "generateImage",
+      "createdAt": 1772427516727,
+      "completedAt": 1772427539077,
+      "inputArgsStr": "{\"prompt\": {\"type\":\"generate\",\"prompt\":\"A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. On the mountain silhouette/icon area, there is a small planted flag icon in red/gold, like a summit flag planted on top of the peak. The flag is small but clearly visible, symbolizing conquering the summit. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design.\"}, \"size\": \"1024x1024\", \"type\": \"asset\", \"background\": \"opaque\"}"
+    },
+    {
+      "id": "toolu_01XoW95qxodThhRrawHiLEYU",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "size": "1024x1024",
+        "type": "asset",
+        "prompt": {
+          "type": "generate",
+          "prompt": "A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. In the top-right corner of the card there is a diagonal gold/amber ribbon banner that says 'Summited' in white text, like a corner ribbon badge you see on product cards. The ribbon is angled at 45 degrees across the corner. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design."
+        },
+        "background": "opaque",
+        "runInBackground": false
+      },
+      "output": {
+        "imageUrl": "https://r2-pub.rork.com/generated-images/40965195-abcc-4247-9eaa-e1065f60f1d3.png"
+      },
+      "toolName": "generateImage",
+      "createdAt": 1772427516734,
+      "completedAt": 1772427528987,
+      "inputArgsStr": "{\"prompt\": {\"type\":\"generate\",\"prompt\":\"A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. In the top-right corner of the card there is a diagonal gold/amber ribbon banner that says 'Summited' in white text, like a corner ribbon badge you see on product cards. The ribbon is angled at 45 degrees across the corner. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design.\"}, \"size\": \"1024x1024\", \"type\": \"asset\", \"background\": \"opaque\"}"
+    },
+    {
+      "id": "toolu_01BDU2FuRJemJ1cVQu4MKKYB",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "size": "1024x1024",
+        "type": "asset",
+        "prompt": {
+          "type": "generate",
+          "prompt": "A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. Below the mountain name there is a small styled badge/pill that shows 'Summited Mar 2024' in a dark navy rounded rectangle with white text, like a date tag. The badge is compact and informative, showing the summit date. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design."
+        },
+        "background": "opaque",
+        "runInBackground": false
+      },
+      "output": {
+        "imageUrl": "https://r2-pub.rork.com/generated-images/ef369095-3ba4-449f-9000-741ce7cc0014.png"
+      },
+      "toolName": "generateImage",
+      "createdAt": 1772427516742,
+      "completedAt": 1772427540523,
+      "inputArgsStr": "{\"prompt\": {\"type\":\"generate\",\"prompt\":\"A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a clean white background with a mountain icon on the left, mountain name 'Mount Everest' in dark navy text in the center, and elevation '8,849 m' on the right. Below the mountain name there is a small styled badge/pill that shows 'Summited Mar 2024' in a dark navy rounded rectangle with white text, like a date tag. The badge is compact and informative, showing the summit date. The overall app uses a blue-frost color scheme with navy text. Show the card on a light blue (#E4EEF8) background. Clean, minimal mobile UI design.\"}, \"size\": \"1024x1024\", \"type\": \"asset\", \"background\": \"opaque\"}"
+    },
+    {
+      "id": "toolu_017QtzmBwiZxX9U4ErvGy1JX",
+      "type": "tool",
+      "error": null,
+      "input": {
+        "size": "1024x1024",
+        "type": "asset",
+        "prompt": {
+          "type": "generate",
+          "prompt": "A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a warm golden/sepia tinted background overlay instead of white, giving it a distinct warm glow compared to non-summited cards. A mountain icon on the left, mountain name 'Mount Everest' in dark text in the center, and elevation '8,849 m' on the right. There is also a small golden summit/peak icon near the name. The warm tint makes summited mountains immediately stand out when scrolling through a list. Show this card next to a normal white non-summited card for comparison. The overall app uses a blue-frost color scheme. Light blue (#E4EEF8) background. Clean, minimal mobile UI design."
+        },
+        "background": "opaque",
+        "runInBackground": false
+      },
+      "output": {
+        "imageUrl": "https://r2-pub.rork.com/generated-images/15037235-07af-44b8-be9e-ebcb6bbcf227.png"
+      },
+      "toolName": "generateImage",
+      "createdAt": 1772427516750,
+      "completedAt": 1772427543138,
+      "inputArgsStr": "{\"prompt\": {\"type\":\"generate\",\"prompt\":\"A mobile app mountain list card UI mockup showing a summited mountain indicator concept. The card has a warm golden/sepia tinted background overlay instead of white, giving it a distinct warm glow compared to non-summited cards. A mountain icon on the left, mountain name 'Mount Everest' in dark text in the center, and elevation '8,849 m' on the right. There is also a small golden summit/peak icon near the name. The warm tint makes summited mountains immediately stand out when scrolling through a list. Show this card next to a normal white non-summited card for comparison. The overall app uses a blue-frost color scheme. Light blue (#E4EEF8) background. Clean, minimal mobile UI design.\"}, \"size\": \"1024x1024\", \"type\": \"asset\", \"background\": \"opaque\"}"
+    },
+    {
+      "id": "b498e0b2-f6d3-4540-8861-3e332ca4b690",
+      "url": "https://r2-pub.rork.com/generated-images/40965195-abcc-4247-9eaa-e1065f60f1d3.png",
+      "size": "1024x1024",
+      "type": "image",
+      "imageType": "image"
+    },
+    {
+      "id": "2e36e76b-2192-4493-839d-b7248f858a08",
+      "url": "https://r2-pub.rork.com/generated-images/7af97da4-42ac-4445-b8cf-79587d56912b.png",
+      "size": "1024x1024",
+      "type": "image",
+      "imageType": "image"
+    },
+    {
+      "id": "9603bffd-9b6d-4678-9a02-4bd6c4058e00",
+      "url": "https://r2-pub.rork.com/generated-images/ef369095-3ba4-449f-9000-741ce7cc0014.png",
+      "size": "1024x1024",
+      "type": "image",
+      "imageType": "image"
+    },
+    {
+      "id": "becd0a06-84c8-430e-b961-3a7b6adef695",
+      "url": "https://r2-pub.rork.com/generated-images/ddeac883-065b-4ff2-8dd1-4ddf7f11e705.png",
+      "size": "1024x1024",
+      "type": "image",
+      "imageType": "image"
+    },
+    {
+      "id": "12e219f2-0202-4f4e-b162-00547bf44a59",
+      "url": "https://r2-pub.rork.com/generated-images/15037235-07af-44b8-be9e-ebcb6bbcf227.png",
+      "size": "1024x1024",
+      "type": "image",
+      "imageType": "image"
+    },
+    {
+      "id": "lsa6qui6i6yefrvwmxm7d",
+      "text": "\n\nHere are mockups for all 5 concepts:\n\n**1. Passport Stamp (\"SUMMITED\")**\n![Stamp concept](https://r2-pub.rork.com/generated-images/ddeac883-065b-4ff2-8dd1-4ddf7f11e705.png)\nA tilted red ink stamp overlaid on the card — bold, tactile, like collecting passport stamps for peaks.\n\n**2. Planted Flag**\n![Flag concept](https://r2-pub.rork.com/generated-images/7af97da4-42ac-4445-b8cf-79587d56912b.png)\nA small flag planted on the mountain icon — on-theme and intuitive for mountaineering.\n\n**3. Gold Corner Ribbon**\n![Ribbon concept](https://r2-pub.rork.com/generated-images/40965195-abcc-4247-9eaa-e1065f60f1d3.png)\nA diagonal gold/amber ribbon in the corner saying \"Summited\" — clean and doesn't obscure content.\n\n**4. Date Badge**\n![Date badge concept](https://r2-pub.rork.com/generated-images/ef369095-3ba4-449f-9000-741ce7cc0014.png)\nA compact pill badge showing \"Summited Mar 2024\" — more informative and personal.\n\n**5. Warm Tint Overlay**\n![Tint concept](https://r2-pub.rork.com/generated-images/15037235-07af-44b8-be9e-ebcb6bbcf227.png)\nA warm golden tint on the entire card so summited mountains stand out at a glance while scrolling.\n\nWhich direction do you like? I can also combine elements (e.g., stamp + warm tint). Just let me know and I'll implement it!",
+      "type": "text"
+    },
+    {
+      "id": "meta",
+      "meta": {
+        "creditsCharged": "1"
+      },
+      "type": "meta"
+    }
+  ]
+}

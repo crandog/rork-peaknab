@@ -1,6 +1,6 @@
 import React, { memo, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { CheckCircle } from 'lucide-react-native';
+
 import Colors from '@/constants/colors';
 import { Mountain } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
@@ -51,9 +51,6 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
           <View style={styles.centerSection}>
             <View style={styles.nameRow}>
               <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
-              {isSummited && (
-                <CheckCircle color={Colors.success} size={14} />
-              )}
             </View>
           </View>
 
@@ -69,6 +66,14 @@ function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false 
                 : `${mountain.elevationFt.toLocaleString()} ft`}
             </Text>
           </View>
+
+          {isSummited && (
+            <View style={styles.stampContainer}>
+              <View style={styles.stamp}>
+                <Text style={styles.stampText}>SUMMITED</Text>
+              </View>
+            </View>
+          )}
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -117,6 +122,27 @@ const styles = StyleSheet.create({
   },
   rightSection: {
     alignItems: 'flex-end',
+  },
+  stampContainer: {
+    position: 'absolute' as const,
+    right: 14,
+    top: 6,
+    transform: [{ rotate: '-12deg' }],
+  },
+  stamp: {
+    borderWidth: 2,
+    borderColor: '#C0392B',
+    borderRadius: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    backgroundColor: 'rgba(192, 57, 43, 0.08)',
+  },
+  stampText: {
+    fontSize: 8,
+    fontWeight: '900' as const,
+    color: '#C0392B',
+    letterSpacing: 1.5,
+    textTransform: 'uppercase' as const,
   },
   elevation: {
     fontSize: 13,

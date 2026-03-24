@@ -254,9 +254,15 @@ export default function MountainDetailScreen() {
             </View>
           </View>
           {summited && (
-            <View style={styles.summitedBadge}>
-              <CheckCircle color={Colors.success} size={16} />
-              <Text style={styles.summitedText}>Summited {summitRecord?.date}</Text>
+            <View style={styles.summitedStampWrap}>
+              <View style={styles.summitedStamp}>
+                <Text style={styles.summitedStampText}>SUMMITED</Text>
+              </View>
+              {summitRecord?.date && (
+                <View style={styles.summitedDateBox}>
+                  <Text style={styles.summitedDateText}>{summitRecord.date}</Text>
+                </View>
+              )}
             </View>
           )}
         </View>
@@ -519,8 +525,11 @@ const styles = StyleSheet.create({
   heroStatSub: { fontSize: 13, color: Colors.textSecondary, marginBottom: 2, textAlign: 'center' as const },
   heroStatLabel: { fontSize: 11, color: Colors.textMuted, fontWeight: '500' as const, textAlign: 'center' as const },
   heroDivider: { width: 1, backgroundColor: Colors.border },
-  summitedBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, marginTop: 12, backgroundColor: Colors.success + '12', paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1, borderColor: Colors.success + '30' },
-  summitedText: { color: Colors.success, fontSize: 13, fontWeight: '600' as const },
+  summitedStampWrap: { alignItems: 'center', marginTop: 16 },
+  summitedStamp: { borderWidth: 2.5, borderColor: '#C0392B', borderRadius: 6, paddingHorizontal: 16, paddingVertical: 6, backgroundColor: 'rgba(192, 57, 43, 0.06)', transform: [{ rotate: '-8deg' }] },
+  summitedStampText: { fontSize: 16, fontWeight: '900' as const, color: '#C0392B', letterSpacing: 3, textTransform: 'uppercase' as const },
+  summitedDateBox: { marginTop: 8, backgroundColor: Colors.primary + '12', paddingHorizontal: 12, paddingVertical: 4, borderRadius: 6, borderWidth: 1, borderColor: Colors.primary + '25' },
+  summitedDateText: { fontSize: 12, fontWeight: '600' as const, color: Colors.primary },
   tabBar: { flexDirection: 'row', marginHorizontal: 20, backgroundColor: Colors.white, borderRadius: 10, padding: 3, marginBottom: 20, borderWidth: 1, borderColor: Colors.border },
   tab: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 10, borderRadius: 8, gap: 6 },
   tabActive: { backgroundColor: Colors.primary },
