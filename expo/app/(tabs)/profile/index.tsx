@@ -26,7 +26,10 @@ import {
   Target,
   Zap,
   Compass,
+  FileDown,
 } from 'lucide-react-native';
+import * as Print from 'expo-print';
+import { shareAsync } from 'expo-sharing';
 import Colors from '@/constants/colors';
 import { categoryLabels, MountainCategory } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
@@ -112,6 +115,205 @@ export default function ProfileScreen() {
     return allMountains.length > 0 ? Math.round((summitCount / allMountains.length) * 100) : 0;
   }, [summitCount, allMountains]);
 
+  const handleExportPDF = useCallback(async () => {
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+
+    const summitRows = summitedMountains
+      .sort((a, b) => {
+        const recA = records.find((r) => r.mountainId === a.id);
+        const recB = records.find((r) => r.mountainId === b.id);
+        return new Date(recB?.createdAt ?? 0).getTime() - new Date(recA?.createdAt ?? 0).getTime();
+      })
+      .map((m, i) => {
+        const record = records.find((r) => r.mountainId === m.id);
+        return `
+          <tr style="background: ${i % 2 === 0 ? '#f8f9fa' : '#ffffff'};">
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e9ecef;">${m.name}</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e9ecef;">${m.elevation.toLocaleString()}m</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e9ecef;">${m.country}</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e9ecef;">${m.range}</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e9ecef;">${m.difficulty}</td>
+            <td style="padding: 10px 14px; border-bottom: 1px solid #e9ecef;">${record?.date ?? '—'}</td>
+          </tr>`;
+      })
+      .join('');
+
+    const categoryRows = categoryProgress
+      .filter((c) => c.total > 0)
+      .map((c) => {
+        const pct = c.total > 0 ? Math.round((c.done / c.total) * 100) : 0;
+        return `
+          <tr>
+            <td style="padding: 8px 14px; border-bottom: 1px solid #e9ecef;">${c.label}</td>
+            <td style="padding: 8px 14px; border-bottom: 1px solid #e9ecef;">${c.done} / ${c.total}</td>
+            <td style="padding: 8px 14px; border-bottom: 1px solid #e9ecef;">
+              <div style="background: #e9ecef; border-radius: 4px; height: 8px; width: 100%;">
+                <div style="background: #169ED0; border-radius: 4px; height: 8px; width: ${pct}%;"></div>
+              </div>
+            </td>
+          </tr>`;
+      })
+      .join('');
+
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+          <style>
+            @page { margin: 40px; }
+            body {
+              font-family: -apple-system, Helvetica Neue, Arial, sans-serif;
+              color: #1a1a2e;
+              margin: 0;
+              padding: 0;
+            }
+            .header {
+              background: linear-gradient(135deg, #0E2A42, #169ED0);
+              color: white;
+              padding: 36px 32px;
+              border-radius: 0 0 16px 16px;
+            }
+            .header h1 { margin: 0 0 4px 0; font-size: 28px; font-weight: 800; }
+            .header p { margin: 0; opacity: 0.8; font-size: 13px; }
+            .stats-grid {
+              display: flex;
+              gap: 12px;
+              padding: 24px 32px 0;
+            }
+            .stat-box {
+              flex: 1;
+              background: #f0f6fa;
+              border-radius: 12px;
+              padding: 16px;
+              text-align: center;
+            }
+            .stat-box .num { font-size: 26px; font-weight: 800; color: #0E2A42; }
+            .stat-box .label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 2px; }
+            .section { padding: 20px 32px 0; }
+            .section h2 { font-size: 18px; font-weight: 700; color: #0E2A42; margin: 0 0 12px 0; border-bottom: 2px solid #169ED0; padding-bottom: 6px; }
+            table { width: 100%; border-collapse: collapse; font-size: 12px; }
+            th {
+              text-align: left;
+              padding: 10px 14px;
+              background: #0E2A42;
+              color: white;
+              font-weight: 600;
+              font-size: 11px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            th:first-child { border-radius: 8px 0 0 0; }
+            th:last-child { border-radius: 0 8px 0 0; }
+            .footer {
+              text-align: center;
+              padding: 24px 32px;
+              color: #9ca3af;
+              font-size: 11px;
+            }
+            ${highestSummit ? `
+            .highlight-box {
+              margin: 20px 32px 0;
+              padding: 16px 20px;
+              background: linear-gradient(135deg, #FFF8E7, #FFF1CC);
+              border-radius: 12px;
+              border-left: 4px solid #D4A843;
+            }
+            .highlight-box .label { font-size: 10px; color: #B8892E; text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; }
+            .highlight-box .value { font-size: 18px; font-weight: 800; color: #0E2A42; margin-top: 2px; }
+            .highlight-box .sub { font-size: 12px; color: #6b7280; margin-top: 2px; }
+            ` : ''}
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Summit Tracker Report</h1>
+            <p>Generated ${dateStr}</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="num">${summitCount}</div>
+              <div class="label">Summits</div>
+            </div>
+            <div class="stat-box">
+              <div class="num">${totalElevation.toLocaleString()}</div>
+              <div class="label">Meters Gained</div>
+            </div>
+            <div class="stat-box">
+              <div class="num">${countriesVisited}</div>
+              <div class="label">Countries</div>
+            </div>
+            <div class="stat-box">
+              <div class="num">${rangesClimbed}</div>
+              <div class="label">Ranges</div>
+            </div>
+          </div>
+
+          ${highestSummit ? `
+          <div class="highlight-box">
+            <div class="label">Highest Summit</div>
+            <div class="value">${highestSummit.name}</div>
+            <div class="sub">${highestSummit.elevation.toLocaleString()}m · ${highestSummit.country} · ${highestSummit.range}</div>
+          </div>
+          ` : ''}
+
+          ${categoryRows ? `
+          <div class="section">
+            <h2>Category Progress</h2>
+            <table>
+              <tr>
+                <th>Category</th>
+                <th>Progress</th>
+                <th style="width: 40%;">Bar</th>
+              </tr>
+              ${categoryRows}
+            </table>
+          </div>
+          ` : ''}
+
+          ${summitRows ? `
+          <div class="section">
+            <h2>Summited Peaks (${summitedMountains.length})</h2>
+            <table>
+              <tr>
+                <th>Peak</th>
+                <th>Elevation</th>
+                <th>Country</th>
+                <th>Range</th>
+                <th>Difficulty</th>
+                <th>Date</th>
+              </tr>
+              ${summitRows}
+            </table>
+          </div>
+          ` : ''}
+
+          <div class="footer">
+            Summit Tracker · ${dateStr}
+          </div>
+        </body>
+      </html>
+    `;
+
+    try {
+      if (Platform.OS === 'web') {
+        await Print.printAsync({ html });
+      } else {
+        const { uri } = await Print.printToFileAsync({ html });
+        console.log('PDF saved to:', uri);
+        await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
+      }
+    } catch (e) {
+      console.log('Export cancelled or failed', e);
+    }
+  }, [summitedMountains, records, categoryProgress, summitCount, totalElevation, countriesVisited, rangesClimbed, highestSummit]);
+
   const handleShareStats = useCallback(async () => {
     if (Platform.OS !== 'web') {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -185,14 +387,24 @@ export default function ProfileScreen() {
             <Text style={styles.subtitle}>Your mountaineering journey</Text>
           </View>
           {summitCount > 0 && (
-            <TouchableOpacity
-              style={styles.shareStatsButton}
-              onPress={handleShareStats}
-              activeOpacity={0.7}
-              testID="share-stats-button"
-            >
-              <Share2 color={Colors.white} size={18} />
-            </TouchableOpacity>
+            <View style={styles.headerActions}>
+              <TouchableOpacity
+                style={styles.exportButton}
+                onPress={handleExportPDF}
+                activeOpacity={0.7}
+                testID="export-pdf-button"
+              >
+                <FileDown color={Colors.white} size={18} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.shareStatsButton}
+                onPress={handleShareStats}
+                activeOpacity={0.7}
+                testID="share-stats-button"
+              >
+                <Share2 color={Colors.white} size={18} />
+              </TouchableOpacity>
+            </View>
           )}
         </View>
 
@@ -422,6 +634,20 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 13,
     color: Colors.textSecondary,
+  },
+  headerActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  exportButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: Colors.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   shareStatsButton: {
     width: 44,
