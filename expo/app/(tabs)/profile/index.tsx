@@ -253,7 +253,7 @@ export default function ProfileScreen() {
         {highestSummit && (
           <TouchableOpacity
             style={styles.highestCard}
-            onPress={() => router.push(`/mountain/${highestSummit.id}`)}
+            onPress={() => router.push(`/mountain/${highestSummit.id}` as any)}
             activeOpacity={0.8}
           >
             <View style={styles.highestLeft}>
@@ -337,7 +337,7 @@ export default function ProfileScreen() {
               <View key={record.mountainId} style={styles.recentItem}>
                 <TouchableOpacity
                   style={styles.recentContent}
-                  onPress={() => router.push(`/mountain/${record.mountainId}`)}
+                  onPress={() => router.push(`/mountain/${record.mountainId}` as any)}
                   activeOpacity={0.8}
                 >
                   <MountainIcon mountainId={record.mountainId} category={record.mountain?.category ?? 'other'} size={20} />

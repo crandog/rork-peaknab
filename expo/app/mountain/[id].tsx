@@ -117,7 +117,7 @@ export default function MountainDetailScreen() {
     setShowDateInput(false);
 
     router.push({
-      pathname: '/summit-report',
+      pathname: '/summit-report' as any,
       params: { mountainId: id, mountainName: mountain.name },
     });
   }, [id, mountain, formattedDate, addSummit, router]);
@@ -306,7 +306,7 @@ export default function MountainDetailScreen() {
                 ) : null}
                 <TouchableOpacity
                   style={styles.editReportButton}
-                  onPress={() => router.push({ pathname: '/summit-report', params: { mountainId: mountain.id, mountainName: mountain.name } })}
+                  onPress={() => router.push({ pathname: '/summit-report' as any, params: { mountainId: mountain.id, mountainName: mountain.name } })}
                 >
                   <Text style={styles.editReportText}>{summitRecord?.report ? 'Edit Report & Photo' : 'Add Report & Photo'}</Text>
                   <ChevronRight color={Colors.accent} size={16} />

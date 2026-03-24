@@ -69,11 +69,11 @@ export default function MountainsScreen() {
   }, [search, selectedCategory, sortBy]);
 
   const handleMountainPress = useCallback((id: string) => {
-    router.push(`/mountain/${id}`);
+    router.push(`/mountain/${id}` as any);
   }, [router]);
 
   const handleO2Press = useCallback(() => {
-    router.push('/o2-equivalent');
+    router.push('/o2-equivalent' as any);
   }, [router]);
 
   const renderItem = useCallback(({ item }: { item: typeof mountains[0] }) => {
