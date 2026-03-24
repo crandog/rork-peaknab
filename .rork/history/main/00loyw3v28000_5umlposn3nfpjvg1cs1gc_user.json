@@ -1,0 +1,7 @@
+{
+  "id": "5umlposn3nfpjvg1cs1gc",
+  "role": "user",
+  "userId": "2ba0a10a-b4f7-47e5-99f3-bd6750193c47",
+  "content": "I want to make an app that tracks a climber's summits. I want each mountain to include an info tab that shows more info about the mountain when clicked, and and \"did you summit tab? that has yes or no. If you click yes it ask you to enter the date of summit and bring you to another tab so you can give a summit report and post a summit photo. I want the mountains to include the 100 most popular climbs in the world- Including the 7 summits, the most popular 14ers, 8000m peaks, most popular climbs in the Alps and Andes, etc. I want you to be able to sort by type of mountain or search. Additionally I want a tab next to the search features for \"O2 equivalent\" when clicked it will show the O2 equivalent at different altitudes. Additionally if possible I want a map tab that when clicked it will show a map of the world and all of the summits a climber has completed. I want icey blue theme (think cold mountains) and if possible a logo for each mountain representing the actual mountain's aesthetic. Please ask me questions if you have any. I want this to be easy to use and efficient as I ultimately want to upload it to the app store.",
+  "attachments": []
+}
