@@ -104,7 +104,7 @@ export default function MountainsScreen() {
   return (
     <View style={styles.container}>
       <LinearGradient
-        colors={['#1A1A2E', '#1E2240', '#222244']}
+        colors={['#0B1926', '#0F2235', '#132D42']}
         style={[styles.header, { paddingTop: insets.top + 8 }]}
       >
         <View style={styles.titleRow}>
@@ -112,18 +112,18 @@ export default function MountainsScreen() {
             <Text style={styles.title}>Summit Tracker</Text>
             <View style={styles.titleSubRow}>
             <Text style={styles.titleSub}>{allMountains.length} peaks to conquer</Text>
-            <TouchableOpacity
-              style={styles.unitToggle}
-              onPress={() => setUseFeet(prev => !prev)}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.unitText, !useFeet && styles.unitTextActive]}>m</Text>
-              <Text style={styles.unitDivider}>/</Text>
-              <Text style={[styles.unitText, useFeet && styles.unitTextActive]}>ft</Text>
-            </TouchableOpacity>
           </View>
           </View>
           <View style={styles.titleActions}>
+            <TouchableOpacity
+              style={styles.unitToggleBtn}
+              onPress={() => setUseFeet(prev => !prev)}
+              activeOpacity={0.7}
+              testID="unit-toggle-button"
+            >
+              <ArrowUpDown color={useFeet ? Colors.accentLight : Colors.ice} size={14} />
+              <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.addButton}
               onPress={handleAddMountain}
@@ -270,28 +270,21 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: Colors.textMuted,
   },
-  unitToggle: {
+  unitToggleBtn: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     backgroundColor: Colors.cardBg,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderRadius: 12,
+    gap: 5,
     borderWidth: 1,
     borderColor: Colors.border,
   },
-  unitText: {
-    fontSize: 11,
-    fontWeight: '600' as const,
-    color: Colors.textMuted,
-  },
-  unitTextActive: {
-    color: Colors.accent,
-  },
-  unitDivider: {
-    fontSize: 11,
-    color: Colors.textMuted,
-    marginHorizontal: 2,
+  unitToggleBtnText: {
+    fontSize: 13,
+    fontWeight: '700' as const,
+    color: Colors.ice,
   },
   titleActions: {
     flexDirection: 'row',
