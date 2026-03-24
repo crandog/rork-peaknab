@@ -123,62 +123,40 @@ export default function ProfileScreen() {
     const sortedSummits = summitedMountains
       .map((m) => {
         const record = records.find((r) => r.mountainId === m.id);
-        return { name: m.name, date: record?.date ?? '—', createdAt: record?.createdAt ?? '' };
+        return { name: m.name, date: record?.date ?? '', createdAt: record?.createdAt ?? '' };
       })
       .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
-    const tableRows = sortedSummits
-      .map((s, i) => {
-        const bg = i % 2 === 0 ? '#ffffff' : '#f7f8fa';
-        return (
-          '<tr style="background:' + bg + ';">' +
-          '<td style="padding:12px 16px;color:#94a3b8;font-size:13px;width:40px;text-align:center;">' + (i + 1) + '</td>' +
-          '<td style="padding:12px 16px;font-size:15px;color:#1e293b;font-weight:500;">' + s.name + '</td>' +
-          '<td style="padding:12px 16px;font-size:13px;color:#64748b;text-align:right;white-space:nowrap;">' + s.date + '</td>' +
-          '</tr>'
-        );
-      })
-      .join('');
+    const rows = sortedSummits.map((s, i) =>
+      '<div style="display:flex;justify-content:space-between;align-items:baseline;padding:10px 0;' +
+      (i < sortedSummits.length - 1 ? 'border-bottom:1px solid #eee;' : '') +
+      '">' +
+      '<span style="font-size:14px;color:#222;">' + s.name + '</span>' +
+      '<span style="font-size:12px;color:#999;flex-shrink:0;margin-left:16px;">' + s.date + '</span>' +
+      '</div>'
+    ).join('');
 
-    const pdfHtml = [
-      '<!DOCTYPE html>',
-      '<html><head><meta charset="utf-8"/>',
-      '<style>',
-      '@page { margin: 48px 40px; }',
-      'body { font-family: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif; margin: 0; padding: 0; color: #1e293b; background: #fff; }',
-      'table { width: 100%; border-collapse: collapse; }',
-      '</style>',
-      '</head><body>',
-      '<div style="border-bottom: 3px solid #0f172a; padding-bottom: 16px; margin-bottom: 24px;">',
-      '<h1 style="font-size: 28px; font-weight: 800; margin: 0 0 6px; color: #0f172a; letter-spacing: -0.5px;">Summit Log</h1>',
-      '<p style="font-size: 13px; color: #94a3b8; margin: 0;">' + sortedSummits.length + (sortedSummits.length === 1 ? ' summit' : ' summits') + ' &bull; Exported ' + dateStr + '</p>',
-      '</div>',
-      '<table>',
-      '<thead>',
-      '<tr style="border-bottom: 2px solid #e2e8f0;">',
-      '<th style="padding: 10px 16px; text-align: center; font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; width: 40px;">#</th>',
-      '<th style="padding: 10px 16px; text-align: left; font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;">Peak</th>',
-      '<th style="padding: 10px 16px; text-align: right; font-size: 11px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;">Date</th>',
-      '</tr>',
-      '</thead>',
-      '<tbody>' + tableRows + '</tbody>',
-      '</table>',
-      '<div style="margin-top: 40px; padding-top: 16px; border-top: 1px solid #e2e8f0; text-align: center;">',
-      '<p style="font-size: 10px; color: #cbd5e1; margin: 0;">Summit Tracker &bull; ' + dateStr + '</p>',
-      '</div>',
-      '</body></html>',
-    ].join('\n');
+    const html = '<!DOCTYPE html><html><head><meta charset="utf-8"/>' +
+      '<style>@page{margin:50px 45px}body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:0;color:#222}</style>' +
+      '</head><body>' +
+      '<div style="margin-bottom:30px;">' +
+      '<div style="font-size:24px;font-weight:bold;color:#111;">Summit Log</div>' +
+      '<div style="font-size:11px;color:#aaa;margin-top:4px;">' + sortedSummits.length + ' summit' + (sortedSummits.length !== 1 ? 's' : '') + ' \u2022 ' + dateStr + '</div>' +
+      '</div>' +
+      '<div style="border-top:2px solid #111;padding-top:12px;">' + rows + '</div>' +
+      '<div style="margin-top:40px;text-align:center;font-size:9px;color:#ccc;">Summit Tracker</div>' +
+      '</body></html>';
 
-    console.log('PDF Export: generating streamlined summit log, summits:', sortedSummits.length);
+    console.log('PDF Export v3: generating minimal summit log, count:', sortedSummits.length);
 
     try {
       if (Platform.OS === 'web') {
-        await Print.printAsync({ html: pdfHtml });
+        await Print.printAsync({ html });
       } else {
-        const { uri } = await Print.printToFileAsync({ html: pdfHtml });
+        const { uri } = await Print.printToFileAsync({ html });
         console.log('PDF saved to:', uri);
         await shareAsync(uri, { UTI: '.pdf', mimeType: 'application/pdf' });
       }
