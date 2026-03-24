@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Search, Wind, X, ChevronDown, Check, Plus } from 'lucide-react-native';
+import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
 import { categoryLabels, MountainCategory } from '@/constants/mountains';
@@ -42,6 +42,7 @@ export default function MountainsScreen() {
   const [selectedCategory, setSelectedCategory] = useState<MountainCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<SortOption>('elevation_desc');
   const [showSort, setShowSort] = useState(false);
+  const [useFeet, setUseFeet] = useState(false);
 
   const filteredMountains = useMemo(() => {
     let filtered = allMountains;
@@ -89,9 +90,10 @@ export default function MountainsScreen() {
         mountain={item}
         isSummited={isSummited(item.id)}
         onPress={() => handleMountainPress(item.id)}
+        useFeet={useFeet}
       />
     );
-  }, [isSummited, handleMountainPress]);
+  }, [isSummited, handleMountainPress, useFeet]);
 
   const sortLabels: Record<SortOption, string> = {
     name: 'Name A-Z',
@@ -108,7 +110,18 @@ export default function MountainsScreen() {
         <View style={styles.titleRow}>
           <View>
             <Text style={styles.title}>Summit Tracker</Text>
+            <View style={styles.titleSubRow}>
             <Text style={styles.titleSub}>{allMountains.length} peaks to conquer</Text>
+            <TouchableOpacity
+              style={styles.unitToggle}
+              onPress={() => setUseFeet(prev => !prev)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.unitText, !useFeet && styles.unitTextActive]}>m</Text>
+              <Text style={styles.unitDivider}>/</Text>
+              <Text style={[styles.unitText, useFeet && styles.unitTextActive]}>ft</Text>
+            </TouchableOpacity>
+          </View>
           </View>
           <View style={styles.titleActions}>
             <TouchableOpacity
@@ -247,10 +260,38 @@ const styles = StyleSheet.create({
     color: Colors.text,
     letterSpacing: -0.8,
   },
+  titleSubRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 10,
+    marginTop: 2,
+  },
   titleSub: {
     fontSize: 12,
     color: Colors.textMuted,
-    marginTop: 2,
+  },
+  unitToggle: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: Colors.cardBg,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  unitText: {
+    fontSize: 11,
+    fontWeight: '600' as const,
+    color: Colors.textMuted,
+  },
+  unitTextActive: {
+    color: Colors.accent,
+  },
+  unitDivider: {
+    fontSize: 11,
+    color: Colors.textMuted,
+    marginHorizontal: 2,
   },
   titleActions: {
     flexDirection: 'row',

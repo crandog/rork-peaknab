@@ -9,9 +9,10 @@ interface MountainCardProps {
   mountain: Mountain;
   isSummited: boolean;
   onPress: () => void;
+  useFeet?: boolean;
 }
 
-function MountainCardComponent({ mountain, isSummited, onPress }: MountainCardProps) {
+function MountainCardComponent({ mountain, isSummited, onPress, useFeet = false }: MountainCardProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -90,9 +91,13 @@ function MountainCardComponent({ mountain, isSummited, onPress }: MountainCardPr
           </View>
 
           <View style={styles.rightSection}>
-            <Text style={styles.elevation}>{mountain.elevation.toLocaleString()}</Text>
-            <Text style={styles.elevationUnit}>meters</Text>
-            <Text style={styles.elevationFt}>{mountain.elevationFt.toLocaleString()}ft</Text>
+            <Text style={styles.elevation}>
+              {useFeet ? mountain.elevationFt.toLocaleString() : mountain.elevation.toLocaleString()}
+            </Text>
+            <Text style={styles.elevationUnit}>{useFeet ? 'feet' : 'meters'}</Text>
+            <Text style={styles.elevationFt}>
+              {useFeet ? `${mountain.elevation.toLocaleString()}m` : `${mountain.elevationFt.toLocaleString()}ft`}
+            </Text>
             <ChevronRight color={Colors.textMuted} size={14} style={styles.chevron} />
           </View>
         </View>
