@@ -1,10 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Platform,
+  TouchableOpacity,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MapPin } from 'lucide-react-native';
@@ -16,8 +18,13 @@ import RNMapView, { Marker as RNMarker } from 'react-native-maps';
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
   const { records, isSummited } = useSummits();
   const allMountains = useAllMountains();
+
+  const navigateToMountain = useCallback((id: string) => {
+    router.push(`/mountain/${id}`);
+  }, [router]);
 
   const summitedMountains = useMemo(() => {
     return allMountains.filter((m) => isSummited(m.id));
@@ -55,14 +62,14 @@ export default function MapScreen() {
               <View style={styles.summitList}>
                 <Text style={styles.summitListTitle}>Your Summits</Text>
                 {summitedMountains.map((m) => (
-                  <View key={m.id} style={styles.summitItem}>
+                  <TouchableOpacity key={m.id} style={styles.summitItem} onPress={() => navigateToMountain(m.id)} activeOpacity={0.7}>
                     <MountainIcon mountainId={m.id} category={m.category} size={20} />
                     <View style={styles.summitInfo}>
                       <Text style={styles.summitName}>{m.name}</Text>
                       <Text style={styles.summitLocation}>{m.country}</Text>
                     </View>
                     <Text style={styles.summitElev}>{m.elevation.toLocaleString()}m</Text>
-                  </View>
+                  </TouchableOpacity>
                 ))}
               </View>
             )}
@@ -103,6 +110,7 @@ export default function MapScreen() {
             description={`${m.elevation.toLocaleString()}m - ${m.country}`}
             pinColor={m.summited ? Colors.success : Colors.accent}
             opacity={m.summited ? 1 : 0.5}
+            onCalloutPress={() => navigateToMountain(m.id)}
           />
         ))}
       </RNMapView>
