@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
+  Image,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -101,6 +102,12 @@ export default function MountainsScreen() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/e154lkqvikg84q9a05bjl' }}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      />
+      <View style={styles.backgroundOverlay} />
 
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.titleRow}>
@@ -112,14 +119,14 @@ export default function MountainsScreen() {
               activeOpacity={0.7}
               testID="add-mountain-button"
             >
-              <Plus color={Colors.primary} size={18} />
+              <Plus color={Colors.white} size={18} />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.o2Button}
               onPress={handleO2Press}
               activeOpacity={0.7}
             >
-              <Wind color={Colors.primary} size={16} />
+              <Wind color={Colors.white} size={16} />
               <Text style={styles.o2Text}>O₂</Text>
             </TouchableOpacity>
           </View>
@@ -239,6 +246,21 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.snow,
   },
 
+  backgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 200,
+  },
+  backgroundOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 200,
+    backgroundColor: 'rgba(180, 205, 230, 0.25)',
+  },
   header: {
     paddingBottom: 4,
     zIndex: 2,
@@ -256,8 +278,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700' as const,
-    color: Colors.text,
+    color: Colors.white,
     letterSpacing: -0.5,
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   titleActions: {
     flexDirection: 'row',
@@ -268,25 +293,25 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Colors.frost,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   o2Button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.frost,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 18,
     gap: 4,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   o2Text: {
-    color: Colors.primary,
+    color: Colors.white,
     fontSize: 13,
     fontWeight: '600' as const,
   },
@@ -297,12 +322,12 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255,255,255,0.85)',
     borderRadius: 10,
     paddingHorizontal: 12,
     gap: 8,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.6)',
   },
   searchInput: {
     flex: 1,
@@ -351,9 +376,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 7,
     borderRadius: 18,
-    backgroundColor: Colors.white,
+    backgroundColor: 'rgba(255,255,255,0.7)',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   categoryChipActive: {
     backgroundColor: Colors.primary,
