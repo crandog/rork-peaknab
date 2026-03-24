@@ -103,7 +103,7 @@ export default function MountainsScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/5tvlwzt7tfogn2gqqotng' }}
+        source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ndnlzm7r655e80x81euc1' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
@@ -125,7 +125,7 @@ export default function MountainsScreen() {
               onPress={handleO2Press}
               activeOpacity={0.7}
             >
-              <Wind color={Colors.primary} size={16} />
+              <Wind color={Colors.white} size={16} />
               <Text style={styles.o2Text}>O₂</Text>
             </TouchableOpacity>
           </View>
@@ -249,22 +249,17 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0,
-    opacity: 0.18,
+    height: 260,
   },
   backgroundOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    bottom: 0,
-    backgroundColor: Colors.snow,
-    opacity: 0.6,
+    height: 260,
+    backgroundColor: 'rgba(180, 205, 230, 0.25)',
   },
   header: {
-    backgroundColor: Colors.snow,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border + '80',
     paddingBottom: 4,
     zIndex: 2,
   },
@@ -281,8 +276,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '700' as const,
-    color: Colors.text,
+    color: Colors.white,
     letterSpacing: -0.5,
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   titleActions: {
     flexDirection: 'row',
@@ -293,23 +291,25 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: Colors.primary,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   o2Button: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.frost,
+    backgroundColor: 'rgba(255,255,255,0.3)',
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 18,
     gap: 4,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   o2Text: {
-    color: Colors.primary,
+    color: Colors.white,
     fontSize: 13,
     fontWeight: '600' as const,
   },
@@ -320,12 +320,12 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.frost,
+    backgroundColor: 'rgba(255,255,255,0.85)',
     borderRadius: 10,
     paddingHorizontal: 12,
     gap: 8,
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   searchInput: {
     flex: 1,
@@ -374,9 +374,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 7,
     borderRadius: 18,
-    backgroundColor: Colors.frost,
+    backgroundColor: 'rgba(255,255,255,0.7)',
     borderWidth: 1,
-    borderColor: Colors.border,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
   categoryChipActive: {
     backgroundColor: Colors.primary,
