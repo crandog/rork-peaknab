@@ -120,24 +120,23 @@ export default function ProfileScreen() {
       Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     }
 
-    const summitRows = summitedMountains
-      .sort((a, b) => {
-        const recA = records.find((r) => r.mountainId === a.id);
-        const recB = records.find((r) => r.mountainId === b.id);
-        return new Date(recB?.createdAt ?? 0).getTime() - new Date(recA?.createdAt ?? 0).getTime();
-      })
-      .map((m, i) => {
+    const sortedSummits = summitedMountains
+      .map((m) => {
         const record = records.find((r) => r.mountainId === m.id);
-        return `
-          <tr style="background: ${i % 2 === 0 ? '#f8f9fa' : '#ffffff'};">
-            <td style="padding: 12px 20px; border-bottom: 1px solid #e9ecef; font-weight: 500;">${m.name}</td>
-            <td style="padding: 12px 20px; border-bottom: 1px solid #e9ecef; text-align: right;">${record?.date ?? '—'}</td>
-          </tr>`;
+        return { name: m.name, date: record?.date ?? '—', createdAt: record?.createdAt ?? '' };
       })
-      .join('');
+      .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     const now = new Date();
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+    const listItems = sortedSummits
+      .map((s, i) => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #e5e7eb;">
+          <span style="font-size: 14px; color: #1f2937; font-weight: 500;">${i + 1}. ${s.name}</span>
+          <span style="font-size: 13px; color: #6b7280; white-space: nowrap; margin-left: 16px;">${s.date}</span>
+        </div>`)
+      .join('');
 
     const html = `
       <!DOCTYPE html>
@@ -145,65 +144,21 @@ export default function ProfileScreen() {
         <head>
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
           <style>
-            @page { margin: 40px; }
+            @page { margin: 48px 40px; }
             body {
               font-family: -apple-system, Helvetica Neue, Arial, sans-serif;
-              color: #1a1a2e;
+              color: #1f2937;
               margin: 0;
               padding: 0;
-            }
-            .header {
-              background: linear-gradient(135deg, #0E2A42, #169ED0);
-              color: white;
-              padding: 32px;
-              text-align: center;
-            }
-            .header h1 { margin: 0 0 4px 0; font-size: 24px; font-weight: 800; }
-            .header p { margin: 0; opacity: 0.8; font-size: 13px; }
-            .header .count { font-size: 14px; margin-top: 8px; opacity: 0.9; }
-            .section { padding: 24px 32px 0; }
-            table { width: 100%; border-collapse: collapse; font-size: 13px; }
-            th {
-              text-align: left;
-              padding: 10px 20px;
-              background: #0E2A42;
-              color: white;
-              font-weight: 600;
-              font-size: 11px;
-              text-transform: uppercase;
-              letter-spacing: 0.5px;
-            }
-            th:first-child { border-radius: 8px 0 0 0; }
-            th:last-child { border-radius: 0 8px 0 0; text-align: right; }
-            .footer {
-              text-align: center;
-              padding: 24px 32px;
-              color: #9ca3af;
-              font-size: 11px;
+              background: #fff;
             }
           </style>
         </head>
         <body>
-          <div class="header">
-            <h1>Summit Log</h1>
-            <p>Generated ${dateStr}</p>
-            <div class="count">${summitedMountains.length} peak${summitedMountains.length !== 1 ? 's' : ''} summited</div>
-          </div>
-
-          ${summitRows ? `
-          <div class="section">
-            <table>
-              <tr>
-                <th>Peak</th>
-                <th>Date</th>
-              </tr>
-              ${summitRows}
-            </table>
-          </div>
-          ` : ''}
-
-          <div class="footer">
-            Summit Tracker · ${dateStr}
+          <div style="padding: 0 8px;">
+            <h1 style="font-size: 22px; font-weight: 700; margin: 0 0 4px 0; color: #111827;">Summit Log</h1>
+            <p style="font-size: 12px; color: #9ca3af; margin: 0 0 24px 0;">${dateStr} · ${sortedSummits.length} summit${sortedSummits.length !== 1 ? 's' : ''}</p>
+            ${listItems}
           </div>
         </body>
       </html>
