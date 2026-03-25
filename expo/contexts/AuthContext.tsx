@@ -3,7 +3,7 @@ import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
-import { supabase } from '@/lib/supabase';
+import { supabase, supabaseConfigured } from '@/lib/supabase';
 import type { Session, User } from '@supabase/supabase-js';
 import type { SummitRecord } from '@/contexts/SummitContext';
 import type { Mountain } from '@/constants/mountains';
@@ -21,6 +21,12 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
 
   useEffect(() => {
+    if (!supabaseConfigured) {
+      console.log('[Auth] Supabase not configured, running in offline mode');
+      setIsLoading(false);
+      return;
+    }
+
     void supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
