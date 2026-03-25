@@ -52,7 +52,7 @@ export const mountainImages: Record<string, string> = {
   'huascaran': 'https://images.unsplash.com/photo-1509839914329-d4beac94085f?w=800&q=80',
   'chimborazo': 'https://images.unsplash.com/photo-1651664426321-838ba7c77902?w=800&q=80',
   'cotopaxi': 'https://images.unsplash.com/photo-1510766528985-20f5e4fcfd4c?w=800&q=80',
-  'illimani': 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&q=80',
+  'illimani': 'https://images.unsplash.com/photo-1619266465172-02a857c3556d?w=800&q=80',
   'huayna-potosi': 'https://images.unsplash.com/photo-1533577116850-9cc66cad8a9b?w=800&q=80',
   'alpamayo': 'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=800&q=80',
   'fitz-roy': 'https://images.unsplash.com/photo-1729476266032-92174668f9fc?w=800&q=80',
