@@ -1,0 +1,7 @@
+{
+  "id": "rmlhsi1q76lthl8wod4le",
+  "role": "user",
+  "content": "Please fix the following build error:\n\nsandbox.init failed: ERROR: Error: Archive download/extract failed with exit code 2",
+  "attachments": [],
+  "userId": "2ba0a10a-b4f7-47e5-99f3-bd6750193c47"
+}
