@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SummitProvider } from "@/contexts/SummitContext";
 import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import Colors from "@/constants/colors";
 
 void SplashScreen.preventAutoHideAsync();
@@ -56,6 +57,14 @@ function RootLayoutNav() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="auth"
+        options={{
+          title: "Sign In",
+          presentation: "modal",
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="+not-found" />
     </Stack>
   );
@@ -69,11 +78,13 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <CustomMountainsProvider>
-          <SummitProvider>
-            <RootLayoutNav />
-          </SummitProvider>
-        </CustomMountainsProvider>
+        <AuthProvider>
+          <CustomMountainsProvider>
+            <SummitProvider>
+              <RootLayoutNav />
+            </SummitProvider>
+          </CustomMountainsProvider>
+        </AuthProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );

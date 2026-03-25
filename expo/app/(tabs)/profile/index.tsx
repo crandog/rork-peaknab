@@ -25,6 +25,11 @@ import {
   Zap,
   Compass,
   FileDown,
+  Cloud,
+  CloudOff,
+  LogOut,
+  RefreshCw,
+  User as UserIcon,
 } from 'lucide-react-native';
 import * as Print from 'expo-print';
 import Colors from '@/constants/colors';
@@ -32,12 +37,14 @@ import { categoryLabels, MountainCategory } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { records, summitCount, totalElevation, isSummited } = useSummits();
   const allMountains = useAllMountains();
+  const { isAuthenticated, user, signOut, syncStatus, pushToCloud, isSigningOut } = useAuth();
 
   const progressAnim = useRef(new Animated.Value(0)).current;
 
@@ -489,6 +496,70 @@ export default function ProfileScreen() {
           </View>
         )}
 
+        <View style={styles.section}>
+          <View style={styles.sectionHeaderRow}>
+            <Cloud color={Colors.primary} size={18} />
+            <Text style={styles.sectionTitle}>Account & Sync</Text>
+          </View>
+          {isAuthenticated ? (
+            <View style={styles.accountCard}>
+              <View style={styles.accountInfo}>
+                <View style={styles.avatarCircle}>
+                  <UserIcon color={Colors.white} size={20} />
+                </View>
+                <View style={styles.accountDetails}>
+                  <Text style={styles.accountEmail} numberOfLines={1}>{user?.email ?? 'Signed in'}</Text>
+                  <View style={styles.syncRow}>
+                    <View style={[styles.syncDot, { backgroundColor: syncStatus === 'synced' ? Colors.success : syncStatus === 'syncing' ? Colors.warning : syncStatus === 'error' ? Colors.danger : Colors.textMuted }]} />
+                    <Text style={styles.syncLabel}>
+                      {syncStatus === 'synced' ? 'Synced' : syncStatus === 'syncing' ? 'Syncing...' : syncStatus === 'error' ? 'Sync error' : 'Local'}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.accountActions}>
+                <TouchableOpacity
+                  style={styles.accountActionButton}
+                  onPress={() => { void pushToCloud(); }}
+                  activeOpacity={0.7}
+                  testID="sync-now-button"
+                >
+                  <RefreshCw color={Colors.primary} size={16} />
+                  <Text style={styles.accountActionText}>Sync</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.accountActionButton, styles.signOutButton]}
+                  onPress={signOut}
+                  disabled={isSigningOut}
+                  activeOpacity={0.7}
+                  testID="sign-out-button"
+                >
+                  <LogOut color={Colors.danger} size={16} />
+                  <Text style={[styles.accountActionText, { color: Colors.danger }]}>Sign Out</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={styles.signInCard}
+              onPress={() => router.push('/auth' as any)}
+              activeOpacity={0.8}
+              testID="sign-in-prompt"
+            >
+              <View style={styles.signInLeft}>
+                <View style={styles.signInIconCircle}>
+                  <CloudOff color={Colors.textMuted} size={20} />
+                </View>
+                <View style={styles.signInInfo}>
+                  <Text style={styles.signInTitle}>Sign in to sync</Text>
+                  <Text style={styles.signInSubtitle}>Back up your data & access it anywhere</Text>
+                </View>
+              </View>
+              <ChevronRight color={Colors.textMuted} size={18} />
+            </TouchableOpacity>
+          )}
+        </View>
+
         {summitCount === 0 && (
           <View style={styles.emptyState}>
             <View style={styles.emptyIconContainer}>
@@ -861,5 +932,111 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontWeight: '700' as const,
+  },
+  accountCard: {
+    backgroundColor: Colors.white,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  accountInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 14,
+  },
+  avatarCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  accountDetails: {
+    flex: 1,
+  },
+  accountEmail: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: Colors.text,
+    marginBottom: 3,
+  },
+  syncRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  syncDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+  },
+  syncLabel: {
+    fontSize: 12,
+    color: Colors.textMuted,
+    fontWeight: '500' as const,
+  },
+  accountActions: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  accountActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: Colors.frost,
+    paddingVertical: 9,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    flex: 1,
+    justifyContent: 'center',
+  },
+  signOutButton: {
+    backgroundColor: Colors.danger + '0C',
+  },
+  accountActionText: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: Colors.primary,
+  },
+  signInCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.white,
+    borderRadius: 14,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: Colors.primary + '25',
+    borderStyle: 'dashed' as const,
+  },
+  signInLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  signInIconCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.frost,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  signInInfo: {
+    flex: 1,
+  },
+  signInTitle: {
+    fontSize: 14,
+    fontWeight: '700' as const,
+    color: Colors.text,
+    marginBottom: 2,
+  },
+  signInSubtitle: {
+    fontSize: 12,
+    color: Colors.textSecondary,
   },
 });

@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
 import { mountains, Mountain } from '@/constants/mountains';
+import { debouncedCloudPush } from '@/lib/cloudSync';
 
 export interface SummitRecord {
   mountainId: string;
@@ -39,6 +40,7 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(['summits'], data);
+      void debouncedCloudPush();
     },
   });
 

@@ -1,0 +1,294 @@
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import createContextHook from '@nkzw/create-context-hook';
+import { supabase } from '@/lib/supabase';
+import type { Session, User } from '@supabase/supabase-js';
+import type { SummitRecord } from '@/contexts/SummitContext';
+import type { Mountain } from '@/constants/mountains';
+
+const SUMMIT_STORAGE_KEY = 'summit_records';
+const CUSTOM_MOUNTAINS_KEY = 'custom_mountains';
+
+export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error';
+
+export const [AuthProvider, useAuth] = createContextHook(() => {
+  const queryClient = useQueryClient();
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
+
+  useEffect(() => {
+    void supabase.auth.getSession().then(({ data: { session: s } }) => {
+      setSession(s);
+      setUser(s?.user ?? null);
+      setIsLoading(false);
+      console.log('[Auth] Initial session:', s ? 'logged in' : 'anonymous');
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+      console.log('[Auth] State changed:', _event);
+      setSession(s);
+      setUser(s?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const signUpMutation = useMutation({
+    mutationFn: async ({ email, password }: { email: string; password: string }) => {
+      const { data, error } = await supabase.auth.signUp({ email, password });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: async (data) => {
+      console.log('[Auth] Signed up successfully');
+      if (data.session) {
+        await migrateLocalDataToCloud(data.session.user.id);
+      }
+    },
+    onError: (error: Error) => {
+      console.log('[Auth] Sign up error:', error.message);
+      Alert.alert('Sign Up Failed', error.message);
+    },
+  });
+
+  const signInMutation = useMutation({
+    mutationFn: async ({ email, password }: { email: string; password: string }) => {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: async (data) => {
+      console.log('[Auth] Signed in successfully');
+      await syncDataFromCloud(data.user.id);
+    },
+    onError: (error: Error) => {
+      console.log('[Auth] Sign in error:', error.message);
+      Alert.alert('Sign In Failed', error.message);
+    },
+  });
+
+  const signOutMutation = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      console.log('[Auth] Signed out');
+      setSyncStatus('idle');
+    },
+    onError: (error: Error) => {
+      console.log('[Auth] Sign out error:', error.message);
+      Alert.alert('Sign Out Failed', error.message);
+    },
+  });
+
+  const migrateLocalDataToCloud = useCallback(async (userId: string) => {
+    try {
+      setSyncStatus('syncing');
+      console.log('[Auth] Migrating local data to cloud for user:', userId);
+
+      const [summitsRaw, mountainsRaw] = await Promise.all([
+        AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
+        AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
+      ]);
+
+      const localSummits: SummitRecord[] = summitsRaw ? JSON.parse(summitsRaw) : [];
+      const localMountains: Mountain[] = mountainsRaw ? JSON.parse(mountainsRaw) : [];
+
+      const { data: existing } = await supabase
+        .from('user_data')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      if (existing) {
+        const cloudSummits: SummitRecord[] = existing.summits ?? [];
+        const cloudMountains: Mountain[] = existing.custom_mountains ?? [];
+
+        const mergedSummits = mergeSummits(localSummits, cloudSummits);
+        const mergedMountains = mergeMountains(localMountains, cloudMountains);
+
+        await supabase
+          .from('user_data')
+          .update({
+            summits: mergedSummits,
+            custom_mountains: mergedMountains,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_id', userId);
+
+        await AsyncStorage.setItem(SUMMIT_STORAGE_KEY, JSON.stringify(mergedSummits));
+        await AsyncStorage.setItem(CUSTOM_MOUNTAINS_KEY, JSON.stringify(mergedMountains));
+
+        queryClient.setQueryData(['summits'], mergedSummits);
+        queryClient.setQueryData(['custom_mountains'], mergedMountains);
+
+        console.log('[Auth] Merged and synced data. Summits:', mergedSummits.length, 'Mountains:', mergedMountains.length);
+      } else {
+        await supabase
+          .from('user_data')
+          .insert({
+            user_id: userId,
+            summits: localSummits,
+            custom_mountains: localMountains,
+            updated_at: new Date().toISOString(),
+          });
+
+        console.log('[Auth] Initial upload. Summits:', localSummits.length, 'Mountains:', localMountains.length);
+      }
+
+      setSyncStatus('synced');
+    } catch (error) {
+      console.log('[Auth] Migration error:', error);
+      setSyncStatus('error');
+    }
+  }, [queryClient]);
+
+  const syncDataFromCloud = useCallback(async (userId: string) => {
+    try {
+      setSyncStatus('syncing');
+      console.log('[Auth] Syncing data from cloud for user:', userId);
+
+      const { data: cloudData } = await supabase
+        .from('user_data')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+      const [summitsRaw, mountainsRaw] = await Promise.all([
+        AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
+        AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
+      ]);
+
+      const localSummits: SummitRecord[] = summitsRaw ? JSON.parse(summitsRaw) : [];
+      const localMountains: Mountain[] = mountainsRaw ? JSON.parse(mountainsRaw) : [];
+
+      if (cloudData) {
+        const cloudSummits: SummitRecord[] = cloudData.summits ?? [];
+        const cloudMountains: Mountain[] = cloudData.custom_mountains ?? [];
+
+        const mergedSummits = mergeSummits(localSummits, cloudSummits);
+        const mergedMountains = mergeMountains(localMountains, cloudMountains);
+
+        await AsyncStorage.setItem(SUMMIT_STORAGE_KEY, JSON.stringify(mergedSummits));
+        await AsyncStorage.setItem(CUSTOM_MOUNTAINS_KEY, JSON.stringify(mergedMountains));
+
+        await supabase
+          .from('user_data')
+          .update({
+            summits: mergedSummits,
+            custom_mountains: mergedMountains,
+            updated_at: new Date().toISOString(),
+          })
+          .eq('user_id', userId);
+
+        queryClient.setQueryData(['summits'], mergedSummits);
+        queryClient.setQueryData(['custom_mountains'], mergedMountains);
+
+        console.log('[Auth] Cloud sync complete. Summits:', mergedSummits.length);
+      } else {
+        await supabase
+          .from('user_data')
+          .insert({
+            user_id: userId,
+            summits: localSummits,
+            custom_mountains: localMountains,
+            updated_at: new Date().toISOString(),
+          });
+
+        console.log('[Auth] No cloud data found, uploaded local data');
+      }
+
+      setSyncStatus('synced');
+    } catch (error) {
+      console.log('[Auth] Sync error:', error);
+      setSyncStatus('error');
+    }
+  }, [queryClient]);
+
+  const pushToCloud = useCallback(async () => {
+    if (!user) return;
+    try {
+      const [summitsRaw, mountainsRaw] = await Promise.all([
+        AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
+        AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
+      ]);
+
+      const summits = summitsRaw ? JSON.parse(summitsRaw) : [];
+      const customMountains = mountainsRaw ? JSON.parse(mountainsRaw) : [];
+
+      await supabase
+        .from('user_data')
+        .upsert({
+          user_id: user.id,
+          summits,
+          custom_mountains: customMountains,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' });
+
+      console.log('[Auth] Pushed data to cloud');
+    } catch (error) {
+      console.log('[Auth] Push error:', error);
+    }
+  }, [user]);
+
+  const signUp = useCallback((email: string, password: string) => {
+    signUpMutation.mutate({ email, password });
+  }, [signUpMutation]);
+
+  const signIn = useCallback((email: string, password: string) => {
+    signInMutation.mutate({ email, password });
+  }, [signInMutation]);
+
+  const signOut = useCallback(() => {
+    signOutMutation.mutate();
+  }, [signOutMutation]);
+
+  const isAuthenticated = !!session;
+
+  return useMemo(() => ({
+    user,
+    session,
+    isAuthenticated,
+    isLoading,
+    syncStatus,
+    signUp,
+    signIn,
+    signOut,
+    pushToCloud,
+    isSigningUp: signUpMutation.isPending,
+    isSigningIn: signInMutation.isPending,
+    isSigningOut: signOutMutation.isPending,
+  }), [user, session, isAuthenticated, isLoading, syncStatus, signUp, signIn, signOut, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending]);
+});
+
+function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {
+  const map = new Map<string, SummitRecord>();
+  for (const record of cloud) {
+    map.set(record.mountainId, record);
+  }
+  for (const record of local) {
+    const existing = map.get(record.mountainId);
+    if (!existing || new Date(record.createdAt) > new Date(existing.createdAt)) {
+      map.set(record.mountainId, record);
+    }
+  }
+  return Array.from(map.values());
+}
+
+function mergeMountains(local: Mountain[], cloud: Mountain[]): Mountain[] {
+  const map = new Map<string, Mountain>();
+  for (const m of cloud) {
+    map.set(m.id, m);
+  }
+  for (const m of local) {
+    if (!map.has(m.id)) {
+      map.set(m.id, m);
+    }
+  }
+  return Array.from(map.values());
+}
