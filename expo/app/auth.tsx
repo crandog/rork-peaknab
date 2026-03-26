@@ -16,7 +16,8 @@ import { useRouter } from 'expo-router';
 import { Stack } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import { ArrowLeft, Mail, Lock, Eye, EyeOff, Cloud, Mountain } from 'lucide-react-native';
+import { ArrowLeft, Mail, Lock, Eye, EyeOff, Cloud, Mountain, Chrome } from 'lucide-react-native';
+
 import Colors from '@/constants/colors';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -25,7 +26,7 @@ type AuthMode = 'signin' | 'signup';
 export default function AuthScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { signIn, signUp, isSigningIn, isSigningUp } = useAuth();
+  const { signIn, signUp, isSigningIn, isSigningUp, signInWithApple, signInWithGoogle, isSigningInWithApple, isSigningInWithGoogle } = useAuth();
 
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState<string>('');
@@ -38,7 +39,8 @@ export default function AuthScreen() {
   const passwordRef = useRef<TextInput>(null);
   const confirmRef = useRef<TextInput>(null);
 
-  const isLoading = isSigningIn || isSigningUp;
+  const isLoading = isSigningIn || isSigningUp || isSigningInWithApple || isSigningInWithGoogle;
+  const showAppleButton = Platform.OS === 'ios';
 
   const toggleMode = useCallback(() => {
     if (Platform.OS !== 'web') {
@@ -237,6 +239,50 @@ export default function AuthScreen() {
                 </Text>
               </Text>
             </TouchableOpacity>
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or continue with</Text>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <View style={styles.socialButtons}>
+              <TouchableOpacity
+                style={styles.googleButton}
+                onPress={signInWithGoogle}
+                disabled={isLoading}
+                activeOpacity={0.8}
+                testID="auth-google-button"
+              >
+                {isSigningInWithGoogle ? (
+                  <ActivityIndicator color={Colors.text} size="small" />
+                ) : (
+                  <>
+                    <Chrome color={Colors.text} size={20} />
+                    <Text style={styles.googleButtonText}>Google</Text>
+                  </>
+                )}
+              </TouchableOpacity>
+
+              {showAppleButton && (
+                <TouchableOpacity
+                  style={styles.appleButton}
+                  onPress={signInWithApple}
+                  disabled={isLoading}
+                  activeOpacity={0.8}
+                  testID="auth-apple-button"
+                >
+                  {isSigningInWithApple ? (
+                    <ActivityIndicator color={Colors.white} size="small" />
+                  ) : (
+                    <>
+                      <Text style={styles.appleLogo}></Text>
+                      <Text style={styles.appleButtonText}>Apple</Text>
+                    </>
+                  )}
+                </TouchableOpacity>
+              )}
+            </View>
           </View>
 
           <View style={styles.infoSection}>
@@ -418,6 +464,63 @@ const styles = StyleSheet.create({
   toggleButton: {
     alignItems: 'center',
     paddingVertical: 4,
+  },
+  dividerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 16,
+    gap: 12,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: Colors.border,
+  },
+  dividerText: {
+    fontSize: 12,
+    color: Colors.textMuted,
+    fontWeight: '500' as const,
+  },
+  socialButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  googleButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: Colors.frost,
+    borderRadius: 14,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  googleButtonText: {
+    fontSize: 15,
+    fontWeight: '600' as const,
+    color: Colors.text,
+  },
+  appleButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#000',
+    borderRadius: 14,
+    paddingVertical: 14,
+  },
+  appleButtonText: {
+    fontSize: 15,
+    fontWeight: '600' as const,
+    color: '#fff',
+  },
+  appleLogo: {
+    fontSize: 18,
+    color: '#fff',
   },
   toggleText: {
     fontSize: 14,

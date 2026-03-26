@@ -4,6 +4,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
 import { supabase, supabaseConfigured } from '@/lib/supabase';
+import * as AppleAuthentication from 'expo-apple-authentication';
+import * as AuthSession from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
 import type { Session, User } from '@supabase/supabase-js';
 import type { SummitRecord } from '@/contexts/SummitContext';
 import type { Mountain } from '@/constants/mountains';
@@ -254,6 +257,121 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     signOutMutation.mutate();
   }, [signOutMutation]);
 
+  const signInWithAppleMutation = useMutation({
+    mutationFn: async () => {
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      if (!credential.identityToken) {
+        throw new Error('No identity token received from Apple');
+      }
+
+      const { data, error } = await supabase.auth.signInWithIdToken({
+        provider: 'apple',
+        token: credential.identityToken,
+      });
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: async (data) => {
+      console.log('[Auth] Apple sign in successful');
+      if (data.session) {
+        await syncDataFromCloud(data.session.user.id);
+      }
+    },
+    onError: (error: Error) => {
+      if ((error as any).code === 'ERR_REQUEST_CANCELED') {
+        console.log('[Auth] Apple sign in cancelled');
+        return;
+      }
+      console.log('[Auth] Apple sign in error:', error.message);
+      Alert.alert('Apple Sign In Failed', error.message);
+    },
+  });
+
+  const signInWithGoogleMutation = useMutation({
+    mutationFn: async () => {
+      const redirectUrl = AuthSession.makeRedirectUri();
+      console.log('[Auth] Google OAuth redirect URL:', redirectUrl);
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: true,
+        },
+      });
+
+      if (error) throw error;
+      if (!data.url) throw new Error('No OAuth URL returned');
+
+      const result = await WebBrowser.openAuthSessionAsync(
+        data.url,
+        redirectUrl,
+      );
+
+      if (result.type !== 'success') {
+        throw new Error('AUTH_CANCELLED');
+      }
+
+      const url = result.url;
+      const params = new URL(url);
+      const accessToken = params.searchParams.get('access_token') || params.hash?.match(/access_token=([^&]*)/)?.[1];
+      const refreshToken = params.searchParams.get('refresh_token') || params.hash?.match(/refresh_token=([^&]*)/)?.[1];
+
+      if (!accessToken || !refreshToken) {
+        const fragmentParams = new URLSearchParams(url.split('#')[1] || '');
+        const fragAccess = fragmentParams.get('access_token');
+        const fragRefresh = fragmentParams.get('refresh_token');
+
+        if (!fragAccess || !fragRefresh) {
+          throw new Error('Could not extract tokens from callback');
+        }
+
+        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+          access_token: fragAccess,
+          refresh_token: fragRefresh,
+        });
+        if (sessionError) throw sessionError;
+        return sessionData;
+      }
+
+      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+      if (sessionError) throw sessionError;
+      return sessionData;
+    },
+    onSuccess: async (data) => {
+      console.log('[Auth] Google sign in successful');
+      if (data.session) {
+        await syncDataFromCloud(data.session.user.id);
+      }
+    },
+    onError: (error: Error) => {
+      if (error.message === 'AUTH_CANCELLED') {
+        console.log('[Auth] Google sign in cancelled');
+        return;
+      }
+      console.log('[Auth] Google sign in error:', error.message);
+      Alert.alert('Google Sign In Failed', error.message);
+    },
+  });
+
+  const signInWithApple = useCallback(() => {
+    signInWithAppleMutation.mutate();
+  }, [signInWithAppleMutation]);
+
+  const signInWithGoogle = useCallback(() => {
+    signInWithGoogleMutation.mutate();
+  }, [signInWithGoogleMutation]);
+
   const isAuthenticated = !!session;
 
   return useMemo(() => ({
@@ -269,7 +387,11 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     isSigningUp: signUpMutation.isPending,
     isSigningIn: signInMutation.isPending,
     isSigningOut: signOutMutation.isPending,
-  }), [user, session, isAuthenticated, isLoading, syncStatus, signUp, signIn, signOut, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending]);
+    signInWithApple,
+    signInWithGoogle,
+    isSigningInWithApple: signInWithAppleMutation.isPending,
+    isSigningInWithGoogle: signInWithGoogleMutation.isPending,
+  }), [user, session, isAuthenticated, isLoading, syncStatus, signUp, signIn, signOut, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
 });
 
 function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {
