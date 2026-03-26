@@ -42,7 +42,7 @@ import { useAuth } from '@/contexts/AuthContext';
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { records, summitCount, totalElevation, isSummited } = useSummits();
+  const { records, summitCount, uniqueSummitCount, totalElevation, isSummited } = useSummits();
   const allMountains = useAllMountains();
   const { isAuthenticated, user, signOut, syncStatus, pushToCloud, isSigningOut } = useAuth();
 
@@ -111,13 +111,14 @@ export default function ProfileScreen() {
       .slice(0, 5)
       .map((r) => {
         const mountain = allMountains.find((m) => m.id === r.mountainId);
-        return { ...r, mountain };
+        const count = records.filter((rec) => rec.mountainId === r.mountainId).length;
+        return { ...r, mountain, summitCount: count };
       });
   }, [records, allMountains]);
 
   const overallCompletion = useMemo(() => {
-    return allMountains.length > 0 ? Math.round((summitCount / allMountains.length) * 100) : 0;
-  }, [summitCount, allMountains]);
+    return allMountains.length > 0 ? Math.round((uniqueSummitCount / allMountains.length) * 100) : 0;
+  }, [uniqueSummitCount, allMountains]);
 
   const handleExportPDF = useCallback(async () => {
     if (Platform.OS !== 'web') {
@@ -335,7 +336,7 @@ export default function ProfileScreen() {
               <Text style={styles.completionPercentage}>{overallCompletion}%</Text>
             </View>
             <View style={styles.completionCircle}>
-              <Text style={styles.completionFraction}>{summitCount}/{allMountains.length}</Text>
+              <Text style={styles.completionFraction}>{uniqueSummitCount}/{allMountains.length}</Text>
               <Text style={styles.completionPeaks}>peaks</Text>
             </View>
           </View>
@@ -360,7 +361,7 @@ export default function ProfileScreen() {
               <Flag color={Colors.primary} size={20} />
             </View>
             <Text style={styles.statNumber}>{summitCount}</Text>
-            <Text style={styles.statLabel}>Summits</Text>
+            <Text style={styles.statLabel}>{summitCount !== uniqueSummitCount ? `Summits (${uniqueSummitCount} peaks)` : 'Summits'}</Text>
           </View>
           <View style={styles.statCard}>
             <View style={[styles.statIcon, { backgroundColor: Colors.success + '15' }]}>
@@ -471,7 +472,7 @@ export default function ProfileScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Recent Summits</Text>
             {recentSummits.map((record) => (
-              <View key={record.mountainId} style={styles.recentItem}>
+              <View key={record.createdAt} style={styles.recentItem}>
                 <TouchableOpacity
                   style={styles.recentContent}
                   onPress={() => router.push(`/mountain/${record.mountainId}` as any)}
@@ -479,7 +480,10 @@ export default function ProfileScreen() {
                 >
                   <MountainIcon mountainId={record.mountainId} category={record.mountain?.category ?? 'other'} size={20} />
                   <View style={styles.recentInfo}>
-                    <Text style={styles.recentName}>{record.mountain?.name ?? 'Unknown'}</Text>
+                    <Text style={styles.recentName}>
+                      {record.mountain?.name ?? 'Unknown'}
+                      {record.summitCount > 1 ? ` (x${record.summitCount})` : ''}
+                    </Text>
                     <Text style={styles.recentDate}>{record.date}</Text>
                   </View>
                 </TouchableOpacity>

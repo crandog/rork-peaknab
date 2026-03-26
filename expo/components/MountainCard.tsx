@@ -9,11 +9,12 @@ interface MountainCardProps {
   mountain: Mountain;
   isSummited: boolean;
   summitDate?: string;
+  summitCount?: number;
   onPress: () => void;
   useFeet?: boolean;
 }
 
-function MountainCardComponent({ mountain, isSummited, summitDate, onPress, useFeet = false }: MountainCardProps) {
+function MountainCardComponent({ mountain, isSummited, summitDate, summitCount = 0, onPress, useFeet = false }: MountainCardProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const handlePressIn = () => {
@@ -58,8 +59,15 @@ function MountainCardComponent({ mountain, isSummited, summitDate, onPress, useF
 
           {isSummited && (
             <View style={styles.summitCenter}>
-              <View style={styles.summitBadge}>
-                <Text style={styles.summitBadgeText}>SUMMITED</Text>
+              <View style={styles.summitBadgeRow}>
+                <View style={styles.summitBadge}>
+                  <Text style={styles.summitBadgeText}>SUMMITED</Text>
+                </View>
+                {summitCount > 1 && (
+                  <View style={styles.summitCountBadge}>
+                    <Text style={styles.summitCountText}>x{summitCount}</Text>
+                  </View>
+                )}
               </View>
               {summitDate && (
                 <View style={styles.dateBox}>
@@ -140,6 +148,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
+  summitBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   summitBadge: {
     borderWidth: 2,
     borderColor: '#C0392B',
@@ -153,6 +166,20 @@ const styles = StyleSheet.create({
     fontWeight: '900' as const,
     color: '#C0392B',
     letterSpacing: 1.5,
+  },
+  summitCountBadge: {
+    backgroundColor: '#C0392B',
+    borderRadius: 8,
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    minWidth: 22,
+    alignItems: 'center',
+  },
+  summitCountText: {
+    fontSize: 9,
+    fontWeight: '800' as const,
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
   },
   dateBox: {
     backgroundColor: '#2E86C1',

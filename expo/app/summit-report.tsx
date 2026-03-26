@@ -19,16 +19,21 @@ import Colors from '@/constants/colors';
 import { useSummits } from '@/contexts/SummitContext';
 
 export default function SummitReportScreen() {
-  const { mountainId, mountainName } = useLocalSearchParams<{
+  const { mountainId, mountainName, createdAt } = useLocalSearchParams<{
     mountainId: string;
     mountainName: string;
+    createdAt?: string;
   }>();
   const router = useRouter();
-  const { getSummit, updateSummit } = useSummits();
+  const { getSummit, getSummitByCreatedAt, updateSummit } = useSummits();
 
   const summitRecord = useMemo(
-    () => (mountainId ? getSummit(mountainId) : undefined),
-    [mountainId, getSummit]
+    () => {
+      if (!mountainId) return undefined;
+      if (createdAt) return getSummitByCreatedAt(mountainId, createdAt);
+      return getSummit(mountainId);
+    },
+    [mountainId, createdAt, getSummit, getSummitByCreatedAt]
   );
 
   const [report, setReport] = useState(summitRecord?.report ?? '');
@@ -61,7 +66,7 @@ export default function SummitReportScreen() {
     updateSummit(mountainId, {
       report: report.trim(),
       photoUri,
-    });
+    }, createdAt);
 
     if (Platform.OS !== 'web') {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -70,7 +75,7 @@ export default function SummitReportScreen() {
     Alert.alert('Saved!', 'Your summit report has been saved.', [
       { text: 'OK', onPress: () => router.back() },
     ]);
-  }, [mountainId, report, photoUri, updateSummit, router]);
+  }, [mountainId, createdAt, report, photoUri, updateSummit, router]);
 
   return (
     <View style={styles.container}>

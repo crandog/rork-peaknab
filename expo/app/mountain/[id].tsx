@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Image as ExpoImage } from 'expo-image';
 import {
   ArrowLeft,
   MapPin,
@@ -22,16 +23,19 @@ import {
   Clock,
   CheckCircle,
   XCircle,
-  ChevronRight,
   ChevronDown,
   Share2,
   Trash2,
+  PlusCircle,
+  FileText,
+  Calendar,
+  Camera,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { categoryLabels } from '@/constants/mountains';
 import { getMountainImage } from '@/constants/mountainImages';
-import { useSummits } from '@/contexts/SummitContext';
+import { useSummits, SummitRecord } from '@/contexts/SummitContext';
 import { useCustomMountains } from '@/contexts/CustomMountainsContext';
 import { useFindMountain } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
@@ -44,7 +48,7 @@ export default function MountainDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { isSummited, getSummit, addSummit, removeSummit } = useSummits();
+  const { isSummited, getSummitsForMountain, getSummitCount, addSummit, removeSummit, removeSingleSummit } = useSummits();
   const { isCustom, removeCustomMountain } = useCustomMountains();
   const [activeTab, setActiveTab] = useState<TabType>('info');
   const [showDateInput, setShowDateInput] = useState(false);
@@ -58,13 +62,19 @@ export default function MountainDetailScreen() {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const mountain = useFindMountain(id);
-  const summitRecord = useMemo(() => (id ? getSummit(id) : undefined), [id, getSummit]);
+  const summitRecords = useMemo(() => (id ? getSummitsForMountain(id) : []), [id, getSummitsForMountain]);
   const summited = id ? isSummited(id) : false;
+  const summitCountVal = id ? getSummitCount(id) : 0;
 
   const heroImageUrl = useMemo(() => {
     if (!mountain) return '';
     return getMountainImage(mountain.id);
   }, [mountain]);
+
+  const tabLabel = useMemo(() => {
+    if (summited) return 'Summit Report';
+    return 'Did You Summit?';
+  }, [summited]);
 
   const switchTab = useCallback((tab: TabType) => {
     setActiveTab(tab);
@@ -111,12 +121,14 @@ export default function MountainDetailScreen() {
   const handleConfirmSummit = useCallback(() => {
     if (!id || !mountain) return;
 
+    const createdAt = new Date().toISOString();
+
     addSummit({
       mountainId: id,
       date: formattedDate,
       report: '',
       photoUri: null,
-      createdAt: new Date().toISOString(),
+      createdAt,
     });
 
     if (Platform.OS !== 'web') {
@@ -127,7 +139,7 @@ export default function MountainDetailScreen() {
 
     router.push({
       pathname: '/summit-report' as any,
-      params: { mountainId: id, mountainName: mountain.name },
+      params: { mountainId: id, mountainName: mountain.name, createdAt },
     });
   }, [id, mountain, formattedDate, addSummit, router]);
 
@@ -136,31 +148,32 @@ export default function MountainDetailScreen() {
     if (Platform.OS !== 'web') {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
+    const latestRecord = summitRecords[summitRecords.length - 1];
     const lines = [
       `Summit Achievement!`,
       ``,
-      `${mountain.iconEmoji} I summited ${mountain.name}!`,
+      `${mountain.iconEmoji} I summited ${mountain.name}${summitCountVal > 1 ? ` (x${summitCountVal})` : ''}!`,
       `${mountain.country} · ${mountain.range}`,
       `${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
-      summitRecord?.date ? `${summitRecord.date}` : '',
-      summitRecord?.report ? `\n"${summitRecord.report}"` : '',
+      latestRecord?.date ? `${latestRecord.date}` : '',
+      latestRecord?.report ? `\n"${latestRecord.report}"` : '',
     ].filter(Boolean).join('\n');
     try {
       await Share.share({ message: lines });
     } catch (e) {
       console.log('Share cancelled or failed', e);
     }
-  }, [mountain, summitRecord]);
+  }, [mountain, summitRecords, summitCountVal]);
 
-  const handleRemoveSummit = useCallback(() => {
+  const handleRemoveAllSummits = useCallback(() => {
     if (!id) return;
     Alert.alert(
-      'Remove Summit',
-      'Are you sure you want to remove this summit record?',
+      'Remove All Summits',
+      `Are you sure you want to remove all ${summitCountVal} summit record${summitCountVal > 1 ? 's' : ''} for this mountain?`,
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Remove',
+          text: 'Remove All',
           style: 'destructive',
           onPress: () => {
             removeSummit(id);
@@ -171,13 +184,34 @@ export default function MountainDetailScreen() {
         },
       ]
     );
-  }, [id, removeSummit]);
+  }, [id, summitCountVal, removeSummit]);
+
+  const handleRemoveSingleSummit = useCallback((record: SummitRecord) => {
+    if (!id) return;
+    Alert.alert(
+      'Remove Summit',
+      `Remove summit from ${record.date}?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Remove',
+          style: 'destructive',
+          onPress: () => {
+            removeSingleSummit(id, record.createdAt);
+            if (Platform.OS !== 'web') {
+              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+            }
+          },
+        },
+      ]
+    );
+  }, [id, removeSingleSummit]);
 
   const handleDeleteMountain = useCallback(() => {
     if (!id) return;
     Alert.alert(
       'Delete Peak',
-      'This will permanently delete this custom peak and any summit record. Continue?',
+      'This will permanently delete this custom peak and any summit records. Continue?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -195,6 +229,13 @@ export default function MountainDetailScreen() {
       ]
     );
   }, [id, removeSummit, removeCustomMountain, router]);
+
+  const handleAnotherSummit = useCallback(() => {
+    if (Platform.OS !== 'web') {
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    }
+    setShowDateInput(true);
+  }, []);
 
   if (!mountain) {
     return (
@@ -219,6 +260,76 @@ export default function MountainDetailScreen() {
     outputRange: [1.3, 1],
     extrapolate: 'clamp',
   });
+
+  const renderSummitReportCard = (record: SummitRecord, index: number) => {
+    return (
+      <View key={record.createdAt} style={styles.reportCard}>
+        <View style={styles.reportCardHeader}>
+          <View style={styles.reportCardHeaderLeft}>
+            <View style={styles.reportNumberBadge}>
+              <Text style={styles.reportNumberText}>#{index + 1}</Text>
+            </View>
+            <View>
+              <View style={styles.reportDateRow}>
+                <Calendar color={Colors.primary} size={13} />
+                <Text style={styles.reportCardDate}>{record.date}</Text>
+              </View>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.reportEditButton}
+            onPress={() => router.push({
+              pathname: '/summit-report' as any,
+              params: { mountainId: mountain.id, mountainName: mountain.name, createdAt: record.createdAt },
+            })}
+            activeOpacity={0.7}
+          >
+            <FileText color={Colors.primary} size={14} />
+            <Text style={styles.reportEditText}>Edit</Text>
+          </TouchableOpacity>
+        </View>
+
+        {record.photoUri && (
+          <View style={styles.reportPhotoContainer}>
+            <ExpoImage
+              source={{ uri: record.photoUri }}
+              style={styles.reportPhoto}
+              contentFit="cover"
+            />
+          </View>
+        )}
+
+        {record.report ? (
+          <View style={styles.reportTextContainer}>
+            <Text style={styles.reportText} numberOfLines={4}>{record.report}</Text>
+          </View>
+        ) : (
+          <TouchableOpacity
+            style={styles.addReportPrompt}
+            onPress={() => router.push({
+              pathname: '/summit-report' as any,
+              params: { mountainId: mountain.id, mountainName: mountain.name, createdAt: record.createdAt },
+            })}
+            activeOpacity={0.7}
+          >
+            <Camera color={Colors.textMuted} size={16} />
+            <Text style={styles.addReportPromptText}>Add notes & photo</Text>
+          </TouchableOpacity>
+        )}
+
+        <View style={styles.reportCardActions}>
+          <TouchableOpacity
+            style={styles.reportActionButton}
+            onPress={() => handleRemoveSingleSummit(record)}
+            activeOpacity={0.7}
+          >
+            <XCircle color={Colors.danger} size={14} />
+            <Text style={styles.reportActionTextDanger}>Remove</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -296,8 +407,10 @@ export default function MountainDetailScreen() {
               <View style={styles.summitedBannerInner}>
                 <CheckCircle color="#fff" size={18} />
                 <Text style={styles.summitedBannerText}>SUMMITED</Text>
-                {summitRecord?.date && (
-                  <Text style={styles.summitedBannerDate}> · {summitRecord.date}</Text>
+                {summitCountVal > 1 && (
+                  <View style={styles.summitCountChip}>
+                    <Text style={styles.summitCountChipText}>x{summitCountVal}</Text>
+                  </View>
                 )}
               </View>
             </View>
@@ -314,7 +427,7 @@ export default function MountainDetailScreen() {
               style={[styles.tab, activeTab === 'summit' && styles.tabActive]}
               onPress={() => switchTab('summit')}
             >
-              <Text style={[styles.tabText, activeTab === 'summit' && styles.tabTextActive]}>Did You Summit?</Text>
+              <Text style={[styles.tabText, activeTab === 'summit' && styles.tabTextActive]}>{tabLabel}</Text>
             </TouchableOpacity>
           </View>
 
@@ -362,35 +475,148 @@ export default function MountainDetailScreen() {
           ) : (
             <View style={styles.summitContent}>
               {summited ? (
-                <View style={styles.summitedSection}>
-                  <View style={styles.summitSuccessIcon}><CheckCircle color={Colors.success} size={48} /></View>
-                  <Text style={styles.summitSuccessTitle}>Summit Recorded!</Text>
-                  <Text style={styles.summitSuccessDate}>Date: {summitRecord?.date}</Text>
-                  {summitRecord?.report ? (
-                    <View style={styles.reportPreview}>
-                      <Text style={styles.reportPreviewLabel}>Your Report:</Text>
-                      <Text style={styles.reportPreviewText}>{summitRecord.report}</Text>
+                <View style={styles.summitReportSection}>
+                  {summitRecords.map((record, index) => renderSummitReportCard(record, index))}
+
+                  {!showDateInput && (
+                    <TouchableOpacity
+                      style={styles.anotherSummitButton}
+                      onPress={handleAnotherSummit}
+                      activeOpacity={0.8}
+                    >
+                      <PlusCircle color={Colors.primary} size={20} />
+                      <Text style={styles.anotherSummitText}>Another Summit?</Text>
+                    </TouchableOpacity>
+                  )}
+
+                  {showDateInput && (
+                    <View style={styles.dateInputCard}>
+                      <Text style={styles.dateTitle}>Select Summit Date</Text>
+
+                      <View style={styles.datePickerRow}>
+                        <View style={styles.datePickerCol}>
+                          <TouchableOpacity
+                            style={styles.dateDropdown}
+                            onPress={() => { closePickers(); setShowMonthPicker(!showMonthPicker); }}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.dateDropdownText}>{MONTHS[selectedMonth].slice(0, 3)}</Text>
+                            <ChevronDown color={Colors.primary} size={14} />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={styles.datePickerCol}>
+                          <TouchableOpacity
+                            style={styles.dateDropdown}
+                            onPress={() => { closePickers(); setShowDayPicker(!showDayPicker); }}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.dateDropdownText}>{selectedDay}</Text>
+                            <ChevronDown color={Colors.primary} size={14} />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={styles.datePickerCol}>
+                          <TouchableOpacity
+                            style={styles.dateDropdown}
+                            onPress={() => { closePickers(); setShowYearPicker(!showYearPicker); }}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.dateDropdownText}>{selectedYear}</Text>
+                            <ChevronDown color={Colors.primary} size={14} />
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+
+                      {showMonthPicker && (
+                        <View style={styles.pickerList}>
+                          <FlatList
+                            data={MONTHS}
+                            keyExtractor={(item) => item}
+                            style={styles.pickerScroll}
+                            renderItem={({ item, index }) => (
+                              <TouchableOpacity
+                                style={[styles.pickerItem, selectedMonth === index && styles.pickerItemActive]}
+                                onPress={() => {
+                                  setSelectedMonth(index);
+                                  setShowMonthPicker(false);
+                                  if (selectedDay > new Date(selectedYear, index + 1, 0).getDate()) {
+                                    setSelectedDay(new Date(selectedYear, index + 1, 0).getDate());
+                                  }
+                                }}
+                              >
+                                <Text style={[styles.pickerItemText, selectedMonth === index && styles.pickerItemTextActive]}>{item}</Text>
+                              </TouchableOpacity>
+                            )}
+                          />
+                        </View>
+                      )}
+
+                      {showDayPicker && (
+                        <View style={styles.pickerList}>
+                          <FlatList
+                            data={DAYS}
+                            keyExtractor={(item) => item.toString()}
+                            style={styles.pickerScroll}
+                            renderItem={({ item }) => (
+                              <TouchableOpacity
+                                style={[styles.pickerItem, selectedDay === item && styles.pickerItemActive]}
+                                onPress={() => { setSelectedDay(item); setShowDayPicker(false); }}
+                              >
+                                <Text style={[styles.pickerItemText, selectedDay === item && styles.pickerItemTextActive]}>{item}</Text>
+                              </TouchableOpacity>
+                            )}
+                          />
+                        </View>
+                      )}
+
+                      {showYearPicker && (
+                        <View style={styles.pickerList}>
+                          <FlatList
+                            data={YEARS}
+                            keyExtractor={(item) => item.toString()}
+                            style={styles.pickerScroll}
+                            renderItem={({ item }) => (
+                              <TouchableOpacity
+                                style={[styles.pickerItem, selectedYear === item && styles.pickerItemActive]}
+                                onPress={() => {
+                                  setSelectedYear(item);
+                                  setShowYearPicker(false);
+                                  if (selectedDay > new Date(item, selectedMonth + 1, 0).getDate()) {
+                                    setSelectedDay(new Date(item, selectedMonth + 1, 0).getDate());
+                                  }
+                                }}
+                              >
+                                <Text style={[styles.pickerItemText, selectedYear === item && styles.pickerItemTextActive]}>{item}</Text>
+                              </TouchableOpacity>
+                            )}
+                          />
+                        </View>
+                      )}
+
+                      <TouchableOpacity style={styles.confirmDateButton} onPress={handleConfirmSummit}>
+                        <Text style={styles.confirmDateText}>Continue</Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={styles.cancelDateButton} onPress={() => { setShowDateInput(false); closePickers(); }}>
+                        <Text style={styles.cancelDateText}>Cancel</Text>
+                      </TouchableOpacity>
                     </View>
-                  ) : null}
-                  <TouchableOpacity
-                    style={styles.editReportButton}
-                    onPress={() => router.push({ pathname: '/summit-report' as any, params: { mountainId: mountain.id, mountainName: mountain.name } })}
-                  >
-                    <Text style={styles.editReportText}>{summitRecord?.report ? 'Edit Report & Photo' : 'Add Report & Photo'}</Text>
-                    <ChevronRight color={Colors.primary} size={16} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.shareReportButton}
-                    onPress={handleShareSummit}
-                    activeOpacity={0.7}
-                  >
-                    <Share2 color={Colors.primary} size={16} />
-                    <Text style={styles.shareReportText}>Share Summit</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.removeButton} onPress={handleRemoveSummit}>
-                    <XCircle color={Colors.danger} size={16} />
-                    <Text style={styles.removeButtonText}>Remove Summit</Text>
-                  </TouchableOpacity>
+                  )}
+
+                  <View style={styles.summitActionsRow}>
+                    <TouchableOpacity
+                      style={styles.shareReportButton}
+                      onPress={handleShareSummit}
+                      activeOpacity={0.7}
+                    >
+                      <Share2 color={Colors.primary} size={16} />
+                      <Text style={styles.shareReportText}>Share Summit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.removeAllButton} onPress={handleRemoveAllSummits}>
+                      <XCircle color={Colors.danger} size={16} />
+                      <Text style={styles.removeButtonText}>Remove All</Text>
+                    </TouchableOpacity>
+                  </View>
+
                   {id && isCustom(id) && (
                     <TouchableOpacity style={styles.deleteButton} onPress={handleDeleteMountain}>
                       <Trash2 color={Colors.danger} size={16} />
@@ -689,10 +915,16 @@ const styles = StyleSheet.create({
     fontWeight: '800' as const,
     letterSpacing: 2,
   },
-  summitedBannerDate: {
-    color: 'rgba(255,255,255,0.85)',
+  summitCountChip: {
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderRadius: 10,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  summitCountChipText: {
+    color: '#fff',
     fontSize: 13,
-    fontWeight: '500' as const,
+    fontWeight: '800' as const,
   },
   tabBar: {
     flexDirection: 'row',
@@ -725,6 +957,160 @@ const styles = StyleSheet.create({
   infoLabel: { fontSize: 11, color: Colors.textMuted, marginBottom: 2, fontWeight: '500' as const },
   infoValue: { fontSize: 14, color: Colors.text, fontWeight: '600' as const },
   summitContent: { paddingHorizontal: 20 },
+  summitReportSection: {
+    gap: 12,
+  },
+  reportCard: {
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    overflow: 'hidden',
+  },
+  reportCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+  },
+  reportCardHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  reportNumberBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: Colors.primary + '15',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  reportNumberText: {
+    fontSize: 12,
+    fontWeight: '700' as const,
+    color: Colors.primary,
+  },
+  reportDateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+  },
+  reportCardDate: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: Colors.text,
+  },
+  reportEditButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: Colors.frost,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  reportEditText: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.primary,
+  },
+  reportPhotoContainer: {
+    marginHorizontal: 14,
+    marginTop: 12,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  reportPhoto: {
+    width: '100%',
+    height: 180,
+    borderRadius: 10,
+  },
+  reportTextContainer: {
+    paddingHorizontal: 14,
+    paddingTop: 10,
+  },
+  reportText: {
+    fontSize: 14,
+    color: Colors.text,
+    lineHeight: 20,
+  },
+  addReportPrompt: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    marginHorizontal: 14,
+    marginTop: 10,
+    paddingVertical: 14,
+    backgroundColor: Colors.frost,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    borderStyle: 'dashed',
+  },
+  addReportPromptText: {
+    fontSize: 13,
+    color: Colors.textMuted,
+    fontWeight: '500' as const,
+  },
+  reportCardActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  reportActionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  reportActionTextDanger: {
+    fontSize: 12,
+    fontWeight: '500' as const,
+    color: Colors.danger,
+  },
+  anotherSummitButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: Colors.white,
+    borderRadius: 14,
+    paddingVertical: 16,
+    borderWidth: 2,
+    borderColor: Colors.primary + '30',
+    borderStyle: 'dashed',
+  },
+  anotherSummitText: {
+    fontSize: 15,
+    fontWeight: '700' as const,
+    color: Colors.primary,
+  },
+  dateInputCard: {
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 24,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    alignItems: 'center',
+  },
+  summitActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 20,
+    paddingTop: 8,
+  },
+  shareReportButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12 },
+  shareReportText: { color: Colors.primary, fontSize: 14, fontWeight: '600' as const },
+  removeAllButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12 },
+  removeButtonText: { color: Colors.danger, fontSize: 14, fontWeight: '500' as const },
+  deleteButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, borderTopWidth: 1, borderTopColor: Colors.border, justifyContent: 'center', marginTop: 4 },
   summitQuestion: { alignItems: 'center', backgroundColor: Colors.white, borderRadius: 20, padding: 32, borderWidth: 1, borderColor: Colors.border },
   questionTitle: { fontSize: 20, fontWeight: '700' as const, color: Colors.text, textAlign: 'center', marginBottom: 8 },
   questionSubtitle: { fontSize: 14, color: Colors.textSecondary, textAlign: 'center', marginBottom: 28 },
@@ -748,22 +1134,8 @@ const styles = StyleSheet.create({
   confirmDateText: { color: Colors.white, fontSize: 15, fontWeight: '700' as const },
   cancelDateButton: { paddingVertical: 12, alignItems: 'center', marginTop: 4 },
   cancelDateText: { color: Colors.textSecondary, fontSize: 14, fontWeight: '500' as const },
-  summitedSection: { alignItems: 'center', backgroundColor: Colors.white, borderRadius: 20, padding: 32, borderWidth: 1, borderColor: Colors.border },
-  summitSuccessIcon: { marginBottom: 16 },
-  summitSuccessTitle: { fontSize: 22, fontWeight: '700' as const, color: Colors.success, marginBottom: 8 },
-  summitSuccessDate: { fontSize: 15, color: Colors.textSecondary, marginBottom: 20 },
-  reportPreview: { width: '100%', backgroundColor: Colors.frost, borderRadius: 12, padding: 16, marginBottom: 16 },
-  reportPreviewLabel: { fontSize: 12, color: Colors.textMuted, marginBottom: 6, fontWeight: '600' as const },
-  reportPreviewText: { fontSize: 14, color: Colors.text, lineHeight: 20 },
-  editReportButton: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 12 },
-  editReportText: { color: Colors.primary, fontSize: 15, fontWeight: '600' as const },
-  shareReportButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 4 },
-  shareReportText: { color: Colors.primary, fontSize: 14, fontWeight: '600' as const },
-  removeButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 8 },
-  deleteButton: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 12, marginTop: 4, borderTopWidth: 1, borderTopColor: Colors.border, width: '100%', justifyContent: 'center' },
   deleteInlineButton: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-end', paddingVertical: 8, paddingHorizontal: 12, marginBottom: 8 },
   deleteInlineText: { color: Colors.danger, fontSize: 12, fontWeight: '500' as const },
-  removeButtonText: { color: Colors.danger, fontSize: 14, fontWeight: '500' as const },
   bottomImageContainer: {
     width: '100%',
     height: 260,

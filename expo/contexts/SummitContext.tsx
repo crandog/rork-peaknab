@@ -60,11 +60,28 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
     });
   }, [saveMutation]);
 
-  const updateSummit = useCallback((mountainId: string, updates: Partial<SummitRecord>) => {
+  const removeSingleSummit = useCallback((mountainId: string, createdAt: string) => {
     setRecords((prev) => {
-      const updated = prev.map((r) =>
-        r.mountainId === mountainId ? { ...r, ...updates } : r
-      );
+      const idx = prev.findIndex((r) => r.mountainId === mountainId && r.createdAt === createdAt);
+      if (idx === -1) return prev;
+      const updated = [...prev];
+      updated.splice(idx, 1);
+      saveMutation.mutate(updated);
+      return updated;
+    });
+  }, [saveMutation]);
+
+  const updateSummit = useCallback((mountainId: string, updates: Partial<SummitRecord>, createdAt?: string) => {
+    setRecords((prev) => {
+      let found = false;
+      const updated = prev.map((r) => {
+        if (found) return r;
+        if (r.mountainId === mountainId && (!createdAt || r.createdAt === createdAt)) {
+          found = true;
+          return { ...r, ...updates };
+        }
+        return r;
+      });
       saveMutation.mutate(updated);
       return updated;
     });
@@ -74,11 +91,28 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
     return records.find((r) => r.mountainId === mountainId);
   }, [records]);
 
+  const getSummitsForMountain = useCallback((mountainId: string): SummitRecord[] => {
+    return records.filter((r) => r.mountainId === mountainId);
+  }, [records]);
+
+  const getSummitByCreatedAt = useCallback((mountainId: string, createdAt: string): SummitRecord | undefined => {
+    return records.find((r) => r.mountainId === mountainId && r.createdAt === createdAt);
+  }, [records]);
+
+  const getSummitCount = useCallback((mountainId: string): number => {
+    return records.filter((r) => r.mountainId === mountainId).length;
+  }, [records]);
+
   const isSummited = useCallback((mountainId: string): boolean => {
     return records.some((r) => r.mountainId === mountainId);
   }, [records]);
 
   const summitCount = useMemo(() => records.length, [records]);
+
+  const uniqueSummitCount = useMemo(() => {
+    const unique = new Set(records.map((r) => r.mountainId));
+    return unique.size;
+  }, [records]);
 
   const findMountain = useCallback((id: string): Mountain | undefined => {
     return mountains.find((m) => m.id === id);
@@ -95,11 +129,16 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
     records,
     addSummit,
     removeSummit,
+    removeSingleSummit,
     updateSummit,
     getSummit,
+    getSummitsForMountain,
+    getSummitByCreatedAt,
+    getSummitCount,
     isSummited,
     summitCount,
+    uniqueSummitCount,
     totalElevation,
     isLoading: summitsQuery.isLoading,
-  }), [records, addSummit, removeSummit, updateSummit, getSummit, isSummited, summitCount, totalElevation, summitsQuery.isLoading]);
+  }), [records, addSummit, removeSummit, removeSingleSummit, updateSummit, getSummit, getSummitsForMountain, getSummitByCreatedAt, getSummitCount, isSummited, summitCount, uniqueSummitCount, totalElevation, summitsQuery.isLoading]);
 });
