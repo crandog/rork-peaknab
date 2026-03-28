@@ -95,7 +95,7 @@ export const mountainImages: Record<string, string> = {
   'gerlachovsky': 'https://images.unsplash.com/photo-1504699011943-1e2c8f9f5e03?w=960&q=80',
   'mt-blanc-chamomix': 'https://images.unsplash.com/photo-1477346611705-65d1883cee1e?w=960&q=80',
   'mt-baker': 'https://images.unsplash.com/photo-1476611338391-6f395a0ebc7b?w=960&q=80',
-  'volcano-teide': 'https://images.unsplash.com/photo-1548247416-ec66f4900b2e?w=960&q=80',
+  'volcano-teide': 'https://images.unsplash.com/photo-1580752751901-ac7a1e15529f?w=960&q=80',
   'cascade-14er-1': 'https://images.unsplash.com/photo-1439853949127-fa647821eba0?w=960&q=80',
   'mt-bierstadt': 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=960&q=80',
   'mt-sneffels': 'https://images.unsplash.com/photo-1418985991508-e47386d96a71?w=960&q=80',
