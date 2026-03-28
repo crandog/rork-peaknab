@@ -116,7 +116,7 @@ export const mountainImages: Record<string, string> = {
   'khan-tengri': 'https://images.unsplash.com/photo-1490682143684-14369e18dce8?w=960&q=80',
   'pobeda-peak': 'https://images.unsplash.com/photo-1532274402911-5a369e4c4bb5?w=960&q=80',
   'popocatepetl': 'https://images.unsplash.com/photo-1518105779142-d975f22f1b0a?w=960&q=80',
-  'mt-st-helens': 'https://images.unsplash.com/photo-1497449493050-aad1e7cad165?w=960&q=80',
+  'mt-st-helens': 'https://images.unsplash.com/photo-1637178097012-f985d8c067d0?w=960&q=80',
   'grand-teton': 'https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?w=960&q=80',
   'tre-cime': 'https://images.unsplash.com/photo-1529768167801-9173d94c2a42?w=960&q=80',
   'mt-meru-tanzania': 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=960&q=80',
