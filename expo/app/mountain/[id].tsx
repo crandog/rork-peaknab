@@ -58,6 +58,7 @@ export default function MountainDetailScreen() {
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [showDayPicker, setShowDayPicker] = useState(false);
   const [showYearPicker, setShowYearPicker] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const tabAnim = useRef(new Animated.Value(0)).current;
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -70,6 +71,8 @@ export default function MountainDetailScreen() {
     if (!mountain) return '';
     return getMountainImage(mountain.id);
   }, [mountain]);
+
+  const fallbackImageUrl = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=960&q=80';
 
   const tabLabel = useMemo(() => {
     if (summited) return 'Summit Report';
@@ -335,9 +338,13 @@ export default function MountainDetailScreen() {
     <View style={styles.container}>
       <Animated.View style={[styles.heroImageContainer, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]}>
         <Image
-          source={{ uri: heroImageUrl }}
+          source={{ uri: imageError ? fallbackImageUrl : heroImageUrl }}
           style={styles.heroImage}
           resizeMode="cover"
+          onError={() => {
+            console.log('Hero image failed to load for:', mountain?.id);
+            setImageError(true);
+          }}
         />
       </Animated.View>
       <View style={styles.heroGradientTop} />
@@ -765,7 +772,7 @@ export default function MountainDetailScreen() {
 
         <View style={styles.bottomImageContainer}>
           <Image
-            source={{ uri: heroImageUrl }}
+            source={{ uri: imageError ? fallbackImageUrl : heroImageUrl }}
             style={styles.bottomImage}
             resizeMode="cover"
           />
