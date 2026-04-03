@@ -53,8 +53,8 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
       <Image
         source={{ uri: iconUrl }}
         style={{
-          width: size,
-          height: size,
+          width: size * 1.45,
+          height: size * 1.45,
         }}
         resizeMode="cover"
         onError={() => {
