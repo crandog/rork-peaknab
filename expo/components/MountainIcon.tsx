@@ -33,7 +33,7 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
         {
           width: size,
           height: size,
-          borderRadius: size / 2,
+          borderRadius: 8,
           backgroundColor: Colors.categoryColors[category] ?? Colors.primary,
         },
       ]}>
@@ -48,7 +48,7 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
       {
         width: size,
         height: size,
-        borderRadius: size / 2,
+        borderRadius: 8,
       },
     ]}>
       <Image
@@ -56,7 +56,7 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
         style={{
           width: size,
           height: size,
-          borderRadius: size / 2,
+          borderRadius: 8,
         }}
         resizeMode="cover"
         onError={() => {
@@ -77,7 +77,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: Colors.frost,
     borderWidth: 1.5,
-    borderColor: 'rgba(59, 111, 160, 0.15)',
+    borderColor: 'rgba(59, 111, 160, 0.12)',
+    borderRadius: 8,
   },
   fallbackContainer: {
     justifyContent: 'center',
