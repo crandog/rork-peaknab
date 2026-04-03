@@ -14,11 +14,11 @@ function MountainIconComponent({ mountainId, size = 24 }: MountainIconProps) {
   const iconUrl = getMountainIconUrl(mountainId ?? 'default');
 
   return (
-    <View style={[styles.container, { width: size, height: size }]}>
+    <View style={[styles.container, { width: size, height: size, borderRadius: size / 2 }]}>
       <Image
         source={{ uri: iconUrl }}
-        style={{ width: size, height: size }}
-        resizeMode="contain"
+        style={{ width: size, height: size, borderRadius: size / 2 }}
+        resizeMode="cover"
       />
     </View>
   );
