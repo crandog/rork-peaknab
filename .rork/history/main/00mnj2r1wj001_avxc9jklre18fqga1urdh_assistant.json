@@ -1,0 +1,20 @@
+{
+  "id": "avxc9jklre18fqga1urdh",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "reasoning",
+      "text": "The user seems to be continuing from a previous conversation about a mountain peaks app. Let me first look at the current state of the project to understand what exists.",
+      "id": "reqihjlme8whlw5qbutnk",
+      "createdAt": 1775231081745,
+      "completedAt": 1775231082329
+    },
+    {
+      "type": "text",
+      "text": "How can I help you with your app?",
+      "id": "v3cap2g27zjrbaeltvlzv",
+      "createdAt": 1775231082330
+    }
+  ],
+  "snapshotId": "avxc9jklre18fqga1urdh"
+}
