@@ -1,3 +1,4 @@
+// Auth screen
 import React, { useState, useRef, useCallback } from 'react';
 import {
   View,

@@ -1,3 +1,4 @@
+// Map screen
 import React, { useMemo, useCallback } from 'react';
 import {
   View,
@@ -18,7 +19,7 @@ import RNMapView, { Marker as RNMarker } from 'react-native-maps';
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { records, isSummited } = useSummits();
+  const { isSummited } = useSummits();
   const allMountains = useAllMountains();
 
   const navigateToMountain = useCallback((id: string) => {
@@ -27,14 +28,14 @@ export default function MapScreen() {
 
   const summitedMountains = useMemo(() => {
     return allMountains.filter((m) => isSummited(m.id));
-  }, [records, isSummited, allMountains]);
+  }, [isSummited, allMountains]);
 
   const allMountainMarkers = useMemo(() => {
     return allMountains.map((m) => ({
       ...m,
       summited: isSummited(m.id),
     }));
-  }, [records, isSummited, allMountains]);
+  }, [isSummited, allMountains]);
 
   if (Platform.OS === 'web') {
     return (

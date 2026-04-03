@@ -10,7 +10,6 @@ import Colors from "@/constants/colors";
 
 void SplashScreen.preventAutoHideAsync();
 
-
 const queryClient = new QueryClient();
 
 function RootLayoutNav() {
@@ -20,7 +19,7 @@ function RootLayoutNav() {
         headerBackTitle: "Back",
         headerStyle: { backgroundColor: Colors.white },
         headerTintColor: Colors.text,
-        headerTitleStyle: { fontWeight: '700' as const },
+        headerTitleStyle: { fontWeight: "700" as const },
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

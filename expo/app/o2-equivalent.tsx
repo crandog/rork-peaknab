@@ -1,3 +1,4 @@
+// O2 equivalent screen
 import React from 'react';
 import {
   View,

@@ -1,3 +1,4 @@
+// Profile screen
 import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   View,

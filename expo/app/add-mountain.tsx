@@ -1,3 +1,4 @@
+// Add mountain screen
 import React, { useState, useCallback } from 'react';
 import {
   View,
@@ -97,7 +98,7 @@ export default function AddMountainScreen() {
     }
 
     if (Platform.OS !== 'web') {
-      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
 
     router.back();

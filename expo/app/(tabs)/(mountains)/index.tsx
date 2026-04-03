@@ -1,3 +1,4 @@
+// Mountains list screen
 import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
