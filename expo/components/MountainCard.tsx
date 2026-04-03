@@ -47,7 +47,7 @@ function MountainCardComponent({ mountain, isSummited, summitDate, summitCount =
       >
         <View style={styles.cardContent}>
           <View style={styles.leftSection}>
-            <MountainIcon mountainId={mountain.id} category={mountain.category} size={52} />
+            <MountainIcon mountainId={mountain.id} category={mountain.category} size={72} />
           </View>
 
           <View style={styles.centerSection}>
@@ -126,13 +126,16 @@ const styles = StyleSheet.create({
   cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 13,
-    paddingHorizontal: 18,
+    paddingVertical: 0,
+    paddingRight: 18,
+    paddingLeft: 0,
   },
   leftSection: {
     marginRight: 14,
-    width: 52,
+    width: 72,
+    height: 72,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   centerSection: {
     flex: 1,

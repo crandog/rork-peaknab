@@ -48,15 +48,13 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
       {
         width: size,
         height: size,
-        borderRadius: 8,
-      },
+        },
     ]}>
       <Image
         source={{ uri: iconUrl }}
         style={{
           width: size,
           height: size,
-          borderRadius: 8,
         }}
         resizeMode="cover"
         onError={() => {
@@ -76,9 +74,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
     backgroundColor: Colors.frost,
-    borderWidth: 1.5,
-    borderColor: 'rgba(59, 111, 160, 0.12)',
-    borderRadius: 8,
   },
   fallbackContainer: {
     justifyContent: 'center',
