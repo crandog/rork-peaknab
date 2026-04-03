@@ -239,6 +239,7 @@ export default function MountainsScreen() {
         data={filteredMountains}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
+        numColumns={2}
         contentContainerStyle={styles.list}
         showsVerticalScrollIndicator={false}
         initialNumToRender={10}
@@ -453,6 +454,8 @@ const styles = StyleSheet.create({
     color: Colors.primary,
   },
   list: {
+    paddingHorizontal: 4,
+    paddingTop: 4,
     paddingBottom: 120,
   },
 });

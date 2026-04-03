@@ -1,9 +1,9 @@
-import React, { memo, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import React, { memo, useRef, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
-import Colors from '@/constants/colors';
 import { Mountain } from '@/constants/mountains';
-import MountainIcon from '@/components/MountainIcon';
+import { getMountainIconUrl } from '@/constants/mountainIcons';
 
 interface MountainCardProps {
   mountain: Mountain;
@@ -16,10 +16,12 @@ interface MountainCardProps {
 
 function MountainCardComponent({ mountain, isSummited, summitDate, summitCount = 0, onPress, useFeet = false }: MountainCardProps) {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const [imgError, setImgError] = useState(false);
+  const iconUrl = getMountainIconUrl(mountain.id);
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.97,
+      toValue: 0.96,
       useNativeDriver: true,
     }).start();
   };
@@ -32,63 +34,62 @@ function MountainCardComponent({ mountain, isSummited, summitDate, summitCount =
     }).start();
   };
 
+  const elevationPrimary = useFeet
+    ? `${mountain.elevationFt.toLocaleString()} ft`
+    : `${mountain.elevation.toLocaleString()} m`;
+
   return (
     <Animated.View style={[styles.cardWrapper, { transform: [{ scale: scaleAnim }] }]}>
       <TouchableOpacity
-        style={[
-          styles.card,
-          isSummited && styles.cardSummited,
-        ]}
+        style={styles.card}
         onPress={onPress}
         onPressIn={handlePressIn}
         onPressOut={handlePressOut}
         activeOpacity={0.9}
         testID={`mountain-card-${mountain.id}`}
       >
-        <View style={styles.cardContent}>
-          <View style={styles.leftSection}>
-            <MountainIcon mountainId={mountain.id} category={mountain.category} size={34} />
-          </View>
+        {!imgError ? (
+          <Image
+            source={{ uri: iconUrl }}
+            style={styles.bgImage}
+            resizeMode="cover"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <View style={[styles.bgImage, styles.bgFallback]} />
+        )}
 
-          <View style={styles.centerSection}>
-            <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
-            <Text style={styles.locationText} numberOfLines={1}>
-              {mountain.country} · {mountain.range}
-            </Text>
-          </View>
+        <LinearGradient
+          colors={['transparent', 'rgba(0,0,0,0.15)', 'rgba(0,0,0,0.72)']}
+          locations={[0, 0.4, 1]}
+          style={styles.gradient}
+        />
 
-          {isSummited && (
-            <View style={styles.summitCenter}>
-              <View style={styles.summitBadgeRow}>
-                <View style={styles.summitBadge}>
-                  <Text style={styles.summitBadgeText}>SUMMITED</Text>
-                </View>
-                {summitCount > 1 && (
-                  <View style={styles.summitCountBadge}>
-                    <Text style={styles.summitCountText}>x{summitCount}</Text>
-                  </View>
-                )}
-              </View>
-              {summitDate && (
-                <View style={styles.dateBox}>
-                  <Text style={styles.dateText}>{formatSummitDate(summitDate)}</Text>
-                </View>
-              )}
+        {isSummited && (
+          <View style={styles.summitOverlay}>
+            <View style={styles.summitBadge}>
+              <Text style={styles.summitBadgeText}>SUMMITED</Text>
             </View>
-          )}
-
-          <View style={styles.rightSection}>
-            <Text style={[styles.elevation, isSummited && styles.elevationSummited]}>
-              {useFeet
-                ? `${mountain.elevationFt.toLocaleString()} ft`
-                : `${mountain.elevation.toLocaleString()} m`}
-            </Text>
-            <Text style={styles.elevationAlt}>
-              {useFeet
-                ? `${mountain.elevation.toLocaleString()} m`
-                : `${mountain.elevationFt.toLocaleString()} ft`}
-            </Text>
+            {summitCount > 1 && (
+              <View style={styles.summitCountBadge}>
+                <Text style={styles.summitCountText}>x{summitCount}</Text>
+              </View>
+            )}
           </View>
+        )}
+
+        <View style={styles.elevationTag}>
+          <Text style={styles.elevationTagText}>{elevationPrimary}</Text>
+        </View>
+
+        <View style={styles.infoOverlay}>
+          <Text style={styles.name} numberOfLines={1}>{mountain.name}</Text>
+          <Text style={styles.locationText} numberOfLines={1}>
+            {mountain.country} · {mountain.range}
+          </Text>
+          {isSummited && summitDate && (
+            <Text style={styles.dateText}>{formatSummitDate(summitDate)}</Text>
+          )}
         </View>
       </TouchableOpacity>
     </Animated.View>
@@ -113,106 +114,104 @@ export default memo(MountainCardComponent);
 
 const styles = StyleSheet.create({
   cardWrapper: {
-    marginBottom: 0,
+    width: '50%',
+    padding: 4,
   },
   card: {
-    backgroundColor: 'transparent',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border + '50',
+    width: '100%',
+    aspectRatio: 1,
+    borderRadius: 14,
+    overflow: 'hidden',
+    backgroundColor: '#1A3350',
   },
-  cardSummited: {
-    backgroundColor: 'rgba(192, 57, 43, 0.03)',
+  bgImage: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
   },
-  cardContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 13,
-    paddingHorizontal: 18,
+  bgFallback: {
+    backgroundColor: '#2E5A85',
   },
-  leftSection: {
-    marginRight: 14,
-    width: 36,
-    alignItems: 'center',
+  gradient: {
+    ...StyleSheet.absoluteFillObject,
   },
-  centerSection: {
-    flex: 1,
-    marginRight: 8,
-  },
-  name: {
-    fontSize: 15,
-    fontWeight: '600' as const,
-    color: Colors.text,
-    flexShrink: 1,
-  },
-  summitCenter: {
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  summitBadgeRow: {
+  summitOverlay: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
   },
   summitBadge: {
-    borderWidth: 2,
-    borderColor: '#C0392B',
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
     borderRadius: 3,
-    paddingHorizontal: 6,
+    paddingHorizontal: 5,
     paddingVertical: 2,
-    transform: [{ rotate: '-4deg' }],
+    backgroundColor: 'rgba(192, 57, 43, 0.85)',
+    transform: [{ rotate: '-3deg' }],
   },
   summitBadgeText: {
-    fontSize: 8,
+    fontSize: 7,
     fontWeight: '900' as const,
-    color: '#C0392B',
-    letterSpacing: 1.5,
+    color: '#FFFFFF',
+    letterSpacing: 1.2,
   },
   summitCountBadge: {
-    backgroundColor: '#C0392B',
+    backgroundColor: 'rgba(192, 57, 43, 0.9)',
     borderRadius: 8,
     paddingHorizontal: 5,
     paddingVertical: 1,
-    minWidth: 22,
+    minWidth: 20,
     alignItems: 'center',
   },
   summitCountText: {
-    fontSize: 9,
+    fontSize: 8,
     fontWeight: '800' as const,
     color: '#FFFFFF',
     letterSpacing: 0.3,
   },
-  dateBox: {
-    backgroundColor: '#2E86C1',
-    borderRadius: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    marginTop: 4,
+  elevationTag: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    paddingHorizontal: 7,
+    paddingVertical: 3,
+    borderRadius: 6,
   },
-  dateText: {
-    fontSize: 7,
+  elevationTagText: {
+    fontSize: 10,
     fontWeight: '700' as const,
     color: '#FFFFFF',
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
+  },
+  infoOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    paddingTop: 6,
+  },
+  name: {
+    fontSize: 14,
+    fontWeight: '700' as const,
+    color: '#FFFFFF',
+    letterSpacing: -0.2,
   },
   locationText: {
-    fontSize: 12,
-    color: Colors.textMuted,
-    marginTop: 2,
-  },
-  rightSection: {
-    alignItems: 'flex-end',
-  },
-  elevation: {
-    fontSize: 13,
-    fontWeight: '500' as const,
-    color: Colors.textSecondary,
-  },
-  elevationSummited: {
-    color: Colors.text,
-  },
-  elevationAlt: {
     fontSize: 11,
-    color: Colors.textMuted,
+    color: 'rgba(255,255,255,0.75)',
     marginTop: 1,
+  },
+  dateText: {
+    fontSize: 9,
+    fontWeight: '600' as const,
+    color: 'rgba(255,255,255,0.6)',
+    marginTop: 2,
+    letterSpacing: 0.3,
   },
 });
