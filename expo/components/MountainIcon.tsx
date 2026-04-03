@@ -33,7 +33,7 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
         {
           width: size,
           height: size,
-          borderRadius: 8,
+          borderRadius: 0,
           backgroundColor: Colors.categoryColors[category] ?? Colors.primary,
         },
       ]}>
@@ -74,10 +74,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
     backgroundColor: Colors.frost,
+    borderRadius: 0,
   },
   fallbackContainer: {
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    borderRadius: 0,
   },
 });
