@@ -1,4 +1,3 @@
-// Profile screen
 import React, { useMemo, useCallback, useRef, useEffect } from 'react';
 import {
   View,
@@ -31,8 +30,11 @@ import {
   LogOut,
   RefreshCw,
   User as UserIcon,
+  Shield,
+  FileText,
 } from 'lucide-react-native';
 import * as Print from 'expo-print';
+import * as Linking from 'expo-linking';
 import Colors from '@/constants/colors';
 import { categoryLabels, MountainCategory } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
@@ -565,6 +567,30 @@ export default function ProfileScreen() {
           )}
         </View>
 
+        <View style={styles.legalSection}>
+          <TouchableOpacity
+            style={styles.legalRow}
+            onPress={() => Linking.openURL('https://rork.app/terms')}
+            activeOpacity={0.7}
+            testID="terms-of-service-button"
+          >
+            <FileText color={Colors.textMuted} size={16} />
+            <Text style={styles.legalText}>Terms of Service</Text>
+            <ChevronRight color={Colors.textMuted} size={16} />
+          </TouchableOpacity>
+          <View style={styles.legalDivider} />
+          <TouchableOpacity
+            style={styles.legalRow}
+            onPress={() => Linking.openURL('https://rork.app/privacy')}
+            activeOpacity={0.7}
+            testID="privacy-policy-button"
+          >
+            <Shield color={Colors.textMuted} size={16} />
+            <Text style={styles.legalText}>Privacy Policy</Text>
+            <ChevronRight color={Colors.textMuted} size={16} />
+          </TouchableOpacity>
+        </View>
+
         {summitCount === 0 && (
           <View style={styles.emptyState}>
             <View style={styles.emptyIconContainer}>
@@ -1043,5 +1069,30 @@ const styles = StyleSheet.create({
   signInSubtitle: {
     fontSize: 12,
     color: Colors.textSecondary,
+  },
+  legalSection: {
+    backgroundColor: Colors.white,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginBottom: 20,
+  },
+  legalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    gap: 10,
+  },
+  legalText: {
+    flex: 1,
+    fontSize: 14,
+    color: Colors.textSecondary,
+    fontWeight: '500' as const,
+  },
+  legalDivider: {
+    height: 1,
+    backgroundColor: Colors.border,
+    marginHorizontal: 16,
   },
 });

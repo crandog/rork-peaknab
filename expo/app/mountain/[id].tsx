@@ -1,4 +1,3 @@
-// Mountain detail screen
 import React, { useState, useMemo, useRef, useCallback } from 'react';
 import {
   View,

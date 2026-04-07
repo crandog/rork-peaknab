@@ -1,14 +1,20 @@
 import { Stack } from "expo-router";
 import React from "react";
+import Colors from "@/constants/colors";
 
 export default function MapLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false,
+        headerStyle: { backgroundColor: Colors.primary },
+        headerTintColor: Colors.text,
+        headerTitleStyle: { fontWeight: '700' as const },
       }}
     >
-      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="index"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }

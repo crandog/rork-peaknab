@@ -4,8 +4,6 @@ import React from "react";
 import { View, Image, StyleSheet } from "react-native";
 import Colors from "@/constants/colors";
 
-const TAB_BAR_BG_IMAGE = 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ce56ixcq6dwvfeks1eq19';
-
 export default function TabLayout() {
   return (
     <Tabs
@@ -16,7 +14,7 @@ export default function TabLayout() {
         tabBarBackground: () => (
           <View style={StyleSheet.absoluteFill}>
             <Image
-              source={{ uri: TAB_BAR_BG_IMAGE }}
+              source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ce56ixcq6dwvfeks1eq19' }}
               style={StyleSheet.absoluteFill}
               resizeMode="cover"
             />
@@ -29,7 +27,7 @@ export default function TabLayout() {
         },
         tabBarLabelStyle: {
           fontSize: 11,
-          fontWeight: "600" as const,
+          fontWeight: '600' as const,
         },
       }}
     >

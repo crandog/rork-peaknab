@@ -1,4 +1,3 @@
-// Summit report screen
 import React, { useState, useCallback, useMemo, useRef } from 'react';
 import {
   View,
