@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "Expo",
+      "name": "PeakNab",
       "path": "expo",
       "framework": "react-native"
     }
