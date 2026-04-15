@@ -120,7 +120,7 @@ export default function MountainsScreen() {
 
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>Summit Tracker</Text>
+          <Text style={styles.title}>PeakNab</Text>
           <View style={styles.titleActions}>
             <TouchableOpacity
               style={styles.addButton}

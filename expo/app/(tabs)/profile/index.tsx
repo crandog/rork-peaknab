@@ -200,7 +200,7 @@ export default function ProfileScreen() {
       '</div>' +
       milestoneHtml +
       '<table><thead><tr><th>Mountain</th><th>Country</th><th>Range</th><th style="text-align:right;padding-right:8px;">Meters</th><th style="text-align:right;padding-right:8px;">Feet</th><th style="text-align:right;padding-right:0;">Date</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-      '<div style="margin-top:40px;text-align:center;font-size:9px;color:#ccc;">Summit Tracker</div>' +
+      '<div style="margin-top:40px;text-align:center;font-size:9px;color:#ccc;">PeakNab</div>' +
       '</body></html>';
 
     console.log('PDF Export v3: generating minimal summit log, count:', sortedSummits.length);
@@ -247,7 +247,7 @@ export default function ProfileScreen() {
       .join('\n');
 
     const message = [
-      `My Summit Tracker Stats`,
+      `My PeakNab Stats`,
       ``,
       `Summits: ${summitCount}`,
       `Elevation Gained: ${totalElevation.toLocaleString()}m / ${totalElevationFt.toLocaleString()}ft`,
