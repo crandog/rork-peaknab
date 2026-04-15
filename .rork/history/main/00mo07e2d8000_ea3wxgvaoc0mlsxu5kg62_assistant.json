@@ -1,0 +1,13 @@
+{
+  "id": "ea3wxgvaoc0mlsxu5kg62",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "\n\nThe app icon isn't set in the App Store Connect \"App Information\" page — it's included automatically from your build.\n\nThe app icon is configured in your project's **app.json** (or app.config.js) under the `\"icon\"` field. When you build with EAS and upload to App Store Connect, the icon is embedded in the binary.\n\nHere's what to check:\n\n1. **In your project**, make sure `app.json` has an `\"icon\"` field pointing to a valid 1024x1024 PNG image\n2. **Rebuild** your app with EAS Build so the icon is included in the binary\n3. **Upload the new build** to App Store Connect — the icon will appear automatically\n\nIf you don't see the icon after uploading a build, it likely means the `\"icon\"` field in app.json is missing or pointing to an invalid file.\n\nWould you like me to check your app.json and help set up the icon?",
+      "id": "5pa8b15qpko5or6jeir45",
+      "createdAt": 1776266796697
+    }
+  ],
+  "snapshotId": "ea3wxgvaoc0mlsxu5kg62"
+}
