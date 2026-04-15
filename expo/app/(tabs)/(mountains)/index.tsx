@@ -121,9 +121,11 @@ export default function MountainsScreen() {
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.titleRow}>
           <View style={styles.logoContainer}>
-            <View style={styles.logoIconWrap}>
-              <Mountain color="#FFFFFF" size={20} strokeWidth={2.5} />
-            </View>
+            <Image
+              source={{ uri: 'https://r2-pub.rork.com/attachments/yysoti63i6d0rv4sldqgm.png' }}
+              style={styles.logoIcon}
+              resizeMode="cover"
+            />
             <View>
               <Text style={styles.title}>
                 <Text style={styles.titleBold}>Peak</Text>
@@ -305,15 +307,10 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
     gap: 8,
   },
-  logoIconWrap: {
+  logoIcon: {
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.4)',
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
   },
   title: {
     fontSize: 24,
