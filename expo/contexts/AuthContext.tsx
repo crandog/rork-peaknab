@@ -13,37 +13,95 @@ import type { Mountain } from '@/constants/mountains';
 
 const SUMMIT_STORAGE_KEY = 'summit_records';
 const CUSTOM_MOUNTAINS_KEY = 'custom_mountains';
+const DEMO_SESSION_KEY = 'demo_session';
+
+const DEMO_EMAIL = 'review@peaknab.com';
+const DEMO_PASSWORD = 'PeakNab2026!';
+const DEMO_USER_ID = 'demo-review-user-001';
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error';
+
+interface DemoUser {
+  id: string;
+  email: string;
+  app_metadata: Record<string, unknown>;
+  user_metadata: { full_name: string };
+  aud: string;
+  created_at: string;
+}
+
+function createDemoUser(): DemoUser {
+  return {
+    id: DEMO_USER_ID,
+    email: DEMO_EMAIL,
+    app_metadata: {},
+    user_metadata: { full_name: 'App Reviewer' },
+    aud: 'authenticated',
+    created_at: new Date().toISOString(),
+  };
+}
+
+function createDemoSession(demoUser: DemoUser) {
+  return {
+    access_token: 'demo-access-token',
+    refresh_token: 'demo-refresh-token',
+    expires_in: 3600,
+    token_type: 'bearer',
+    user: demoUser,
+  };
+}
 
 export const [AuthProvider, useAuth] = createContextHook(() => {
   const queryClient = useQueryClient();
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
 
   useEffect(() => {
-    if (!supabaseConfigured) {
-      console.log('[Auth] Supabase not configured, running in offline mode');
-      setIsLoading(false);
-      return;
-    }
+    const checkDemoSession = async () => {
+      try {
+        const demoSession = await AsyncStorage.getItem(DEMO_SESSION_KEY);
+        if (demoSession) {
+          const parsed = JSON.parse(demoSession);
+          console.log('[Auth] Restored demo session');
+          setIsDemoMode(true);
+          setUser(parsed.user as User);
+          setSession(parsed as Session);
+          setIsLoading(false);
+          return true;
+        }
+      } catch (e) {
+        console.log('[Auth] Error checking demo session:', e);
+      }
+      return false;
+    };
 
-    void supabase.auth.getSession().then(({ data: { session: s } }) => {
-      setSession(s);
-      setUser(s?.user ?? null);
-      setIsLoading(false);
-      console.log('[Auth] Initial session:', s ? 'logged in' : 'anonymous');
+    void checkDemoSession().then((isDemo) => {
+      if (isDemo) return;
+
+      if (!supabaseConfigured) {
+        console.log('[Auth] Supabase not configured, running in offline mode');
+        setIsLoading(false);
+        return;
+      }
+
+      void supabase.auth.getSession().then(({ data: { session: s } }) => {
+        setSession(s);
+        setUser(s?.user ?? null);
+        setIsLoading(false);
+        console.log('[Auth] Initial session:', s ? 'logged in' : 'anonymous');
+      });
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+        console.log('[Auth] State changed:', _event);
+        setSession(s);
+        setUser(s?.user ?? null);
+      });
+
+      return () => subscription.unsubscribe();
     });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
-      console.log('[Auth] State changed:', _event);
-      setSession(s);
-      setUser(s?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
   }, []);
 
   const signUpMutation = useMutation({
@@ -66,11 +124,26 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const signInMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
+      if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
+        console.log('[Auth] Demo login detected');
+        const demoUser = createDemoUser();
+        const demoSession = createDemoSession(demoUser);
+        await AsyncStorage.setItem(DEMO_SESSION_KEY, JSON.stringify(demoSession));
+        setIsDemoMode(true);
+        setUser(demoUser as unknown as User);
+        setSession(demoSession as unknown as Session);
+        return { user: demoUser, session: demoSession } as any;
+      }
+
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       return data;
     },
     onSuccess: async (data) => {
+      if (isDemoMode) {
+        console.log('[Auth] Demo sign in complete');
+        return;
+      }
       console.log('[Auth] Signed in successfully');
       await syncDataFromCloud(data.user.id);
     },
@@ -82,6 +155,13 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const signOutMutation = useMutation({
     mutationFn: async () => {
+      if (isDemoMode) {
+        await AsyncStorage.removeItem(DEMO_SESSION_KEY);
+        setIsDemoMode(false);
+        setUser(null);
+        setSession(null);
+        return;
+      }
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     },
@@ -372,12 +452,13 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     signInWithGoogleMutation.mutate();
   }, [signInWithGoogleMutation]);
 
-  const isAuthenticated = !!session;
+  const isAuthenticated = !!session || isDemoMode;
 
   return useMemo(() => ({
     user,
     session,
     isAuthenticated,
+    isDemoMode,
     isLoading,
     syncStatus,
     signUp,
@@ -391,7 +472,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     signInWithGoogle,
     isSigningInWithApple: signInWithAppleMutation.isPending,
     isSigningInWithGoogle: signInWithGoogleMutation.isPending,
-  }), [user, session, isAuthenticated, isLoading, syncStatus, signUp, signIn, signOut, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
+  }), [user, session, isAuthenticated, isDemoMode, isLoading, syncStatus, signUp, signIn, signOut, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
 });
 
 function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {
