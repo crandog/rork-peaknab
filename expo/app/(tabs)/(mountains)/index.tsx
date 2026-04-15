@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown } from 'lucide-react-native';
+import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown, Mountain } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { MountainCategory } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
@@ -120,7 +120,17 @@ export default function MountainsScreen() {
 
       <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>PeakNab</Text>
+          <View style={styles.logoContainer}>
+            <View style={styles.logoIconWrap}>
+              <Mountain color="#FFFFFF" size={20} strokeWidth={2.5} />
+            </View>
+            <View>
+              <Text style={styles.title}>
+                <Text style={styles.titleBold}>Peak</Text>
+                <Text style={styles.titleAccent}>Nab</Text>
+              </Text>
+            </View>
+          </View>
           <View style={styles.titleActions}>
             <TouchableOpacity
               style={styles.addButton}
@@ -290,14 +300,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 14,
   },
+  logoContainer: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 8,
+  },
+  logoIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255,255,255,0.4)',
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+  },
   title: {
-    fontSize: 26,
-    fontWeight: '700' as const,
+    fontSize: 24,
     color: Colors.white,
-    letterSpacing: -0.5,
-    textShadowColor: 'rgba(0,0,0,0.3)',
+    letterSpacing: -0.3,
+    textShadowColor: 'rgba(0,0,0,0.35)',
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
+    textShadowRadius: 6,
+  },
+  titleBold: {
+    fontWeight: '800' as const,
+    letterSpacing: -0.5,
+  },
+  titleAccent: {
+    fontWeight: '400' as const,
+    fontStyle: 'italic' as const,
+    letterSpacing: 0.5,
   },
   titleActions: {
     flexDirection: 'row',
