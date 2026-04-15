@@ -15,8 +15,8 @@ const SUMMIT_STORAGE_KEY = 'summit_records';
 const CUSTOM_MOUNTAINS_KEY = 'custom_mountains';
 const DEMO_SESSION_KEY = 'demo_session';
 
-const DEMO_EMAIL = 'review@peaknab.com';
-const DEMO_PASSWORD = 'PeakNab2026!';
+const DEMO_EMAIL = 'appreview@peaknab.com';
+const DEMO_PASSWORD = 'ReviewPeakNab2026!';
 const DEMO_USER_ID = 'demo-review-user-001';
 
 export type SyncStatus = 'idle' | 'syncing' | 'synced' | 'error';
@@ -124,8 +124,8 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const signInMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
-        console.log('[Auth] Demo login detected');
+      if (email === DEMO_EMAIL && password === DEMO_PASSWORD && !supabaseConfigured) {
+        console.log('[Auth] Demo login detected (offline mode)');
         const demoUser = createDemoUser();
         const demoSession = createDemoSession(demoUser);
         await AsyncStorage.setItem(DEMO_SESSION_KEY, JSON.stringify(demoSession));
