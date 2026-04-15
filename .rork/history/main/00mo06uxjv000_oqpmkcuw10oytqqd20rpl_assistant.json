@@ -1,0 +1,20 @@
+{
+  "id": "oqpmkcuw10oytqqd20rpl",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "reasoning",
+      "text": "The user is having trouble submitting their app to the App Store. They're seeing specific errors about missing requirements. These are things that need to be configured in App Store Connect directly, not in the code. Let me explain what they need to do.",
+      "id": "o5pa8b15qpko5or6jeir4",
+      "createdAt": 1776265901324,
+      "completedAt": 1776265902197
+    },
+    {
+      "type": "text",
+      "text": "These issues need to be resolved directly in **App Store Connect** (not in the code). Here's how to fix each one:\n\n1. **Content Rights Information**\n   - Go to **App Store Connect → Your App → App Information**\n   - Scroll to \"Content Rights\" section\n   - Select whether your app contains, displays, or accesses third-party content\n   - If it does, confirm you have the rights to use it\n\n2. **Choose a Build**\n   - Go to your app's version page (e.g., under \"iOS App 1.0\")\n   - Click the **\"+\"** next to \"Build\" to select a build\n   - If no builds appear, your build may still be processing (can take 15-30 min after upload)\n\n3. **Contact Information**\n   - On the version page, scroll to **\"App Review Information\"**\n   - Fill in: First Name, Last Name, Phone Number, Email\n   - Optionally add notes or demo credentials for the reviewer\n\n4. **Primary Category**\n   - Go to **App Information** (left sidebar)\n   - Under \"Category\", select a **Primary Category** (e.g., \"Sports\", \"Health & Fitness\", \"Travel\")\n   - Optionally select a secondary category\n\n5. **App Privacy**\n   - An **Admin** on your developer account must go to **App Privacy** (left sidebar)\n   - Answer the questionnaire about what data your app collects (location, usage data, etc.)\n   - If your app doesn't collect any data, select \"None\"\n\nOnce all five items are completed, the \"Add for Review\" button will become active.",
+      "id": "5po229aoct8ox1s13mq0t",
+      "createdAt": 1776265902197
+    }
+  ],
+  "snapshotId": "oqpmkcuw10oytqqd20rpl"
+}
