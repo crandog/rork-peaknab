@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -26,7 +26,18 @@ type AuthMode = 'signin' | 'signup';
 export default function AuthScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { signIn, signUp, isSigningIn, isSigningUp, signInWithApple, signInWithGoogle, isSigningInWithApple, isSigningInWithGoogle } = useAuth();
+  const { signIn, signUp, isSigningIn, isSigningUp, signInWithApple, signInWithGoogle, isSigningInWithApple, isSigningInWithGoogle, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log('[Auth Screen] Authenticated, dismissing modal');
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/');
+      }
+    }
+  }, [isAuthenticated, router]);
 
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState<string>('');
