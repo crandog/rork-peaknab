@@ -124,8 +124,8 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const signInMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
-      if (email === DEMO_EMAIL && password === DEMO_PASSWORD && !supabaseConfigured) {
-        console.log('[Auth] Demo login detected (offline mode)');
+      if (email.toLowerCase() === DEMO_EMAIL && password === DEMO_PASSWORD) {
+        console.log('[Auth] Demo login detected');
         const demoUser = createDemoUser();
         const demoSession = createDemoSession(demoUser);
         await AsyncStorage.setItem(DEMO_SESSION_KEY, JSON.stringify(demoSession));
@@ -133,6 +133,10 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         setUser(demoUser as unknown as User);
         setSession(demoSession as unknown as Session);
         return { user: demoUser, session: demoSession } as any;
+      }
+
+      if (!supabaseConfigured) {
+        throw new Error('Authentication is not configured. Please try the demo account.');
       }
 
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
