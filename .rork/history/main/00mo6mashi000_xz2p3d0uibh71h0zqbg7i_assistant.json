@@ -1,0 +1,13 @@
+{
+  "id": "xz2p3d0uibh71h0zqbg7i",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "After clicking **Create OAuth client ID**, follow these steps:\n\n### 1. Configure consent screen (if prompted)\nIf Google asks you to configure the consent screen first:\n- Click **Configure Consent Screen**\n- Choose **External** → Create\n- Fill in:\n  - App name: your app's name\n  - User support email: your email\n  - Developer contact email: your email\n- Click **Save and Continue** through the rest (you can skip scopes and test users for now)\n- Go back to **Credentials** → **Create Credentials** → **OAuth client ID**\n\n### 2. Create the OAuth client\n\n**Application type:** Select **Web application**\n\n**Name:** Anything, e.g. \"Supabase Auth\"\n\n**Authorized JavaScript origins:** Add:\n```\nhttps://<YOUR-PROJECT-REF>.supabase.co\n```\n\n**Authorized redirect URIs:** Add:\n```\nhttps://<YOUR-PROJECT-REF>.supabase.co/auth/v1/callback\n```\n\nYou can find `<YOUR-PROJECT-REF>` in your Supabase dashboard URL (e.g. `abcdxyz123.supabase.co`). Or in Supabase: **Authentication → Providers → Google** — it shows the exact callback URL to copy.\n\n### 3. Click Create\nGoogle will show you:\n- **Client ID**\n- **Client Secret**\n\nCopy both.\n\n### 4. Paste into Supabase\nGo to Supabase → **Authentication** → **Providers** → **Google**:\n- Toggle **Enable**\n- Paste **Client ID** and **Client Secret**\n- Click **Save**\n\nDone! Let me know when you've saved it and I'll help wire up the Google sign-in button in the app.",
+      "id": "sx1e677zjb4hbf5wo6g8f",
+      "createdAt": 1776654633921
+    }
+  ],
+  "snapshotId": "xz2p3d0uibh71h0zqbg7i"
+}
