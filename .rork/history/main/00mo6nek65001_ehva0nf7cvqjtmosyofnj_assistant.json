@@ -1,0 +1,13 @@
+{
+  "id": "ehva0nf7cvqjtmosyofnj",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "That error means you pasted the Supabase callback URL into the wrong field in Google Cloud Console.\n\nHere's where things go:\n\n**In Google Cloud Console (Create OAuth client ID screen):**\n\n1. **Application type**: Web application\n2. **Name**: anything (e.g. \"Supabase Auth\")\n3. **Authorized JavaScript origins**: \n   ```\n   https://umvimcjqbjlvtkrvrmki.supabase.co\n   ```\n4. **Authorized redirect URIs** ← paste the Supabase callback URL HERE:\n   ```\n   https://umvimcjqbjlvtkrvrmki.supabase.co/auth/v1/callback\n   ```\n\nThe \"invalid characters / comma-separated domain-like strings\" error happens when you put the full `https://.../auth/v1/callback` URL into the **Authorized JavaScript origins** field. That field only accepts the origin (protocol + domain), no path.\n\nAfter saving, Google gives you a **Client ID** and **Client Secret** — paste those into Supabase → Authentication → Providers → Google.",
+      "id": "eq68wg59gi3fxbozsvd0t",
+      "createdAt": 1776656491220
+    }
+  ],
+  "snapshotId": "ehva0nf7cvqjtmosyofnj"
+}
