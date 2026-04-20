@@ -1,0 +1,13 @@
+{
+  "id": "0cs66tltrphuic9sudiaj",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "Here's where to do each step for **Google Sign-In**:\n\n## 1. Google Cloud Console (create OAuth credentials)\nGo to: **https://console.cloud.google.com/**\n\n- Create/select a project\n- Navigate to **APIs & Services → Credentials**\n- Click **Create Credentials → OAuth client ID**\n- Configure the **OAuth consent screen** first (External, add app name, support email)\n- Create **3 OAuth Client IDs**:\n  1. **Web application** – for Supabase\n     - Authorized redirect URI: `https://<your-project-ref>.supabase.co/auth/v1/callback`\n     - (Find your project ref in Supabase → Settings → General)\n  2. **iOS** – bundle ID: your app's bundle identifier (from `app.json`)\n  3. **Android** – package name + SHA-1 fingerprint\n\nCopy the **Web Client ID** and **Web Client Secret**.\n\n## 2. Supabase Dashboard (enable provider)\nGo to: **https://supabase.com/dashboard** → your project\n\n- **Authentication → Providers → Google**\n- Toggle **Enable**\n- Paste the **Web Client ID** and **Client Secret** from step 1\n- Copy the **Callback URL** shown there and make sure it matches what you added in Google Cloud\n- Save\n\n## 3. Back in your app\nOnce those two are done, the Google sign-in button will work. Want me to walk you through the **Apple** setup too, or did you want to start with Google first?",
+      "id": "tu3sx1e677zjb4hbf5wo6",
+      "createdAt": 1776651673442
+    }
+  ],
+  "snapshotId": "0cs66tltrphuic9sudiaj"
+}
