@@ -1,0 +1,13 @@
+{
+  "id": "lwdvla3tpht70lipjyss0",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "In Supabase's Google provider settings, the **Client ID** field needs the Client ID you got from Google Cloud Console (from the OAuth client you just created).\n\nIt looks like this:\n```\n1234567890-abcdefg123456.apps.googleusercontent.com\n```\n\n**Where to find it:**\n1. Go to Google Cloud Console → **APIs & Services** → **Credentials**\n2. Click on the OAuth 2.0 Client ID you just created\n3. Copy the **Client ID** (top right of the page)\n4. Paste it into Supabase's \"Client ID (for OAuth)\" field\n5. Copy the **Client Secret** too and paste it into Supabase's \"Client Secret\" field\n6. Click **Save** in Supabase\n\nMake sure you're copying the Client ID, not the API key — they're different things.",
+      "id": "17ngnvjwirexuwjjm7cji",
+      "createdAt": 1776656730855
+    }
+  ],
+  "snapshotId": "lwdvla3tpht70lipjyss0"
+}
