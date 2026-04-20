@@ -1,0 +1,13 @@
+{
+  "id": "zch90yvjp7av8yx23hbri",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "Great — that's your Supabase callback URL. Here's exactly what to do with it in Google Cloud Console:\n\n**In the \"Create OAuth client ID\" screen:**\n\n1. **Application type:** Web application\n2. **Name:** Anything (e.g. \"Supabase Auth\")\n3. **Authorized JavaScript origins:** Add:\n   ```\n   https://umvimcjqbjlvtkrvrmki.supabase.co\n   ```\n4. **Authorized redirect URIs:** Add:\n   ```\n   https://umvimcjqbjlvtkrvrmki.supabase.co/auth/v1/callback\n   ```\n5. Click **Create**.\n\nGoogle will give you a **Client ID** and **Client Secret**. Copy both.\n\n**Then in Supabase:**\n1. Go to **Authentication → Providers → Google**\n2. Toggle it **ON**\n3. Paste the **Client ID** and **Client Secret**\n4. Click **Save**\n\nThat's it for Google. Want me to walk through Apple next?",
+      "id": "gi3fxbozsvd0tu3sx1e67",
+      "createdAt": 1776656372641
+    }
+  ],
+  "snapshotId": "zch90yvjp7av8yx23hbri"
+}
