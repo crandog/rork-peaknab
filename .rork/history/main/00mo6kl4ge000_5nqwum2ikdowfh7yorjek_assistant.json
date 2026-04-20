@@ -1,0 +1,13 @@
+{
+  "id": "5nqwum2ikdowfh7yorjek",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "Both places. Here's the order:\n\n**1. Google Cloud Console** (console.cloud.google.com) — to create the OAuth credentials:\n- Create a project (or use existing)\n- APIs & Services → Credentials → Create Credentials → OAuth client ID\n- Create one for **Web application**\n- Add this to \"Authorized redirect URIs\":\n  ```\n  https://<your-project-ref>.supabase.co/auth/v1/callback\n  ```\n  (Get your project ref from Supabase dashboard URL)\n- Copy the **Client ID** and **Client Secret**\n\n**2. Supabase Dashboard** (supabase.com/dashboard):\n- Your project → **Authentication** → **Providers**\n- Find **Google** → toggle it on\n- Paste the Client ID and Client Secret from step 1\n- Save\n\n**3. For Apple:**\n- Go to developer.apple.com → Certificates, IDs & Profiles\n- Create a Services ID, enable Sign in with Apple\n- Add Supabase callback URL: `https://<your-project-ref>.supabase.co/auth/v1/callback`\n- In Supabase → Authentication → Providers → Apple → enable and paste the credentials\n\nSo: **create credentials on Google/Apple first, then paste them into Supabase**. Want me to walk through Google step-by-step with screenshots of what to click?",
+      "id": "b4hbf5wo6g8fku1yx7pre",
+      "createdAt": 1776651757509
+    }
+  ],
+  "snapshotId": "5nqwum2ikdowfh7yorjek"
+}
