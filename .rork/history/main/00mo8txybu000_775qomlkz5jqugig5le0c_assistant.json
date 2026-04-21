@@ -1,0 +1,13 @@
+{
+  "id": "775qomlkz5jqugig5le0c",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "No, you don't need to click Edit or fill in anything. Sign in with Apple just needs to be enabled as a capability on your App ID (which it now is after I added it). There are no fields to configure — Apple handles everything automatically.\n\nYou can go ahead and try submitting the app again.",
+      "id": "318aozy4b5ovg1p1s8yqj",
+      "createdAt": 1776788402602
+    }
+  ],
+  "snapshotId": "775qomlkz5jqugig5le0c"
+}
