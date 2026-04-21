@@ -341,6 +341,85 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     signOutMutation.mutate();
   }, [signOutMutation]);
 
+  const deleteAccountMutation = useMutation({
+    mutationFn: async () => {
+      console.log('[Auth] Deleting account...');
+
+      if (isDemoMode) {
+        await AsyncStorage.multiRemove([SUMMIT_STORAGE_KEY, CUSTOM_MOUNTAINS_KEY, DEMO_SESSION_KEY]);
+        setIsDemoMode(false);
+        setUser(null);
+        setSession(null);
+        queryClient.setQueryData(['summits'], []);
+        queryClient.setQueryData(['custom_mountains'], []);
+        return;
+      }
+
+      const currentUser = user;
+      if (!currentUser) throw new Error('No user to delete');
+
+      try {
+        await supabase.from('user_data').delete().eq('user_id', currentUser.id);
+        console.log('[Auth] Deleted user_data row');
+      } catch (e) {
+        console.log('[Auth] Error deleting user_data:', e);
+      }
+
+      const { error: rpcError } = await supabase.rpc('delete_user');
+      if (rpcError) {
+        console.log('[Auth] delete_user RPC error:', rpcError.message);
+        throw new Error(
+          'Could not fully delete your account on the server. Your data has been erased, but please contact support@peaknab.com to complete deletion.'
+        );
+      }
+      console.log('[Auth] Auth user deleted via RPC');
+
+      await AsyncStorage.multiRemove([SUMMIT_STORAGE_KEY, CUSTOM_MOUNTAINS_KEY]);
+      await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
+      queryClient.setQueryData(['summits'], []);
+      queryClient.setQueryData(['custom_mountains'], []);
+    },
+    onSuccess: () => {
+      console.log('[Auth] Account deleted successfully');
+      setSyncStatus('idle');
+      Alert.alert('Account Deleted', 'Your account and all associated data have been permanently deleted.');
+    },
+    onError: (error: Error) => {
+      console.log('[Auth] Delete account error:', error.message);
+      Alert.alert('Account Deletion', error.message);
+    },
+  });
+
+  const deleteAccount = useCallback(() => {
+    Alert.alert(
+      'Delete Account?',
+      'This will permanently delete your account and all your summit data. This action cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              'Are you absolutely sure?',
+              'All your summits, custom mountains, and account data will be erased forever.',
+              [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                  text: 'Delete Forever',
+                  style: 'destructive',
+                  onPress: () => deleteAccountMutation.mutate(),
+                },
+              ]
+            );
+          },
+        },
+      ]
+    );
+  }, [deleteAccountMutation]);
+
   const signInWithAppleMutation = useMutation({
     mutationFn: async () => {
       const credential = await AppleAuthentication.signInAsync({
@@ -468,15 +547,17 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     signUp,
     signIn,
     signOut,
+    deleteAccount,
     pushToCloud,
     isSigningUp: signUpMutation.isPending,
     isSigningIn: signInMutation.isPending,
     isSigningOut: signOutMutation.isPending,
+    isDeletingAccount: deleteAccountMutation.isPending,
     signInWithApple,
     signInWithGoogle,
     isSigningInWithApple: signInWithAppleMutation.isPending,
     isSigningInWithGoogle: signInWithGoogleMutation.isPending,
-  }), [user, session, isAuthenticated, isDemoMode, isLoading, syncStatus, signUp, signIn, signOut, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
+  }), [user, session, isAuthenticated, isDemoMode, isLoading, syncStatus, signUp, signIn, signOut, deleteAccount, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, deleteAccountMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
 });
 
 function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {

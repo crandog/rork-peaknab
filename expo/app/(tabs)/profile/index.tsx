@@ -32,6 +32,7 @@ import {
   User as UserIcon,
   Shield,
   FileText,
+  Trash2,
 } from 'lucide-react-native';
 import * as Print from 'expo-print';
 import * as Linking from 'expo-linking';
@@ -47,7 +48,7 @@ export default function ProfileScreen() {
   const router = useRouter();
   const { records, summitCount, uniqueSummitCount, totalElevation, isSummited } = useSummits();
   const allMountains = useAllMountains();
-  const { isAuthenticated, user, signOut, syncStatus, pushToCloud, isSigningOut } = useAuth();
+  const { isAuthenticated, user, signOut, syncStatus, pushToCloud, isSigningOut, deleteAccount, isDeletingAccount } = useAuth();
 
   const progressAnim = useRef(new Animated.Value(0)).current;
 
@@ -591,6 +592,27 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
+        {isAuthenticated && (
+          <View style={styles.dangerSection}>
+            <Text style={styles.dangerSectionTitle}>Danger Zone</Text>
+            <TouchableOpacity
+              style={styles.deleteAccountButton}
+              onPress={deleteAccount}
+              disabled={isDeletingAccount}
+              activeOpacity={0.7}
+              testID="delete-account-button"
+            >
+              <Trash2 color={Colors.danger} size={18} />
+              <Text style={styles.deleteAccountText}>
+                {isDeletingAccount ? 'Deleting...' : 'Delete Account'}
+              </Text>
+            </TouchableOpacity>
+            <Text style={styles.deleteAccountHint}>
+              Permanently delete your account and all summit data. This cannot be undone.
+            </Text>
+          </View>
+        )}
+
         {summitCount === 0 && (
           <View style={styles.emptyState}>
             <View style={styles.emptyIconContainer}>
@@ -1094,5 +1116,39 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: Colors.border,
     marginHorizontal: 16,
+  },
+  dangerSection: {
+    marginBottom: 24,
+  },
+  dangerSectionTitle: {
+    fontSize: 11,
+    fontWeight: '700' as const,
+    color: Colors.textMuted,
+    letterSpacing: 1.2,
+    marginBottom: 10,
+    textTransform: 'uppercase' as const,
+  },
+  deleteAccountButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: Colors.white,
+    borderRadius: 12,
+    paddingVertical: 14,
+    borderWidth: 1,
+    borderColor: Colors.danger + '40',
+  },
+  deleteAccountText: {
+    fontSize: 14,
+    fontWeight: '700' as const,
+    color: Colors.danger,
+  },
+  deleteAccountHint: {
+    fontSize: 11,
+    color: Colors.textMuted,
+    marginTop: 8,
+    textAlign: 'center',
+    lineHeight: 16,
   },
 });
