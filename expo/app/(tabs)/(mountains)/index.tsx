@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
-import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown, Mountain } from 'lucide-react-native';
+import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown, Mountain, Trophy } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { MountainCategory } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
@@ -42,12 +42,17 @@ export default function MountainsScreen() {
   const [sortBy, setSortBy] = useState<SortOption>('elevation_desc');
   const [showSort, setShowSort] = useState(false);
   const [useFeet, setUseFeet] = useState(false);
+  const [summitedOnly, setSummitedOnly] = useState<boolean>(false);
 
   const filteredMountains = useMemo(() => {
     let filtered = allMountains;
 
     if (selectedCategory !== 'all') {
       filtered = filtered.filter((m) => m.category === selectedCategory);
+    }
+
+    if (summitedOnly) {
+      filtered = filtered.filter((m) => isSummited(m.id));
     }
 
     if (search.trim()) {
@@ -69,7 +74,7 @@ export default function MountainsScreen() {
       default:
         return [...filtered].sort((a, b) => b.elevation - a.elevation);
     }
-  }, [search, selectedCategory, sortBy, allMountains]);
+  }, [search, selectedCategory, sortBy, allMountains, summitedOnly, isSummited]);
 
   const handleMountainPress = useCallback((id: string) => {
     router.push(`/mountain/${id}` as any);
@@ -227,6 +232,15 @@ export default function MountainsScreen() {
           {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
         </Text>
         <View style={styles.listHeaderRight}>
+          <TouchableOpacity
+            style={[styles.summitedBtn, summitedOnly && styles.summitedBtnActive]}
+            onPress={() => setSummitedOnly((p) => !p)}
+            activeOpacity={0.7}
+            testID="summited-filter-button"
+          >
+            <Trophy color={summitedOnly ? Colors.white : Colors.primary} size={13} />
+            <Text style={[styles.summitedBtnText, summitedOnly && styles.summitedBtnTextActive]}>Summited</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.sortButton}
             onPress={() => setShowSort(!showSort)}
@@ -465,6 +479,29 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontSize: 12,
     fontWeight: '600' as const,
+  },
+  summitedBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: Colors.frost,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    gap: 4,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  summitedBtnActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  summitedBtnText: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.primary,
+  },
+  summitedBtnTextActive: {
+    color: Colors.white,
   },
   unitToggleBtn: {
     flexDirection: 'row' as const,
