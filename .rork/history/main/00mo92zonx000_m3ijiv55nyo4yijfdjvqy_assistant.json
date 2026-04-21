@@ -1,0 +1,13 @@
+{
+  "id": "m3ijiv55nyo4yijfdjvqy",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "Yes. TestFlight only shows what's in the uploaded build, so any code changes require a new build upload (increment the build number, archive, and upload again) before testers see them.",
+      "id": "d6dcq1ni5z47pe3cv8te1",
+      "createdAt": 1776803604751
+    }
+  ],
+  "snapshotId": "m3ijiv55nyo4yijfdjvqy"
+}
