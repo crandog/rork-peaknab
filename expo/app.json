@@ -15,7 +15,8 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "app.rork.summit-tracker"
+      "bundleIdentifier": "app.rork.summit-tracker",
+      "usesAppleSignIn": true
     },
     "android": {
       "adaptiveIcon": {
