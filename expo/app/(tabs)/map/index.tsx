@@ -88,12 +88,16 @@ export default function MapScreen() {
       <RNMapView
         style={styles.map}
         initialRegion={{
-          latitude: 30,
-          longitude: 10,
-          latitudeDelta: 120,
-          longitudeDelta: 120,
+          latitude: 20,
+          longitude: 30,
+          latitudeDelta: 160,
+          longitudeDelta: 160,
         }}
-        mapType="terrain"
+        mapType={Platform.OS === 'ios' ? 'standard' : 'terrain'}
+        showsCompass
+        showsScale
+        rotateEnabled={false}
+        pitchEnabled={false}
       >
         {allMountainMarkers.map((m) => (
           <RNMarker
@@ -105,7 +109,8 @@ export default function MapScreen() {
             title={m.name}
             description={`${m.elevation.toLocaleString()}m - ${m.country}`}
             pinColor={m.summited ? '#22C55E' : '#EF4444'}
-            opacity={m.summited ? 1 : 0.8}
+            opacity={m.summited ? 1 : 0.85}
+            tracksViewChanges={false}
             onCalloutPress={() => navigateToMountain(m.id)}
           />
         ))}
