@@ -24,10 +24,17 @@ export default function TabLayout() {
         tabBarStyle: {
           borderTopWidth: 0,
           elevation: 0,
+          height: 64,
+          paddingTop: 6,
+          paddingBottom: 8,
+        },
+        tabBarIconStyle: {
+          marginBottom: 0,
         },
         tabBarLabelStyle: {
-          fontSize: 11,
+          fontSize: 10,
           fontWeight: '600' as const,
+          marginTop: 2,
         },
       }}
     >
