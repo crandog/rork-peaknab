@@ -123,7 +123,7 @@ export default function MountainsScreen() {
       />
       <View style={styles.bottomOverlay} />
 
-      <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
+      <View style={[styles.header, { paddingTop: insets.top + 4 }]}>
         <View style={styles.titleRow}>
           <View style={styles.logoContainer}>
             <Image
@@ -286,14 +286,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 220,
+    height: 180,
   },
   backgroundOverlay: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 220,
+    height: 180,
     backgroundColor: 'rgba(180, 205, 230, 0.25)',
   },
   bottomBackground: {
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    marginBottom: 14,
+    marginBottom: 8,
   },
   logoContainer: {
     flexDirection: 'row' as const,
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
   },
   searchRow: {
     paddingHorizontal: 20,
-    marginBottom: 12,
+    marginBottom: 8,
   },
   searchContainer: {
     flexDirection: 'row',
@@ -429,12 +429,12 @@ const styles = StyleSheet.create({
   categoryList: {
     paddingHorizontal: 16,
     gap: 8,
-    paddingBottom: 10,
+    paddingBottom: 4,
   },
   categoryChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 7,
-    borderRadius: 18,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 16,
     backgroundColor: 'rgba(255,255,255,0.7)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.5)',
@@ -457,7 +457,7 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
     justifyContent: 'space-between' as const,
     paddingHorizontal: 20,
-    paddingTop: 10,
+    paddingTop: 6,
     paddingBottom: 6,
   },
   listHeaderRight: {
@@ -471,9 +471,15 @@ const styles = StyleSheet.create({
     fontWeight: '500' as const,
   },
   sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: Colors.frost,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
     gap: 4,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   sortLabel: {
     color: Colors.primary,
