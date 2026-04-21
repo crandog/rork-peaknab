@@ -182,6 +182,28 @@ export default function MountainsScreen() {
           showsHorizontalScrollIndicator={false}
           keyExtractor={(item) => item.key}
           contentContainerStyle={styles.categoryList}
+          ListHeaderComponent={
+            <TouchableOpacity
+              style={[
+                styles.categoryChip,
+                styles.summitedChip,
+                summitedOnly && styles.categoryChipActive,
+              ]}
+              onPress={() => setSummitedOnly((p) => !p)}
+              activeOpacity={0.7}
+              testID="summited-filter-button"
+            >
+              <Trophy color={summitedOnly ? Colors.white : Colors.textSecondary} size={12} />
+              <Text
+                style={[
+                  styles.categoryChipText,
+                  summitedOnly && styles.categoryChipTextActive,
+                ]}
+              >
+                Summited
+              </Text>
+            </TouchableOpacity>
+          }
           renderItem={({ item }) => {
             const isActive = selectedCategory === item.key;
             return (
@@ -232,15 +254,6 @@ export default function MountainsScreen() {
           {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
         </Text>
         <View style={styles.listHeaderRight}>
-          <TouchableOpacity
-            style={[styles.summitedBtn, summitedOnly && styles.summitedBtnActive]}
-            onPress={() => setSummitedOnly((p) => !p)}
-            activeOpacity={0.7}
-            testID="summited-filter-button"
-          >
-            <Trophy color={summitedOnly ? Colors.white : Colors.primary} size={13} />
-            <Text style={[styles.summitedBtnText, summitedOnly && styles.summitedBtnTextActive]}>Summited</Text>
-          </TouchableOpacity>
           <TouchableOpacity
             style={styles.sortButton}
             onPress={() => setShowSort(!showSort)}
@@ -438,6 +451,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.7)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.5)',
+  },
+  summitedChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 4,
+    marginRight: 8,
   },
   categoryChipActive: {
     backgroundColor: Colors.primary,
