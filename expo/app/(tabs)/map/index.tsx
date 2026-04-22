@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,7 @@ import Colors from '@/constants/colors';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
-import RNMapView, { Marker as RNMarker } from 'react-native-maps';
+import RNMapView, { Marker as RNMarker, Region } from 'react-native-maps';
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
@@ -29,12 +29,26 @@ export default function MapScreen() {
     return allMountains.filter((m) => isSummited(m.id));
   }, [records, isSummited, allMountains]);
 
+  const [region, setRegion] = useState<Region>({
+    latitude: 20,
+    longitude: 30,
+    latitudeDelta: 160,
+    longitudeDelta: 160,
+  });
+
   const allMountainMarkers = useMemo(() => {
-    return allMountains.map((m) => ({
-      ...m,
-      summited: isSummited(m.id),
-    }));
-  }, [records, isSummited, allMountains]);
+    const zoom = Math.max(region.latitudeDelta, region.longitudeDelta);
+    let minElevation = 0;
+    if (zoom > 100) minElevation = 7500;
+    else if (zoom > 50) minElevation = 6500;
+    else if (zoom > 20) minElevation = 5000;
+    else if (zoom > 8) minElevation = 3500;
+    else minElevation = 0;
+
+    return allMountains
+      .map((m) => ({ ...m, summited: isSummited(m.id) }))
+      .filter((m) => m.summited || m.elevation >= minElevation);
+  }, [records, isSummited, allMountains, region.latitudeDelta, region.longitudeDelta]);
 
   if (Platform.OS === 'web') {
     return (
@@ -87,12 +101,8 @@ export default function MapScreen() {
       </View>
       <RNMapView
         style={styles.map}
-        initialRegion={{
-          latitude: 20,
-          longitude: 30,
-          latitudeDelta: 160,
-          longitudeDelta: 160,
-        }}
+        initialRegion={region}
+        onRegionChangeComplete={setRegion}
         mapType={Platform.OS === 'ios' ? 'standard' : 'terrain'}
         showsCompass
         showsScale
@@ -124,6 +134,9 @@ export default function MapScreen() {
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: '#EF4444' }]} />
           <Text style={styles.legendText}>Unclimbed</Text>
+        </View>
+        <View style={styles.legendItem}>
+          <Text style={styles.legendHint}>Zoom in for more</Text>
         </View>
       </View>
     </View>
@@ -196,6 +209,11 @@ const styles = StyleSheet.create({
     color: Colors.text,
     fontSize: 12,
     fontWeight: '500' as const,
+  },
+  legendHint: {
+    color: Colors.textMuted,
+    fontSize: 11,
+    fontStyle: 'italic' as const,
   },
   fallbackContainer: {
     flex: 1,
