@@ -1,0 +1,13 @@
+{
+  "id": "u37rb0hupl54e1xk962ze",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "text",
+      "text": "In the Rork UI, look for the message history on the left side — each of your previous messages has a revert/restore option (usually a small icon when you hover over the message, or a \"...\" menu). Clicking it rolls the project back to the state right before that message.\n\nIf you can't find it, just tell me \"revert the mountain icons change\" and I'll undo it from here.",
+      "id": "gt129cbretm7r0aoq6n6o",
+      "createdAt": 1779321514534
+    }
+  ],
+  "snapshotId": "u37rb0hupl54e1xk962ze"
+}
