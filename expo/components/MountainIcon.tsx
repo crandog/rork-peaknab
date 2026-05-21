@@ -48,15 +48,15 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
       {
         width: size,
         height: size,
-        },
+      },
     ]}>
       <Image
         source={{ uri: iconUrl }}
         style={{
-          width: size * 1.45,
-          height: size * 1.45,
+          width: size,
+          height: size,
         }}
-        resizeMode="cover"
+        resizeMode="contain"
         onError={() => {
           console.log('MountainIcon load error for:', mountainId, iconUrl);
           setHasError(true);
@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
-    backgroundColor: Colors.frost,
+    overflow: 'visible',
+    backgroundColor: 'transparent',
     borderRadius: 0,
   },
   fallbackContainer: {
