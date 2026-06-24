@@ -54,7 +54,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'cotopaxi': 'https://r2-pub.rork.com/generated-images/286bde7d-43c2-4b78-8c1f-7980bad8a9be.png',
   'illimani': 'https://r2-pub.rork.com/generated-images/5ac7c516-117d-4540-8ae0-0fecdbf6e617.png',
   'huayna-potosi': 'https://r2-pub.rork.com/generated-images/4da76671-c204-405b-ad1d-4ff051871158.png',
-  'alpamayo': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/a4fd5746-f254-4cd0-a3a0-677bca9b1763.png',
+  'alpamayo': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c9d2a5f8-93e1-4f7e-b9d2-8e33d67f4b66.png',
   'fitz-roy': 'https://r2-pub.rork.com/generated-images/928b430a-5670-48ef-9bda-8bd3cf386038.png',
   'cerro-torre': 'https://r2-pub.rork.com/generated-images/c48e6a62-8f29-49da-bd6f-40829a30aac3.png',
   'sajama': 'https://r2-pub.rork.com/generated-images/5b39cfde-9027-4133-8507-9a531ad55c43.png',
