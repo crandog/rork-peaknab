@@ -1,5 +1,10 @@
 export type MountainCategory = '7summits' | '8000m' | '14ers' | 'alps' | 'andes' | 'himalaya' | 'other' | 'custom';
 
+export interface Camp {
+  name: string;
+  elevation: number;
+}
+
 export interface Mountain {
   id: string;
   name: string;
@@ -14,6 +19,8 @@ export interface Mountain {
   description: string;
   firstAscent: string;
   iconEmoji: string;
+  routes?: string[];
+  camps?: Camp[];
 }
 
 export const categoryLabels: Record<MountainCategory, string> = {
@@ -53,6 +60,14 @@ export const mountains: Mountain[] = [
     description: 'The highest mountain on Earth. Known as Sagarmatha in Nepal and Chomolungma in Tibet, Everest has been the ultimate mountaineering challenge since it was first summited in 1953.',
     firstAscent: '1953 - Edmund Hillary & Tenzing Norgay',
     iconEmoji: '🏔️',
+    routes: ['South Col Route (Nepal)', 'North Ridge Route (Tibet)'],
+    camps: [
+      { name: 'Base Camp', elevation: 5364 },
+      { name: 'Camp I', elevation: 6060 },
+      { name: 'Camp II', elevation: 6400 },
+      { name: 'Camp III', elevation: 7200 },
+      { name: 'Camp IV / South Col', elevation: 7950 },
+    ],
   },
   {
     id: 'aconcagua',
@@ -68,6 +83,14 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in both the Western and Southern Hemispheres. A non-technical climb via the Normal Route, but altitude and weather are serious challenges.',
     firstAscent: '1897 - Matthias Zurbriggen',
     iconEmoji: '🦅',
+    routes: ['Normal Route (Northwest Ridge)', 'Polish Glacier Route', 'False Polish Route'],
+    camps: [
+      { name: 'Confluencia', elevation: 3390 },
+      { name: 'Plaza de Mulas', elevation: 4370 },
+      { name: 'Camp I / Canada', elevation: 4910 },
+      { name: 'Camp II / Nido de Cóndores', elevation: 5380 },
+      { name: 'Camp III / Colera', elevation: 5970 },
+    ],
   },
   {
     id: 'denali',
@@ -83,6 +106,15 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in North America. Known for extreme cold and weather, Denali has one of the largest base-to-summit rises of any mountain on Earth.',
     firstAscent: '1913 - Hudson Stuck & team',
     iconEmoji: '🐻',
+    routes: ['West Buttress', 'West Rib', 'Cassin Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 2195 },
+      { name: 'Camp I / 7,800ft', elevation: 2377 },
+      { name: 'Camp II / 9,500ft', elevation: 2896 },
+      { name: 'Camp III / 11,000ft', elevation: 3353 },
+      { name: 'Camp IV / 14,200ft', elevation: 4328 },
+      { name: 'High Camp / 17,200ft', elevation: 5243 },
+    ],
   },
   {
     id: 'kilimanjaro',
@@ -98,6 +130,12 @@ export const mountains: Mountain[] = [
     description: 'Africa\'s highest peak and the world\'s tallest freestanding mountain. A volcanic massif with three cones: Kibo, Mawenzi, and Shira.',
     firstAscent: '1889 - Hans Meyer & Ludwig Purtscheller',
     iconEmoji: '🌋',
+    routes: ['Marangu Route', 'Machame Route', 'Lemosho Route', 'Rongai Route'],
+    camps: [
+      { name: 'Mandara Hut', elevation: 2700 },
+      { name: 'Horombo Hut', elevation: 3720 },
+      { name: 'Kibo Hut', elevation: 4703 },
+    ],
   },
   {
     id: 'elbrus',
@@ -113,6 +151,11 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in Europe (when the Caucasus is considered part of Europe). A dormant volcano with twin summits covered in permanent ice.',
     firstAscent: '1874 - Florence Crauford Grove & team',
     iconEmoji: '❄️',
+    routes: ['South Route (Barrels Hut)', 'North Route'],
+    camps: [
+      { name: 'Barrels Hut', elevation: 3890 },
+      { name: 'Pastukhov Rocks', elevation: 4670 },
+    ],
   },
   {
     id: 'vinson',
@@ -128,6 +171,12 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in Antarctica. Remote and extremely cold, reaching Vinson requires flying to a base camp on the ice from Punta Arenas, Chile.',
     firstAscent: '1966 - Nicholas Clinch & team',
     iconEmoji: '🧊',
+    routes: ['Normal Route (Branscomb Glacier)'],
+    camps: [
+      { name: 'Base Camp', elevation: 2140 },
+      { name: 'Low Camp', elevation: 2770 },
+      { name: 'High Camp', elevation: 3730 },
+    ],
   },
   {
     id: 'carstensz',
@@ -143,6 +192,11 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in Oceania. A limestone spire requiring technical rock climbing, located in the remote highlands of Papua.',
     firstAscent: '1962 - Heinrich Harrer & team',
     iconEmoji: '🪨',
+    routes: ['Standard Route (North Face)'],
+    camps: [
+      { name: 'Base Camp', elevation: 4260 },
+      { name: 'High Camp area', elevation: 4500 },
+    ],
   },
   {
     id: 'k2',
@@ -158,6 +212,14 @@ export const mountains: Mountain[] = [
     description: 'The second highest and arguably the most dangerous mountain in the world. Known as the "Savage Mountain" for its extreme difficulty and high fatality rate.',
     firstAscent: '1954 - Achille Compagnoni & Lino Lacedelli',
     iconEmoji: '⚡',
+    routes: ['Abruzzi Spur', 'Cesen Route', 'Magic Line'],
+    camps: [
+      { name: 'Base Camp', elevation: 5150 },
+      { name: 'Camp I', elevation: 6050 },
+      { name: 'Camp II', elevation: 6700 },
+      { name: 'Camp III', elevation: 7200 },
+      { name: 'Camp IV', elevation: 7950 },
+    ],
   },
   {
     id: 'kangchenjunga',
@@ -173,6 +235,14 @@ export const mountains: Mountain[] = [
     description: 'The third highest mountain in the world. Sacred to the people of Sikkim, climbers traditionally stop just below the summit out of respect.',
     firstAscent: '1955 - Joe Brown & George Band',
     iconEmoji: '🙏',
+    routes: ['Southwest Face', 'North Face'],
+    camps: [
+      { name: 'Base Camp', elevation: 5140 },
+      { name: 'Camp I', elevation: 5900 },
+      { name: 'Camp II', elevation: 6500 },
+      { name: 'Camp III', elevation: 7200 },
+      { name: 'Camp IV', elevation: 7900 },
+    ],
   },
   {
     id: 'lhotse',
@@ -188,6 +258,14 @@ export const mountains: Mountain[] = [
     description: 'The fourth highest mountain in the world, connected to Everest via the South Col. Its south face is one of the steepest walls in mountaineering.',
     firstAscent: '1956 - Ernst Reiss & Fritz Luchsinger',
     iconEmoji: '🔺',
+    routes: ['West Face / Lhotse Couloir'],
+    camps: [
+      { name: 'Base Camp', elevation: 5364 },
+      { name: 'Camp I', elevation: 6060 },
+      { name: 'Camp II', elevation: 6400 },
+      { name: 'Camp III', elevation: 7200 },
+      { name: 'Camp IV / South Col', elevation: 7950 },
+    ],
   },
   {
     id: 'makalu',
@@ -203,6 +281,13 @@ export const mountains: Mountain[] = [
     description: 'The fifth highest mountain in the world. An isolated peak with a distinctive four-sided pyramid shape, known for its steep pitches and exposed ridges.',
     firstAscent: '1955 - Jean Couzy & Lionel Terray',
     iconEmoji: '💎',
+    routes: ['Northwest Ridge', 'West Face'],
+    camps: [
+      { name: 'Base Camp', elevation: 4870 },
+      { name: 'Camp I', elevation: 5700 },
+      { name: 'Camp II', elevation: 6400 },
+      { name: 'Camp III', elevation: 7400 },
+    ],
   },
   {
     id: 'cho-oyu',
@@ -218,6 +303,13 @@ export const mountains: Mountain[] = [
     description: 'The sixth highest mountain in the world. Considered the easiest 8000m peak, it is often used as preparation for Everest.',
     firstAscent: '1954 - Herbert Tichy, Joseph Jöchler & Pasang Dawa Lama',
     iconEmoji: '🌬️',
+    routes: ['Normal Route (Northwest Face)'],
+    camps: [
+      { name: 'Base Camp', elevation: 5650 },
+      { name: 'Camp I', elevation: 6400 },
+      { name: 'Camp II', elevation: 7100 },
+      { name: 'Camp III', elevation: 7500 },
+    ],
   },
   {
     id: 'dhaulagiri',
@@ -233,6 +325,13 @@ export const mountains: Mountain[] = [
     description: 'The seventh highest mountain in the world. Its name means "White Mountain" and it held the record as the world\'s highest known peak for 30 years.',
     firstAscent: '1960 - Kurt Diemberger & team',
     iconEmoji: '🏳️',
+    routes: ['Northeast Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 4700 },
+      { name: 'Camp I', elevation: 5900 },
+      { name: 'Camp II', elevation: 6400 },
+      { name: 'Camp III', elevation: 7400 },
+    ],
   },
   {
     id: 'manaslu',
@@ -248,6 +347,14 @@ export const mountains: Mountain[] = [
     description: 'The eighth highest mountain in the world. Known as the "Mountain of the Spirit," it has become increasingly popular as an alternative to Everest.',
     firstAscent: '1956 - Toshio Imanishi & Gyalzen Norbu',
     iconEmoji: '👻',
+    routes: ['Northeast Face'],
+    camps: [
+      { name: 'Base Camp', elevation: 4800 },
+      { name: 'Camp I', elevation: 5700 },
+      { name: 'Camp II', elevation: 6300 },
+      { name: 'Camp III', elevation: 6800 },
+      { name: 'Camp IV', elevation: 7400 },
+    ],
   },
   {
     id: 'nanga-parbat',
@@ -263,6 +370,14 @@ export const mountains: Mountain[] = [
     description: 'The ninth highest mountain in the world. Known as the "Killer Mountain" for its extremely high fatality rate among climbers. Features the largest mountain face on Earth.',
     firstAscent: '1953 - Hermann Buhl (solo)',
     iconEmoji: '💀',
+    routes: ['Kinshofer Route', 'Diamir Face', 'Mazeno Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 4100 },
+      { name: 'Camp I', elevation: 4900 },
+      { name: 'Camp II', elevation: 6000 },
+      { name: 'Camp III', elevation: 6600 },
+      { name: 'Camp IV', elevation: 7200 },
+    ],
   },
   {
     id: 'annapurna',
@@ -278,6 +393,14 @@ export const mountains: Mountain[] = [
     description: 'The tenth highest mountain with the highest fatality-to-summit ratio of any 8000m peak. The first 8000m peak ever climbed.',
     firstAscent: '1950 - Maurice Herzog & Louis Lachenal',
     iconEmoji: '🔥',
+    routes: ['North Face', 'South Face'],
+    camps: [
+      { name: 'Base Camp', elevation: 4130 },
+      { name: 'Camp I', elevation: 5000 },
+      { name: 'Camp II', elevation: 5600 },
+      { name: 'Camp III', elevation: 6300 },
+      { name: 'Camp IV', elevation: 7100 },
+    ],
   },
   {
     id: 'gasherbrum1',
@@ -293,6 +416,13 @@ export const mountains: Mountain[] = [
     description: 'Also known as Hidden Peak, the 11th highest mountain in the world. Its name means "Beautiful Mountain" in Balti language.',
     firstAscent: '1958 - Pete Schoening & Andy Kauffman',
     iconEmoji: '🌟',
+    routes: ['Japanese Couloir'],
+    camps: [
+      { name: 'Base Camp', elevation: 5100 },
+      { name: 'Camp I', elevation: 6000 },
+      { name: 'Camp II', elevation: 6600 },
+      { name: 'Camp III', elevation: 7100 },
+    ],
   },
   {
     id: 'broad-peak',
@@ -308,6 +438,13 @@ export const mountains: Mountain[] = [
     description: 'The 12th highest mountain, named for its broad summit. The first 8000m peak climbed without supplemental oxygen or high-altitude porters.',
     firstAscent: '1957 - Fritz Wintersteller & team',
     iconEmoji: '📐',
+    routes: ['West Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 5000 },
+      { name: 'Camp I', elevation: 6000 },
+      { name: 'Camp II', elevation: 6600 },
+      { name: 'Camp III', elevation: 7200 },
+    ],
   },
   {
     id: 'gasherbrum2',
@@ -323,6 +460,13 @@ export const mountains: Mountain[] = [
     description: 'The 13th highest mountain and one of the more accessible 8000m peaks in the Karakoram. A popular stepping stone for higher Karakoram objectives.',
     firstAscent: '1956 - Fritz Moravec & team',
     iconEmoji: '🗻',
+    routes: ['Southwest Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 5100 },
+      { name: 'Camp I', elevation: 6100 },
+      { name: 'Camp II', elevation: 6600 },
+      { name: 'Camp III', elevation: 7000 },
+    ],
   },
   {
     id: 'shishapangma',
@@ -338,6 +482,13 @@ export const mountains: Mountain[] = [
     description: 'The 14th highest mountain and the lowest of the 8000m peaks. The last 8000m peak to be climbed, as it lies entirely within Tibet.',
     firstAscent: '1964 - Xu Jing & team',
     iconEmoji: '🐉',
+    routes: ['Northwest Face'],
+    camps: [
+      { name: 'Base Camp', elevation: 5000 },
+      { name: 'Camp I', elevation: 5800 },
+      { name: 'Camp II', elevation: 6400 },
+      { name: 'Camp III', elevation: 7200 },
+    ],
   },
   {
     id: 'mt-elbert',
@@ -578,6 +729,13 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in the Alps and Western Europe. The birthplace of mountaineering, first climbed in 1786. Over 20,000 people attempt it annually.',
     firstAscent: '1786 - Jacques Balmat & Michel Paccard',
     iconEmoji: '👑',
+    routes: ['Goûter Route', 'Trois Monts Route', 'Cosmiques Route'],
+    camps: [
+      { name: 'Tête Rousse Hut', elevation: 3167 },
+      { name: 'Goûter Hut', elevation: 3817 },
+      { name: 'Cosmiques Hut', elevation: 3613 },
+      { name: 'Grands Mulets Hut', elevation: 3051 },
+    ],
   },
   {
     id: 'matterhorn',
@@ -593,6 +751,12 @@ export const mountains: Mountain[] = [
     description: 'Perhaps the most iconic mountain in the world. Its distinctive pyramidal shape makes it one of the most photographed mountains. The Hörnli Ridge is the standard route.',
     firstAscent: '1865 - Edward Whymper & team',
     iconEmoji: '🍫',
+    routes: ['Hörnli Ridge', 'Lion Ridge (Italian)', 'Zmutt Ridge'],
+    camps: [
+      { name: 'Hörnli Hut', elevation: 3260 },
+      { name: 'Solvay Hut', elevation: 4003 },
+      { name: 'Carrel Hut', elevation: 3830 },
+    ],
   },
   {
     id: 'eiger',
@@ -608,6 +772,11 @@ export const mountains: Mountain[] = [
     description: 'Famous for its treacherous North Face, known as the "Mordwand" (Murder Wall). The North Face is considered one of the great north faces of the Alps.',
     firstAscent: '1858 - Charles Barrington & guides',
     iconEmoji: '🧗',
+    routes: ['Mittellegi Ridge', '1938 Route (North Face)'],
+    camps: [
+      { name: 'Mittellegi Hut', elevation: 3355 },
+      { name: 'Eigergletscher', elevation: 2320 },
+    ],
   },
   {
     id: 'jungfrau',
@@ -803,6 +972,12 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in Peru and the tropics. Located in Huascarán National Park, a UNESCO World Heritage Site.',
     firstAscent: '1932 - German-Austrian expedition',
     iconEmoji: '🦙',
+    routes: ['Normal Route (Garganta)', 'Shield Route'],
+    camps: [
+      { name: 'Base Camp / Musho', elevation: 4450 },
+      { name: 'Camp I / Moraine', elevation: 4950 },
+      { name: 'Camp II / Garganta', elevation: 5900 },
+    ],
   },
   {
     id: 'chimborazo',
@@ -818,6 +993,11 @@ export const mountains: Mountain[] = [
     description: 'While not the highest by elevation, its summit is the farthest point from Earth\'s center due to the equatorial bulge. A massive stratovolcano.',
     firstAscent: '1880 - Edward Whymper & team',
     iconEmoji: '🌍',
+    routes: ['Normal Route', 'Whymper Route'],
+    camps: [
+      { name: 'Carrel Refuge', elevation: 4850 },
+      { name: 'Whymper Refuge', elevation: 5000 },
+    ],
   },
   {
     id: 'cotopaxi',
@@ -833,6 +1013,10 @@ export const mountains: Mountain[] = [
     description: 'One of the highest active volcanoes in the world. Its symmetrical cone is covered with glaciers, creating a stunning visual. Popular mountaineering destination.',
     firstAscent: '1872 - Wilhelm Reiss & Ángel Escobar',
     iconEmoji: '🌊',
+    routes: ['Normal Route'],
+    camps: [
+      { name: 'José Ribas Refuge', elevation: 4864 },
+    ],
   },
   {
     id: 'illimani',
@@ -878,6 +1062,11 @@ export const mountains: Mountain[] = [
     description: 'Once voted the "Most Beautiful Mountain in the World." Its near-perfect ice pyramid shape and steep fluted ice faces make it an iconic climb.',
     firstAscent: '1957 - German expedition',
     iconEmoji: '💠',
+    routes: ['Ferrari Route', 'French Direct'],
+    camps: [
+      { name: 'Base Camp', elevation: 4300 },
+      { name: 'High Camp / Col', elevation: 5400 },
+    ],
   },
   {
     id: 'fitz-roy',
@@ -893,6 +1082,10 @@ export const mountains: Mountain[] = [
     description: 'One of the most technically challenging mountains in the world. Its sheer granite walls and extreme weather make it a test piece for elite alpinists. The Patagonia brand logo.',
     firstAscent: '1952 - Lionel Terray & Guido Magnone',
     iconEmoji: '🌪️',
+    routes: ['Franco-Argentine Route', 'Supercanaleta'],
+    camps: [
+      { name: 'Paso Superior area', elevation: 2200 },
+    ],
   },
   {
     id: 'cerro-torre',
@@ -908,6 +1101,10 @@ export const mountains: Mountain[] = [
     description: 'A needle of granite and ice in Patagonia, considered one of the most difficult climbs on Earth. Infamous for constant gale-force winds and ice mushrooms.',
     firstAscent: '1974 - Casimiro Ferrari & team',
     iconEmoji: '🪡',
+    routes: ['Compressor Route', 'Ragni Route'],
+    camps: [
+      { name: 'Nipo Nino area', elevation: 1500 },
+    ],
   },
   {
     id: 'sajama',
@@ -968,6 +1165,13 @@ export const mountains: Mountain[] = [
     description: 'Known as the "Matterhorn of the Himalaya" for its striking shape. One of the most beautiful and popular climbing peaks in Nepal.',
     firstAscent: '1961 - Mike Gill, Barry Bishop & team',
     iconEmoji: '💍',
+    routes: ['Southwest Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 4570 },
+      { name: 'Camp I', elevation: 5340 },
+      { name: 'Camp II', elevation: 5910 },
+      { name: 'Camp III', elevation: 6350 },
+    ],
   },
   {
     id: 'island-peak',
@@ -998,6 +1202,11 @@ export const mountains: Mountain[] = [
     description: 'The highest trekking peak in Nepal. Offers stunning panoramic views of five 8000m peaks from its summit.',
     firstAscent: '1953 - Jimmy Roberts & Sen Tenzing',
     iconEmoji: '👁️',
+    routes: ['Standard Route (North Face)'],
+    camps: [
+      { name: 'Mera La', elevation: 5415 },
+      { name: 'High Camp', elevation: 5800 },
+    ],
   },
   {
     id: 'pumori',
@@ -1043,6 +1252,11 @@ export const mountains: Mountain[] = [
     description: 'A popular trekking peak near Everest Base Camp. The summit offers incredible views of the Khumbu icefall and surrounding giants.',
     firstAscent: '1984 - Various teams',
     iconEmoji: '⛺',
+    routes: ['Normal Route (South Ridge)'],
+    camps: [
+      { name: 'Base Camp', elevation: 4950 },
+      { name: 'High Camp', elevation: 5400 },
+    ],
   },
   {
     id: 'annapurna-south',

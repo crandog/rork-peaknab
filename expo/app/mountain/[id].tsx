@@ -30,6 +30,8 @@ import {
   FileText,
   Calendar,
   Camera,
+  GitBranch,
+  Home,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
@@ -441,6 +443,43 @@ export default function MountainDetailScreen() {
           {activeTab === 'info' ? (
             <View style={styles.infoContent}>
               <Text style={styles.description}>{mountain.description}</Text>
+
+              {mountain.routes && mountain.routes.length > 0 && (
+                <View style={styles.routesSection}>
+                  <View style={styles.sectionHeader}>
+                    <GitBranch color={Colors.primary} size={16} />
+                    <Text style={styles.sectionHeaderText}>Common Routes</Text>
+                  </View>
+                  <View style={styles.routesList}>
+                    {mountain.routes.map((route: string, idx: number) => (
+                      <View key={idx} style={styles.routeChip}>
+                        <Text style={styles.routeChipText}>{route}</Text>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
+
+              {mountain.camps && mountain.camps.length > 0 && (
+                <View style={styles.campsSection}>
+                  <View style={styles.sectionHeader}>
+                    <Home color={Colors.primary} size={16} />
+                    <Text style={styles.sectionHeaderText}>Camps</Text>
+                  </View>
+                  <View style={styles.campsList}>
+                    {mountain.camps.map((camp, idx: number) => (
+                      <View key={idx} style={styles.campRow}>
+                        <View style={styles.campDot} />
+                        <View style={styles.campInfo}>
+                          <Text style={styles.campName}>{camp.name}</Text>
+                          <Text style={styles.campElevation}>{camp.elevation.toLocaleString()}m</Text>
+                        </View>
+                      </View>
+                    ))}
+                  </View>
+                </View>
+              )}
+
               <View style={styles.infoGrid}>
                 <View style={styles.infoRow}>
                   <View style={styles.infoIcon}><Mountain color={Colors.primary} size={18} /></View>
@@ -454,13 +493,6 @@ export default function MountainDetailScreen() {
                   <View style={styles.infoDetail}>
                     <Text style={styles.infoLabel}>Category</Text>
                     <Text style={styles.infoValue}>{categoryLabels[mountain.category]}</Text>
-                  </View>
-                </View>
-                <View style={styles.infoRow}>
-                  <View style={styles.infoIcon}><MapPin color={Colors.primary} size={18} /></View>
-                  <View style={styles.infoDetail}>
-                    <Text style={styles.infoLabel}>Coordinates</Text>
-                    <Text style={styles.infoValue}>{mountain.latitude.toFixed(4)}°, {mountain.longitude.toFixed(4)}°</Text>
                   </View>
                 </View>
                 <View style={styles.infoRow}>
@@ -1157,4 +1189,84 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(11, 29, 48, 0.35)',
   },
   errorText: { color: Colors.text, fontSize: 16, textAlign: 'center', marginTop: 100 },
+  routesSection: {
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 16,
+    marginBottom: 16,
+  },
+  campsSection: {
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: 16,
+    marginBottom: 16,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  sectionHeaderText: {
+    fontSize: 13,
+    fontWeight: '700' as const,
+    color: Colors.textSecondary,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.8,
+  },
+  routesList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  routeChip: {
+    backgroundColor: Colors.frost,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  routeChipText: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: Colors.text,
+  },
+  campsList: {
+    gap: 0,
+  },
+  campRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: Colors.border,
+    gap: 12,
+  },
+  campDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: Colors.primary,
+  },
+  campInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  campName: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: Colors.text,
+  },
+  campElevation: {
+    fontSize: 13,
+    fontWeight: '500' as const,
+    color: Colors.textSecondary,
+  },
 });
