@@ -444,6 +444,37 @@ export default function MountainDetailScreen() {
             <View style={styles.infoContent}>
               <Text style={styles.description}>{mountain.description}</Text>
 
+              <View style={styles.infoGrid}>
+                <View style={styles.infoRow}>
+                  <View style={styles.infoIcon}><Mountain color={Colors.primary} size={18} /></View>
+                  <View style={styles.infoDetail}>
+                    <Text style={styles.infoLabel}>Range</Text>
+                    <Text style={styles.infoValue}>{mountain.range}</Text>
+                  </View>
+                </View>
+                <View style={styles.infoRow}>
+                  <View style={styles.infoIcon}><Globe color={Colors.primary} size={18} /></View>
+                  <View style={styles.infoDetail}>
+                    <Text style={styles.infoLabel}>Category</Text>
+                    <Text style={styles.infoValue}>{categoryLabels[mountain.category]}</Text>
+                  </View>
+                </View>
+                <View style={styles.infoRow}>
+                  <View style={styles.infoIcon}><Clock color={Colors.primary} size={18} /></View>
+                  <View style={styles.infoDetail}>
+                    <Text style={styles.infoLabel}>First Ascent</Text>
+                    <Text style={styles.infoValue}>{mountain.firstAscent}</Text>
+                  </View>
+                </View>
+                <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
+                  <View style={styles.infoIcon}><TrendingUp color={Colors.primary} size={18} /></View>
+                  <View style={styles.infoDetail}>
+                    <Text style={styles.infoLabel}>O₂ at Summit</Text>
+                    <Text style={styles.infoValue}>~{effectiveO2}% effective O₂ ({o2Percentage}% of sea level)</Text>
+                  </View>
+                </View>
+              </View>
+
               {mountain.routes && mountain.routes.length > 0 && (
                 <View style={styles.routesSection}>
                   <View style={styles.sectionHeader}>
@@ -479,37 +510,6 @@ export default function MountainDetailScreen() {
                   </View>
                 </View>
               )}
-
-              <View style={styles.infoGrid}>
-                <View style={styles.infoRow}>
-                  <View style={styles.infoIcon}><Mountain color={Colors.primary} size={18} /></View>
-                  <View style={styles.infoDetail}>
-                    <Text style={styles.infoLabel}>Range</Text>
-                    <Text style={styles.infoValue}>{mountain.range}</Text>
-                  </View>
-                </View>
-                <View style={styles.infoRow}>
-                  <View style={styles.infoIcon}><Globe color={Colors.primary} size={18} /></View>
-                  <View style={styles.infoDetail}>
-                    <Text style={styles.infoLabel}>Category</Text>
-                    <Text style={styles.infoValue}>{categoryLabels[mountain.category]}</Text>
-                  </View>
-                </View>
-                <View style={styles.infoRow}>
-                  <View style={styles.infoIcon}><Clock color={Colors.primary} size={18} /></View>
-                  <View style={styles.infoDetail}>
-                    <Text style={styles.infoLabel}>First Ascent</Text>
-                    <Text style={styles.infoValue}>{mountain.firstAscent}</Text>
-                  </View>
-                </View>
-                <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
-                  <View style={styles.infoIcon}><TrendingUp color={Colors.primary} size={18} /></View>
-                  <View style={styles.infoDetail}>
-                    <Text style={styles.infoLabel}>O₂ at Summit</Text>
-                    <Text style={styles.infoValue}>~{effectiveO2}% effective O₂ ({o2Percentage}% of sea level)</Text>
-                  </View>
-                </View>
-              </View>
             </View>
           ) : (
             <View style={styles.summitContent}>

@@ -957,6 +957,12 @@ export const mountains: Mountain[] = [
     description: 'The highest volcano in the world and second highest peak in the Andes. Located in the Atacama Desert, one of the driest places on Earth.',
     firstAscent: '1937 - Jan Alfred Szczepański & Justyn Wojsznis',
     iconEmoji: '🌵',
+    routes: ['Normal Route (Chilean side)', 'Argentine Route'],
+    camps: [
+      { name: 'Refugio Atacama', elevation: 5200 },
+      { name: 'Refugio Tejos', elevation: 5825 },
+      { name: 'Refugio César', elevation: 6400 },
+    ],
   },
   {
     id: 'huascaran',
@@ -1032,6 +1038,12 @@ export const mountains: Mountain[] = [
     description: 'The guardian mountain of La Paz, Bolivia. Its four peaks are visible from the city and it holds spiritual significance for the Aymara people.',
     firstAscent: '1898 - Martin Conway & team',
     iconEmoji: '🏙️',
+    routes: ['Normal Route (South Face)', 'Southwest Ridge'],
+    camps: [
+      { name: 'Base Camp / Puente Roto', elevation: 4450 },
+      { name: 'Nido de Cóndores', elevation: 5450 },
+      { name: 'High Camp', elevation: 5600 },
+    ],
   },
   {
     id: 'huayna-potosi',
@@ -1047,6 +1059,12 @@ export const mountains: Mountain[] = [
     description: 'Known as the "easiest 6000m peak in the world." Popular for its accessibility from La Paz and spectacular glaciated routes.',
     firstAscent: '1919 - German Alpine Club expedition',
     iconEmoji: '🧗',
+    routes: ['Normal Route', 'French Route'],
+    camps: [
+      { name: 'Base Camp / Refugio', elevation: 4750 },
+      { name: 'Campo Alto / High Camp', elevation: 5300 },
+      { name: 'Campo Argentino', elevation: 5500 },
+    ],
   },
   {
     id: 'alpamayo',
@@ -1065,6 +1083,7 @@ export const mountains: Mountain[] = [
     routes: ['Ferrari Route', 'French Direct'],
     camps: [
       { name: 'Base Camp', elevation: 4300 },
+      { name: 'Moraine Camp', elevation: 4900 },
       { name: 'High Camp / Col', elevation: 5400 },
     ],
   },
@@ -1120,6 +1139,11 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in Bolivia and a symmetrical stratovolcano. Located in Sajama National Park with hot springs at its base.',
     firstAscent: '1939 - Wilfrid Kühm & Josef Prem',
     iconEmoji: '♨️',
+    routes: ['Standard Route (Southwest Ridge)', 'Normal Route (West Ridge)'],
+    camps: [
+      { name: 'Base Camp', elevation: 4800 },
+      { name: 'High Camp', elevation: 5700 },
+    ],
   },
   {
     id: 'volcan-lanin',
@@ -1150,6 +1174,11 @@ export const mountains: Mountain[] = [
     description: 'The seventh highest peak in the Andes. A remote and less-visited peak offering solitude compared to nearby Aconcagua.',
     firstAscent: '1934 - Adam Karpiński & team',
     iconEmoji: '🏜️',
+    routes: ['Normal Route (Southwest Ridge)', 'North Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 5080 },
+      { name: 'High Camp', elevation: 5600 },
+    ],
   },
   {
     id: 'ama-dablam',
@@ -1187,6 +1216,11 @@ export const mountains: Mountain[] = [
     description: 'One of the most popular trekking peaks in Nepal. Named for its island-like appearance when viewed from Dingboche. Often combined with Everest Base Camp trek.',
     firstAscent: '1956 - Tenzing Norgay & team',
     iconEmoji: '🏝️',
+    routes: ['Normal Route (South Ridge)', 'North Ridge'],
+    camps: [
+      { name: 'Base Camp / Pareshaya Gyab', elevation: 5080 },
+      { name: 'High Camp', elevation: 5600 },
+    ],
   },
   {
     id: 'mera-peak',
@@ -1222,6 +1256,12 @@ export const mountains: Mountain[] = [
     description: 'Known as "Everest\'s Daughter" and visible from Everest Base Camp. Its southeast face provides a stunning backdrop to the Khumbu region.',
     firstAscent: '1962 - Gerhard Lenser',
     iconEmoji: '👧',
+    routes: ['Normal Route (Southeast Ridge)', 'Southwest Face'],
+    camps: [
+      { name: 'Base Camp', elevation: 5300 },
+      { name: 'Camp I', elevation: 5650 },
+      { name: 'Camp II', elevation: 6100 },
+    ],
   },
   {
     id: 'baruntse',
@@ -1237,6 +1277,11 @@ export const mountains: Mountain[] = [
     description: 'A striking peak between the Barun and Imja valleys. A demanding expedition peak that offers true high-altitude mountaineering experience.',
     firstAscent: '1954 - Colin Todd & team',
     iconEmoji: '🏕️',
+    routes: ['South Ridge', 'East Ridge'],
+    camps: [
+      { name: 'Base Camp', elevation: 5300 },
+      { name: 'Camp I', elevation: 6000 },
+    ],
   },
   {
     id: 'lobuche-east',
@@ -1317,6 +1362,12 @@ export const mountains: Mountain[] = [
     description: 'The most heavily glaciated peak in the contiguous US. A massive active stratovolcano and training ground for bigger Himalayan expeditions.',
     firstAscent: '1870 - Hazard Stevens & Philemon Van Trump',
     iconEmoji: '🌧️',
+    routes: ['Disappointment Cleaver', 'Emmons Glacier', 'Kautz Glacier'],
+    camps: [
+      { name: 'Camp Muir', elevation: 3060 },
+      { name: 'Camp Schurman', elevation: 2900 },
+      { name: 'Ingraham Flats', elevation: 3300 },
+    ],
   },
   {
     id: 'mt-hood',
@@ -1332,6 +1383,11 @@ export const mountains: Mountain[] = [
     description: 'Oregon\'s highest peak and most climbed glaciated peak in North America. The south side route is a popular introduction to mountaineering.',
     firstAscent: '1857 - Thomas Dryer & team',
     iconEmoji: '🌲',
+    routes: ['South Side / Hogsback', 'Cooper Spur', 'Sunshine Route'],
+    camps: [
+      { name: 'Timberline Lodge', elevation: 1800 },
+      { name: 'Illumination Saddle', elevation: 2830 },
+    ],
   },
   {
     id: 'mt-shasta',
@@ -1347,6 +1403,12 @@ export const mountains: Mountain[] = [
     description: 'A massive stratovolcano in Northern California. Known for its spiritual significance and beautiful symmetrical cone visible for over 100 miles.',
     firstAscent: '1854 - Elias Pearce',
     iconEmoji: '✨',
+    routes: ['Avalanche Gulch', 'Hotlum Glacier', 'Casaval Ridge'],
+    camps: [
+      { name: 'Horse Camp', elevation: 2100 },
+      { name: 'Lake Helen', elevation: 3170 },
+      { name: 'Hidden Valley', elevation: 2800 },
+    ],
   },
   {
     id: 'mt-whitney',
@@ -1362,6 +1424,12 @@ export const mountains: Mountain[] = [
     description: 'The highest peak in the contiguous United States. The Whitney Trail is one of the most popular hikes in America with a highly competitive permit system.',
     firstAscent: '1873 - Charles Begole & team',
     iconEmoji: '🌅',
+    routes: ['Whitney Trail', 'Mountaineer\'s Route', 'East Face'],
+    camps: [
+      { name: 'Outpost Camp', elevation: 3140 },
+      { name: 'Trail Camp', elevation: 3660 },
+      { name: 'Upper Boy Scout Lake', elevation: 3450 },
+    ],
   },
   {
     id: 'mt-fuji',
@@ -1377,6 +1445,12 @@ export const mountains: Mountain[] = [
     description: 'Japan\'s highest peak and most iconic symbol. A UNESCO World Heritage Site climbed by over 300,000 people annually during the summer season.',
     firstAscent: '663 AD - En no Ozunu (traditional)',
     iconEmoji: '🗾',
+    routes: ['Yoshida Trail', 'Subashiri Trail', 'Gotemba Trail', 'Fujinomiya Trail'],
+    camps: [
+      { name: '5th Station', elevation: 2305 },
+      { name: '8th Station Huts', elevation: 3100 },
+      { name: 'Summit Huts', elevation: 3700 },
+    ],
   },
   {
     id: 'aoraki',
