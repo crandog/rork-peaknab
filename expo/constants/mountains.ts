@@ -1084,7 +1084,7 @@ export const mountains: Mountain[] = [
     camps: [
       { name: 'Base Camp', elevation: 4300 },
       { name: 'Moraine Camp', elevation: 4900 },
-      { name: 'High Camp / Col', elevation: 5400 },
+      { name: 'High Camp / Col', elevation: 5500 },
     ],
   },
   {
