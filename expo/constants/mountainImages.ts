@@ -54,7 +54,7 @@ export const mountainImages: Record<string, string> = {
   'cotopaxi': 'https://r2-pub.rork.com/generated-images/25275ae6-bfca-4e45-bc05-cbed521b3366.png',
   'illimani': 'https://r2-pub.rork.com/generated-images/8e25703a-4cff-440b-99ec-b2e3660fe481.png',
   'huayna-potosi': 'https://r2-pub.rork.com/generated-images/2117d16b-7851-4214-9d43-6a98bcec7e3c.png',
-  'alpamayo': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c9a330f8-5196-4af7-b7e8-9e8ad3de3f94.png',
+  'alpamayo': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/eedf9ed1-b266-4a04-aa72-f4ef9fb14d08.png',
   'fitz-roy': 'https://r2-pub.rork.com/generated-images/3ce7a445-792c-4a41-86e0-d041497e70a9.png',
   'cerro-torre': 'https://r2-pub.rork.com/generated-images/1b409ae5-fd1a-4131-9c56-8c46b6191c2b.png',
   'sajama': 'https://r2-pub.rork.com/generated-images/976c3b1a-b2dd-439c-8508-2776c7334049.png',
