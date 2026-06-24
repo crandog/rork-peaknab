@@ -393,8 +393,7 @@ export default function MountainDetailScreen() {
         <View style={styles.contentCard}>
           <View style={styles.statsRow}>
             <View style={styles.statItem}>
-              <Text style={styles.statValue}>{mountain.elevation.toLocaleString()}m</Text>
-              <Text style={styles.statSub}>{mountain.elevationFt.toLocaleString()}ft</Text>
+              <Text style={styles.statValue}>{mountain.elevation.toLocaleString()}m / {mountain.elevationFt.toLocaleString()}ft</Text>
               <Text style={styles.statLabel}>Elevation</Text>
             </View>
             <View style={styles.statDivider} />
@@ -503,7 +502,7 @@ export default function MountainDetailScreen() {
                         <View style={styles.campDot} />
                         <View style={styles.campInfo}>
                           <Text style={styles.campName}>{camp.name}</Text>
-                          <Text style={styles.campElevation}>{camp.elevation.toLocaleString()}m</Text>
+                          <Text style={styles.campElevation}>{camp.elevation.toLocaleString()}m / {Math.round(camp.elevation * 3.28084).toLocaleString()}ft</Text>
                         </View>
                       </View>
                     ))}

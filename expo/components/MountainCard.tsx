@@ -79,14 +79,7 @@ function MountainCardComponent({ mountain, isSummited, summitDate, summitCount =
 
           <View style={styles.rightSection}>
             <Text style={[styles.elevation, isSummited && styles.elevationSummited]}>
-              {useFeet
-                ? `${mountain.elevationFt.toLocaleString()} ft`
-                : `${mountain.elevation.toLocaleString()} m`}
-            </Text>
-            <Text style={styles.elevationAlt}>
-              {useFeet
-                ? `${mountain.elevation.toLocaleString()} m`
-                : `${mountain.elevationFt.toLocaleString()} ft`}
+              {mountain.elevation.toLocaleString()}m / {mountain.elevationFt.toLocaleString()}ft
             </Text>
           </View>
         </View>
