@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Platform,
   Image,
+  ScrollView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -175,38 +176,37 @@ export default function MountainsScreen() {
           </View>
         </View>
 
-        <FlatList
-          data={categories}
+        <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.key}
+          style={styles.chipScrollView}
           contentContainerStyle={styles.categoryList}
-          ListHeaderComponent={
-            <TouchableOpacity
+        >
+          <TouchableOpacity
+            style={[
+              styles.categoryChip,
+              styles.summitedChip,
+              summitedOnly && styles.categoryChipActive,
+            ]}
+            onPress={() => setSummitedOnly((p) => !p)}
+            activeOpacity={0.7}
+            testID="summited-filter-button"
+          >
+            <Trophy color={summitedOnly ? Colors.white : Colors.textSecondary} size={12} />
+            <Text
               style={[
-                styles.categoryChip,
-                styles.summitedChip,
-                summitedOnly && styles.categoryChipActive,
+                styles.categoryChipText,
+                summitedOnly && styles.categoryChipTextActive,
               ]}
-              onPress={() => setSummitedOnly((p) => !p)}
-              activeOpacity={0.7}
-              testID="summited-filter-button"
             >
-              <Trophy color={summitedOnly ? Colors.white : Colors.textSecondary} size={12} />
-              <Text
-                style={[
-                  styles.categoryChipText,
-                  summitedOnly && styles.categoryChipTextActive,
-                ]}
-              >
-                Summited
-              </Text>
-            </TouchableOpacity>
-          }
-          renderItem={({ item }) => {
+              Summited
+            </Text>
+          </TouchableOpacity>
+          {categories.map((item) => {
             const isActive = selectedCategory === item.key;
             return (
               <TouchableOpacity
+                key={item.key}
                 style={[
                   styles.categoryChip,
                   isActive && styles.categoryChipActive,
@@ -224,72 +224,69 @@ export default function MountainsScreen() {
                 </Text>
               </TouchableOpacity>
             );
-          }}
-        />
+          })}
+        </ScrollView>
 
         </View>
 
-      {/* Mountains list — header row is part of the FlatList to avoid iOS/web layout divergence */}
-      <FlatList
-        data={filteredMountains}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        ListHeaderComponent={
-          <View style={styles.listHeaderWrapper}>
-            <View style={styles.listHeaderRow}>
-              <Text style={styles.resultCount}>
-                {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
-              </Text>
-              <View style={styles.listHeaderRight}>
-                <TouchableOpacity
-                  style={styles.sortButton}
-                  onPress={() => setShowSort(!showSort)}
-                  activeOpacity={0.7}
-                >
-                  <ChevronDown color={Colors.primary} size={14} />
-                  <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.unitToggleBtn}
-                  onPress={() => setUseFeet(prev => !prev)}
-                  activeOpacity={0.7}
-                  testID="unit-toggle-button"
-                >
-                  <ArrowUpDown color={Colors.primary} size={13} />
-                  <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            {showSort && (
-              <View style={styles.sortDropdown}>
-                {(Object.keys(sortLabels) as SortOption[]).map((key) => (
-                  <TouchableOpacity
-                    key={key}
-                    style={[styles.sortOption, sortBy === key && styles.sortOptionActive]}
-                    onPress={() => {
-                      setSortBy(key);
-                      setShowSort(false);
-                    }}
-                  >
-                    <Text style={[styles.sortOptionText, sortBy === key && styles.sortOptionTextActive]}>
-                      {sortLabels[key]}
-                    </Text>
-                    {sortBy === key && <Check color={Colors.primary} size={14} />}
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
+      {/* Mountains list with sort row as a plain View to guarantee iOS/web parity */}
+      <View style={styles.mountainsSection}>
+        <View style={styles.listHeaderRow}>
+          <Text style={styles.resultCount}>
+            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+          </Text>
+          <View style={styles.listHeaderRight}>
+            <TouchableOpacity
+              style={styles.sortButton}
+              onPress={() => setShowSort(!showSort)}
+              activeOpacity={0.7}
+            >
+              <ChevronDown color={Colors.primary} size={14} />
+              <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.unitToggleBtn}
+              onPress={() => setUseFeet(prev => !prev)}
+              activeOpacity={0.7}
+              testID="unit-toggle-button"
+            >
+              <ArrowUpDown color={Colors.primary} size={13} />
+              <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
+            </TouchableOpacity>
           </View>
-        }
-        contentContainerStyle={styles.list}
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={10}
-        maxToRenderPerBatch={10}
-        style={styles.flatList}
-        contentInsetAdjustmentBehavior="never"
-        {...(Platform.OS === 'ios' ? { automaticallyAdjustsScrollIndicatorInsets: false } : {})}
-      />
+        </View>
+
+        {showSort && (
+          <View style={styles.sortDropdown}>
+            {(Object.keys(sortLabels) as SortOption[]).map((key) => (
+              <TouchableOpacity
+                key={key}
+                style={[styles.sortOption, sortBy === key && styles.sortOptionActive]}
+                onPress={() => {
+                  setSortBy(key);
+                  setShowSort(false);
+                }}
+              >
+                <Text style={[styles.sortOptionText, sortBy === key && styles.sortOptionTextActive]}>
+                  {sortLabels[key]}
+                </Text>
+                {sortBy === key && <Check color={Colors.primary} size={14} />}
+              </TouchableOpacity>
+            ))}
+          </View>
+        )}
+
+        <FlatList
+          data={filteredMountains}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={styles.list}
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={10}
+          maxToRenderPerBatch={10}
+          style={styles.mountainList}
+        />
+      </View>
     </View>
   );
 }
@@ -322,15 +319,19 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   header: {
-    paddingBottom: 6,
+    paddingBottom: 0,
     zIndex: 2,
   },
-  flatList: {
+  chipScrollView: {
+    flexGrow: 0,
+    flexShrink: 0,
+  },
+  mountainsSection: {
     flex: 1,
     backgroundColor: Colors.white,
   },
-  listHeaderWrapper: {
-    backgroundColor: Colors.white,
+  mountainList: {
+    flex: 1,
   },
   titleRow: {
     flexDirection: 'row',
@@ -452,7 +453,7 @@ const styles = StyleSheet.create({
   categoryList: {
     paddingHorizontal: 16,
     gap: 8,
-    paddingBottom: 2,
+    paddingBottom: 0,
   },
   categoryChip: {
     paddingHorizontal: 14,
@@ -488,9 +489,10 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
     justifyContent: 'space-between' as const,
     paddingHorizontal: 20,
-    paddingTop: 0,
-    paddingBottom: 0,
-    height: 28,
+    paddingTop: 10,
+    paddingBottom: 8,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.border + '50',
   },
   listHeaderRight: {
     flexDirection: 'row' as const,
