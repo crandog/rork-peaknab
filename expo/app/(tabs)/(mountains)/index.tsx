@@ -26,7 +26,6 @@ const categories: Array<{ key: MountainCategory | 'all'; label: string }> = [
   { key: 'alps', label: 'Alps' },
   { key: 'andes', label: 'Andes' },
   { key: 'himalaya', label: 'Himalaya' },
-  { key: 'other', label: 'World' },
   { key: 'custom', label: 'My Peaks' },
 ];
 
