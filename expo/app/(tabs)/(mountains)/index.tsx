@@ -229,8 +229,10 @@ export default function MountainsScreen() {
 
         </View>
 
-      {/* Mountains list with sort row as a plain View to guarantee iOS/web parity */}
+      {/* Mountains list — white bg bridges header gap on iOS via negative margin */}
       <View style={styles.mountainsSection}>
+        {/* Spacer to absorb the negative margin pull so content stays in place */}
+        <View style={styles.gapBridge} />
         <View style={styles.listHeaderRow}>
           <Text style={styles.resultCount}>
             {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
@@ -328,6 +330,11 @@ const styles = StyleSheet.create({
   },
   mountainsSection: {
     flex: 1,
+    backgroundColor: Colors.white,
+    marginTop: -2,
+  },
+  gapBridge: {
+    height: 2,
     backgroundColor: Colors.white,
   },
   mountainList: {
