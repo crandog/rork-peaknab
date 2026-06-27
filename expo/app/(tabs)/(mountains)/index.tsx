@@ -226,6 +226,31 @@ export default function MountainsScreen() {
             );
           }}
         />
+
+        <View style={styles.listHeaderRow}>
+          <Text style={styles.resultCount}>
+            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+          </Text>
+          <View style={styles.listHeaderRight}>
+            <TouchableOpacity
+              style={styles.sortButton}
+              onPress={() => setShowSort(!showSort)}
+              activeOpacity={0.7}
+            >
+              <ChevronDown color={Colors.primary} size={14} />
+              <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.unitToggleBtn}
+              onPress={() => setUseFeet(prev => !prev)}
+              activeOpacity={0.7}
+              testID="unit-toggle-button"
+            >
+              <ArrowUpDown color={Colors.primary} size={13} />
+              <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
 
       {showSort && (
@@ -247,31 +272,6 @@ export default function MountainsScreen() {
           ))}
         </View>
       )}
-
-      <View style={styles.listHeaderRow}>
-        <Text style={styles.resultCount}>
-          {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
-        </Text>
-        <View style={styles.listHeaderRight}>
-          <TouchableOpacity
-            style={styles.sortButton}
-            onPress={() => setShowSort(!showSort)}
-            activeOpacity={0.7}
-          >
-            <ChevronDown color={Colors.primary} size={14} />
-            <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.unitToggleBtn}
-            onPress={() => setUseFeet(prev => !prev)}
-            activeOpacity={0.7}
-            testID="unit-toggle-button"
-          >
-            <ArrowUpDown color={Colors.primary} size={13} />
-            <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
 
       <FlatList
         data={filteredMountains}
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
   categoryList: {
     paddingHorizontal: 16,
     gap: 8,
-    paddingBottom: 8,
+    paddingBottom: 4,
   },
   categoryChip: {
     paddingHorizontal: 16,
@@ -477,8 +477,9 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
     justifyContent: 'space-between' as const,
     paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 6,
+    paddingTop: 0,
+    paddingBottom: 2,
+    backgroundColor: '#FFFFFF',
   },
   listHeaderRight: {
     flexDirection: 'row' as const,
