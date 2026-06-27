@@ -1,0 +1,20 @@
+{
+  "id": "jpnjdaawv0f148ah8f3mb",
+  "role": "assistant",
+  "responseMessageContents": [
+    {
+      "type": "reasoning",
+      "text": "The user is asking about the QR code on the \"test on your phone\" feature in Rork. They're saying the app looks different when they scan the QR code and run it on their actual phone compared to what they see in the Rork web preview/simulator.\n\nLet me think about this. The Rork platform has:\n1. A web-based preview/simulator (what they see in the browser)\n2. A QR code feature that lets them test on their actual phone via the Rork App\n\nThe difference in appearance could be due to:\n- Screen size differences (simulator vs real phone)\n- The web preview might not perfectly match the native Expo Go experience\n- The Rork App might be running the built version while the preview shows the latest code\n- Different rendering environments (WebRTC stream vs native)\n\nBut actually, the user is asking a more fundamental question - does the QR code \"test on your phone\" feature change things? They're noticing the app looks different from what the simulator shows.\n\nThe key thing here is that the Rork simulator runs the latest code, while the QR code in the Rork App loads the latest published build. There might be a delay between code changes and what's available via the QR code. Also, the simulator is a cloud-based iOS simulator streamed via WebRTC, while the phone runs it natively in Expo Go or the Rork App.\n\nI should explain this clearly:\n1. The web preview shows the latest code changes in a cloud simulator\n2. The QR code / \"test on your phone\" loads the app in the Rork App on their device\n3. The Rork App should pick up the latest build, but there might be slight differences due to real device vs simulator rendering\n4. If they're seeing significant differences, it could be a build not being up to date\n\nLet me check if there are any recent build issues or if the app needs to be rebuilt for the QR code to reflect latest changes.\n\nActually, I should just be straightforward - the QR code should show the same thing. If it looks different, it might be because the build hasn't been refreshed. Let me check the runChecks status or recent builds. But actually, I can just explain this clearly to the user.\n\nThe user is asking a simple question - let me give a clear, concise answer and offer to investigate if needed.",
+      "id": "sj7d33vwf2pmhcodewbz9",
+      "createdAt": 1782524373823,
+      "completedAt": 1782524382066
+    },
+    {
+      "type": "text",
+      "text": "The QR code in the Rork App should show the same app as what you see here in the browser preview — it loads the latest build of your code.\n\nIf it looks different, it's usually one of these:\n\n- **The build is stale** — the QR code loads the last successful build. If recent changes haven't been built yet, the phone shows an older version. Running `runChecks` would refresh it.\n- **Screen size rendering** — the cloud simulator runs at a fixed iPhone size, while your phone has its own resolution. Things like spacing or layout can shift slightly.\n- **The Rork App cache** — sometimes pulling down to refresh or killing and reopening the app helps.\n\nWant me to rebuild so the QR code picks up your latest changes?",
+      "id": "tri6e8hqn5hu2mo9i0yny",
+      "createdAt": 1782524382066
+    }
+  ],
+  "snapshotId": "jpnjdaawv0f148ah8f3mb"
+}
