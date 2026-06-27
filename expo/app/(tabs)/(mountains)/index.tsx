@@ -441,16 +441,16 @@ const styles = StyleSheet.create({
   categoryList: {
     paddingHorizontal: 16,
     gap: 8,
-    paddingBottom: 4,
+    paddingBottom: 2,
   },
   categoryChip: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 22,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 18,
     backgroundColor: 'rgba(255,255,255,0.75)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.5)',
-    minHeight: 44,
+    minHeight: 36,
     justifyContent: 'center' as const,
   },
   summitedChip: {
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
   },
   categoryChipText: {
     color: Colors.textSecondary,
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '600' as const,
   },
   categoryChipTextActive: {
