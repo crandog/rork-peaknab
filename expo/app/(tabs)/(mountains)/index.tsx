@@ -229,66 +229,67 @@ export default function MountainsScreen() {
 
         </View>
 
-      {/* Mountains section — list header + cards as one unified block */}
-      <View style={styles.mountainsSection}>
-        <View style={styles.listHeaderRow}>
-          <Text style={styles.resultCount}>
-            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
-          </Text>
-          <View style={styles.listHeaderRight}>
-            <TouchableOpacity
-              style={styles.sortButton}
-              onPress={() => setShowSort(!showSort)}
-              activeOpacity={0.7}
-            >
-              <ChevronDown color={Colors.primary} size={14} />
-              <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.unitToggleBtn}
-              onPress={() => setUseFeet(prev => !prev)}
-              activeOpacity={0.7}
-              testID="unit-toggle-button"
-            >
-              <ArrowUpDown color={Colors.primary} size={13} />
-              <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+      {/* Mountains list — header row is part of the FlatList to avoid iOS/web layout divergence */}
+      <FlatList
+        data={filteredMountains}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        ListHeaderComponent={
+          <View style={styles.listHeaderWrapper}>
+            <View style={styles.listHeaderRow}>
+              <Text style={styles.resultCount}>
+                {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+              </Text>
+              <View style={styles.listHeaderRight}>
+                <TouchableOpacity
+                  style={styles.sortButton}
+                  onPress={() => setShowSort(!showSort)}
+                  activeOpacity={0.7}
+                >
+                  <ChevronDown color={Colors.primary} size={14} />
+                  <Text style={styles.sortLabel}>{sortLabels[sortBy]}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.unitToggleBtn}
+                  onPress={() => setUseFeet(prev => !prev)}
+                  activeOpacity={0.7}
+                  testID="unit-toggle-button"
+                >
+                  <ArrowUpDown color={Colors.primary} size={13} />
+                  <Text style={styles.unitToggleBtnText}>{useFeet ? 'FT' : 'M'}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
 
-        {showSort && (
-          <View style={styles.sortDropdown}>
-            {(Object.keys(sortLabels) as SortOption[]).map((key) => (
-              <TouchableOpacity
-                key={key}
-                style={[styles.sortOption, sortBy === key && styles.sortOptionActive]}
-                onPress={() => {
-                  setSortBy(key);
-                  setShowSort(false);
-                }}
-              >
-                <Text style={[styles.sortOptionText, sortBy === key && styles.sortOptionTextActive]}>
-                  {sortLabels[key]}
-                </Text>
-                {sortBy === key && <Check color={Colors.primary} size={14} />}
-              </TouchableOpacity>
-            ))}
+            {showSort && (
+              <View style={styles.sortDropdown}>
+                {(Object.keys(sortLabels) as SortOption[]).map((key) => (
+                  <TouchableOpacity
+                    key={key}
+                    style={[styles.sortOption, sortBy === key && styles.sortOptionActive]}
+                    onPress={() => {
+                      setSortBy(key);
+                      setShowSort(false);
+                    }}
+                  >
+                    <Text style={[styles.sortOptionText, sortBy === key && styles.sortOptionTextActive]}>
+                      {sortLabels[key]}
+                    </Text>
+                    {sortBy === key && <Check color={Colors.primary} size={14} />}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
           </View>
-        )}
-
-        <FlatList
-          data={filteredMountains}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.list}
-          showsVerticalScrollIndicator={false}
-          initialNumToRender={10}
-          maxToRenderPerBatch={10}
-          style={styles.flatList}
-          contentInsetAdjustmentBehavior="never"
-          {...(Platform.OS === 'ios' ? { automaticallyAdjustsScrollIndicatorInsets: false } : {})}
-        />
-      </View>
+        }
+        contentContainerStyle={styles.list}
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={10}
+        maxToRenderPerBatch={10}
+        style={styles.flatList}
+        contentInsetAdjustmentBehavior="never"
+        {...(Platform.OS === 'ios' ? { automaticallyAdjustsScrollIndicatorInsets: false } : {})}
+      />
     </View>
   );
 }
@@ -324,12 +325,12 @@ const styles = StyleSheet.create({
     paddingBottom: 6,
     zIndex: 2,
   },
-  mountainsSection: {
+  flatList: {
     flex: 1,
     backgroundColor: Colors.white,
   },
-  flatList: {
-    flex: 1,
+  listHeaderWrapper: {
+    backgroundColor: Colors.white,
   },
   titleRow: {
     flexDirection: 'row',
