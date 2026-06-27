@@ -317,6 +317,7 @@ const styles = StyleSheet.create({
   header: {
     paddingBottom: 0,
     zIndex: 2,
+    backgroundColor: '#FFFFFF',
   },
   flatList: {
     zIndex: 1,
@@ -441,15 +442,15 @@ const styles = StyleSheet.create({
   categoryList: {
     paddingHorizontal: 16,
     gap: 8,
-    paddingBottom: 4,
+    paddingBottom: 8,
   },
   categoryChip: {
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 22,
-    backgroundColor: 'rgba(255,255,255,0.75)',
+    backgroundColor: Colors.frost,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.5)',
+    borderColor: Colors.border,
     minHeight: 44,
     justifyContent: 'center' as const,
   },
