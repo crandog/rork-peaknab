@@ -285,6 +285,8 @@ export default function MountainsScreen() {
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           style={styles.flatList}
+          contentInsetAdjustmentBehavior="never"
+          {...(Platform.OS === 'ios' ? { automaticallyAdjustsScrollIndicatorInsets: false } : {})}
         />
       </View>
     </View>
@@ -487,6 +489,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 0,
     paddingBottom: 0,
+    height: 28,
   },
   listHeaderRight: {
     flexDirection: 'row' as const,
