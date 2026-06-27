@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     display: 'none',
   },
   header: {
-    paddingBottom: 4,
+    paddingBottom: 0,
     zIndex: 2,
   },
   flatList: {
@@ -441,15 +441,17 @@ const styles = StyleSheet.create({
   categoryList: {
     paddingHorizontal: 16,
     gap: 8,
-    paddingBottom: 4,
+    paddingBottom: 8,
   },
   categoryChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255,255,255,0.75)',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.5)',
+    minHeight: 44,
+    justifyContent: 'center' as const,
   },
   summitedChip: {
     flexDirection: 'row' as const,
@@ -463,8 +465,8 @@ const styles = StyleSheet.create({
   },
   categoryChipText: {
     color: Colors.textSecondary,
-    fontSize: 13,
-    fontWeight: '500' as const,
+    fontSize: 14,
+    fontWeight: '600' as const,
   },
   categoryChipTextActive: {
     color: Colors.white,
@@ -475,7 +477,7 @@ const styles = StyleSheet.create({
     alignItems: 'center' as const,
     justifyContent: 'space-between' as const,
     paddingHorizontal: 20,
-    paddingTop: 6,
+    paddingTop: 4,
     paddingBottom: 6,
   },
   listHeaderRight: {
