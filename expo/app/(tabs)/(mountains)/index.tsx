@@ -478,7 +478,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between' as const,
     paddingHorizontal: 20,
     paddingTop: 0,
-    paddingBottom: 2,
+    paddingBottom: 0,
   },
   listHeaderRight: {
     flexDirection: 'row' as const,
