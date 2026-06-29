@@ -47,7 +47,8 @@ export default function MapScreen() {
 
     return allMountains
       .map((m) => ({ ...m, summited: isSummited(m.id) }))
-      .filter((m) => m.summited || m.elevation >= minElevation);
+      .filter((m) => m.summited || m.elevation >= minElevation)
+      .filter((m) => !(m.latitude === 0 && m.longitude === 0));
   }, [records, isSummited, allMountains, region.latitudeDelta, region.longitudeDelta]);
 
   if (Platform.OS === 'web') {

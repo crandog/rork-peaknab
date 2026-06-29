@@ -132,6 +132,7 @@ export default function MountainDetailScreen() {
       mountainId: id,
       date: formattedDate,
       report: '',
+      conditions: '',
       photoUri: null,
       createdAt,
     });

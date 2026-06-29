@@ -4,11 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
 import { mountains, Mountain } from '@/constants/mountains';
 import { debouncedCloudPush } from '@/lib/cloudSync';
+import { useCustomMountains } from '@/contexts/CustomMountainsContext';
 
 export interface SummitRecord {
   mountainId: string;
   date: string;
   report: string;
+  conditions: string;
   photoUri: string | null;
   createdAt: string;
 }
@@ -17,6 +19,7 @@ const STORAGE_KEY = 'summit_records';
 
 export const [SummitProvider, useSummits] = createContextHook(() => {
   const queryClient = useQueryClient();
+  const { customMountains } = useCustomMountains();
   const [records, setRecords] = useState<SummitRecord[]>([]);
 
   const summitsQuery = useQuery({
@@ -115,8 +118,8 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
   }, [records]);
 
   const findMountain = useCallback((id: string): Mountain | undefined => {
-    return mountains.find((m) => m.id === id);
-  }, []);
+    return mountains.find((m) => m.id === id) ?? customMountains.find((m) => m.id === id);
+  }, [customMountains]);
 
   const totalElevation = useMemo(() => {
     return records.reduce((acc, record) => {

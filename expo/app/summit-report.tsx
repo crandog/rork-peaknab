@@ -37,6 +37,7 @@ export default function SummitReportScreen() {
   );
 
   const [report, setReport] = useState(summitRecord?.report ?? '');
+  const [conditions, setConditions] = useState(summitRecord?.conditions ?? '');
   const [photoUri, setPhotoUri] = useState<string | null>(summitRecord?.photoUri ?? null);
   const saveScale = useRef(new Animated.Value(1)).current;
 
@@ -65,6 +66,7 @@ export default function SummitReportScreen() {
 
     updateSummit(mountainId, {
       report: report.trim(),
+      conditions: conditions.trim(),
       photoUri,
     }, createdAt);
 
@@ -147,6 +149,8 @@ export default function SummitReportScreen() {
             style={styles.conditionsInput}
             placeholder="Clear skies, -20°C, Light wind."
             placeholderTextColor={Colors.textMuted}
+            value={conditions}
+            onChangeText={setConditions}
           />
         </View>
 

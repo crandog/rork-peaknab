@@ -561,14 +561,16 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 });
 
 function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {
+  // Use composite key (mountainId + createdAt) so repeat summits of the same peak survive
   const map = new Map<string, SummitRecord>();
   for (const record of cloud) {
-    map.set(record.mountainId, record);
+    map.set(`${record.mountainId}|${record.createdAt}`, record);
   }
   for (const record of local) {
-    const existing = map.get(record.mountainId);
-    if (!existing || new Date(record.createdAt) > new Date(existing.createdAt)) {
-      map.set(record.mountainId, record);
+    // Accept local record if cloud doesn't have this specific summit, or local is newer
+    const existing = map.get(`${record.mountainId}|${record.createdAt}`);
+    if (!existing) {
+      map.set(`${record.mountainId}|${record.createdAt}`, record);
     }
   }
   return Array.from(map.values());
