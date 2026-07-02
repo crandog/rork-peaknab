@@ -54,7 +54,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'cotopaxi': 'https://r2-pub.rork.com/generated-images/286bde7d-43c2-4b78-8c1f-7980bad8a9be.png',
   'illimani': 'https://r2-pub.rork.com/generated-images/5ac7c516-117d-4540-8ae0-0fecdbf6e617.png',
   'huayna-potosi': 'https://r2-pub.rork.com/generated-images/4da76671-c204-405b-ad1d-4ff051871158.png',
-  'alpamayo': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/43514937-3f8a-43b1-b500-2e0ff26a9e7f.png',
+  'alpamayo': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/ddb84b2c-816c-4537-91f4-a9b741d08dab.png',
   'fitz-roy': 'https://r2-pub.rork.com/generated-images/928b430a-5670-48ef-9bda-8bd3cf386038.png',
   'cerro-torre': 'https://r2-pub.rork.com/generated-images/c48e6a62-8f29-49da-bd6f-40829a30aac3.png',
   'sajama': 'https://r2-pub.rork.com/generated-images/5b39cfde-9027-4133-8507-9a531ad55c43.png',
@@ -120,7 +120,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'mt-st-helens': 'https://r2-pub.rork.com/generated-images/725d753c-f8e4-4861-b691-c4b91d008db3.png',
   'tre-cime': 'https://r2-pub.rork.com/generated-images/ea4ac21c-6a4a-4f46-8b32-66f8879c2c1c.png',
   'mt-meru-tanzania': 'https://r2-pub.rork.com/generated-images/2898416a-1906-40d0-9e61-df20143fa13b.png',
-  'yanapaccha': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/87d41e6a-4de1-48fc-a0c1-117980f950eb.png',
+  'yanapaccha': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/1a143e00-dc89-4ce1-be9f-78d10698ece8.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/5e4ed8ff-d88c-4d01-ad81-d5aab5a6b46c.png';
