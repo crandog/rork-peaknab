@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Alert } from 'react-native';
+import { Alert, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
@@ -459,7 +459,14 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const signInWithGoogleMutation = useMutation({
     mutationFn: async () => {
-      const redirectUrl = AuthSession.makeRedirectUri();
+      // In the Rork web preview (and web builds generally), exp:// URLs cannot
+      // be intercepted by the browser — Supabase would fall back to the Site
+      // URL and the app would never receive the auth code. Use the current
+      // https origin instead so the browser popup can redirect back to us.
+      const redirectUrl =
+        Platform.OS === 'web' && typeof window !== 'undefined' && window.location?.origin
+          ? window.location.origin
+          : AuthSession.makeRedirectUri();
       console.log('[Auth] Google OAuth redirect URL:', redirectUrl);
 
       const { data, error } = await supabase.auth.signInWithOAuth({
