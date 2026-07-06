@@ -483,33 +483,39 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       }
 
       const url = result.url;
+      console.log('[Auth] Google OAuth callback URL:', url);
+
+      // PKCE flow: callback contains ?code=... — exchange it for a session.
+      // Implicit flow fallback: callback may contain access_token/refresh_token.
       const params = new URL(url);
-      const accessToken = params.searchParams.get('access_token') || params.hash?.match(/access_token=([^&]*)/)?.[1];
-      const refreshToken = params.searchParams.get('refresh_token') || params.hash?.match(/refresh_token=([^&]*)/)?.[1];
+      const code = params.searchParams.get('code');
 
-      if (!accessToken || !refreshToken) {
-        const fragmentParams = new URLSearchParams(url.split('#')[1] || '');
-        const fragAccess = fragmentParams.get('access_token');
-        const fragRefresh = fragmentParams.get('refresh_token');
-
-        if (!fragAccess || !fragRefresh) {
-          throw new Error('Could not extract tokens from callback');
-        }
-
-        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-          access_token: fragAccess,
-          refresh_token: fragRefresh,
-        });
+      if (code) {
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.exchangeCodeForSession(url);
         if (sessionError) throw sessionError;
         return sessionData;
       }
 
-      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
-      if (sessionError) throw sessionError;
-      return sessionData;
+      // Implicit flow fallback (older Supabase projects)
+      const accessToken =
+        params.searchParams.get('access_token') ||
+        params.hash?.match(/access_token=([^&]*)/)?.[1];
+      const refreshToken =
+        params.searchParams.get('refresh_token') ||
+        params.hash?.match(/refresh_token=([^&]*)/)?.[1];
+
+      if (accessToken && refreshToken) {
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          });
+        if (sessionError) throw sessionError;
+        return sessionData;
+      }
+
+      throw new Error('Could not extract tokens from callback');
     },
     onSuccess: async (data) => {
       console.log('[Auth] Google sign in successful');
