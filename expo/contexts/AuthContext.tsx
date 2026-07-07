@@ -511,24 +511,46 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
         // PKCE flow: callback contains ?code=... — exchange it for a session.
         if (params.code) {
+          console.log('[Auth] Google OAuth exchanging code for session, code length:', params.code.length);
           const { data: sessionData, error: sessionError } =
             await supabase.auth.exchangeCodeForSession(params.code);
-          if (sessionError) throw sessionError;
+          if (sessionError) {
+            console.log('[Auth] exchangeCodeForSession error:', JSON.stringify({
+              message: sessionError.message,
+              name: sessionError.name,
+              status: (sessionError as any).status,
+              code: (sessionError as any).code,
+              details: (sessionError as any).details,
+            }));
+            throw sessionError;
+          }
+          console.log('[Auth] exchangeCodeForSession success, has session:', !!sessionData?.session);
           return sessionData;
         }
 
         // Implicit flow fallback: callback may contain access_token/refresh_token.
         if (params.access_token && params.refresh_token) {
+          console.log('[Auth] Google OAuth implicit flow, setSession');
           const { data: sessionData, error: sessionError } =
             await supabase.auth.setSession({
               access_token: params.access_token,
               refresh_token: params.refresh_token,
             });
-          if (sessionError) throw sessionError;
+          if (sessionError) {
+            console.log('[Auth] setSession error:', JSON.stringify({
+              message: sessionError.message,
+              name: sessionError.name,
+              status: (sessionError as any).status,
+            }));
+            throw sessionError;
+          }
           return sessionData;
         }
 
-        throw new Error('Could not extract tokens from callback');
+        // No code and no tokens — include the raw URL so we can see what
+        // actually came back instead of guessing.
+        console.log('[Auth] No tokens in callback. Raw url:', url);
+        throw new Error(`Could not extract tokens from callback. URL: ${url}`);
       }
 
       // Web path: new URL() is reliable for https origins.
