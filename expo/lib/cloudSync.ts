@@ -6,6 +6,19 @@ const CUSTOM_MOUNTAINS_KEY = 'custom_mountains';
 
 let syncTimeout: ReturnType<typeof setTimeout> | null = null;
 
+// Tracks the updated_at of the most recent push from THIS device. The realtime
+// listener compares incoming payload.updated_at against this to skip echoing our
+// own write back into local state (which would be redundant and could loop).
+let lastPushedUpdatedAt: string | null = null;
+
+export function getLastPushedUpdatedAt(): string | null {
+  return lastPushedUpdatedAt;
+}
+
+export function clearLastPushedUpdatedAt(): void {
+  lastPushedUpdatedAt = null;
+}
+
 export async function debouncedCloudPush() {
   if (syncTimeout) clearTimeout(syncTimeout);
   syncTimeout = setTimeout(async () => {
@@ -21,13 +34,18 @@ export async function debouncedCloudPush() {
       const summits = summitsRaw ? JSON.parse(summitsRaw) : [];
       const customMountains = mountainsRaw ? JSON.parse(mountainsRaw) : [];
 
+      const updatedAt = new Date().toISOString();
+      // Record the timestamp BEFORE the upsert so the realtime listener can
+      // recognise this row's UPDATE as our own and skip it.
+      lastPushedUpdatedAt = updatedAt;
+
       await supabase
         .from('user_data')
         .upsert({
           user_id: session.user.id,
           summits,
           custom_mountains: customMountains,
-          updated_at: new Date().toISOString(),
+          updated_at: updatedAt,
         }, { onConflict: 'user_id' });
 
       console.log('[CloudSync] Auto-pushed to cloud');

@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
 import { supabase, supabaseConfigured } from '@/lib/supabase';
+import { getLastPushedUpdatedAt, clearLastPushedUpdatedAt } from '@/lib/cloudSync';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
@@ -104,6 +105,71 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     });
   }, []);
 
+  // Live cross-device sync: subscribe to realtime UPDATEs on this user's
+  // user_data row. When another device pushes, merge the incoming summits /
+  // custom_mountains into AsyncStorage + React Query cache so the UI updates
+  // live without needing sign out/in. Demo mode stays local-only. An echo
+  // guard (lastPushedUpdatedAt) prevents re-applying our own write.
+  useEffect(() => {
+    if (!user || isDemoMode || !supabaseConfigured) return;
+    const userId = user.id;
+
+    const channel = supabase
+      .channel(`user_data_sync:${userId}`)
+      .on<{
+        summits: SummitRecord[];
+        custom_mountains: Mountain[];
+        updated_at: string;
+      }>(
+        'postgres_changes',
+        { event: 'UPDATE', schema: 'public', table: 'user_data', filter: `user_id=eq.${userId}` },
+        async (payload) => {
+          try {
+            const newRow = payload.new;
+            console.log('[Auth] Realtime user_data update, updated_at:', newRow.updated_at);
+
+            // Echo guard: skip our own push coming back through Realtime.
+            const lastPush = getLastPushedUpdatedAt();
+            if (lastPush && newRow.updated_at === lastPush) {
+              console.log('[Auth] Realtime echo — skipping own push');
+              return;
+            }
+
+            const cloudSummits: SummitRecord[] = newRow.summits ?? [];
+            const cloudMountains: Mountain[] = newRow.custom_mountains ?? [];
+
+            // Merge with local to preserve any records not yet pushed.
+            const [summitsRaw, mountainsRaw] = await Promise.all([
+              AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
+              AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
+            ]);
+            const localSummits: SummitRecord[] = summitsRaw ? JSON.parse(summitsRaw) : [];
+            const localMountains: Mountain[] = mountainsRaw ? JSON.parse(mountainsRaw) : [];
+
+            const mergedSummits = mergeSummits(localSummits, cloudSummits);
+            const mergedMountains = mergeMountains(localMountains, cloudMountains);
+
+            await AsyncStorage.setItem(SUMMIT_STORAGE_KEY, JSON.stringify(mergedSummits));
+            await AsyncStorage.setItem(CUSTOM_MOUNTAINS_KEY, JSON.stringify(mergedMountains));
+
+            queryClient.setQueryData(['summits'], mergedSummits);
+            queryClient.setQueryData(['custom_mountains'], mergedMountains);
+
+            console.log('[Auth] Realtime merge applied. Summits:', mergedSummits.length, 'Mountains:', mergedMountains.length);
+          } catch (error) {
+            console.log('[Auth] Realtime handler error:', error);
+          }
+        }
+      )
+      .subscribe((status) => {
+        console.log('[Auth] Realtime subscription status:', status);
+      });
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, isDemoMode, supabaseConfigured, queryClient]);
+
   const signUpMutation = useMutation({
     mutationFn: async ({ email, password }: { email: string; password: string }) => {
       const { data, error } = await supabase.auth.signUp({ email, password });
@@ -172,6 +238,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     onSuccess: () => {
       console.log('[Auth] Signed out');
       setSyncStatus('idle');
+      clearLastPushedUpdatedAt();
     },
     onError: (error: Error) => {
       console.log('[Auth] Sign out error:', error.message);
