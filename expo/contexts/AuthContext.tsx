@@ -7,7 +7,6 @@ import { supabase, supabaseConfigured } from '@/lib/supabase';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
-import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import type { Session, User } from '@supabase/supabase-js';
 import type { SummitRecord } from '@/contexts/SummitContext';
 import type { Mountain } from '@/constants/mountains';
@@ -497,10 +496,15 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
       const url = result.url;
 
-      // Native/Expo Go path: expo-auth-session's QueryParams handles exp:// URLs
-      // reliably (new URL() can mangle non-https schemes).
+      // Native/Expo Go path. We avoid expo-auth-session's QueryParams.getQueryParams
+      // here because it internally uses new URL(), which mangles exp:// URLs (and the
+      // `--` segment Expo Go inserts) on Hermes — the params come back empty even when
+      // the code is present. Parse query + fragment manually instead.
       if (!isWeb) {
-        const { params, errorCode } = QueryParams.getQueryParams(url);
+        const params = parseCallbackParams(url);
+        console.log('[Auth] Google OAuth parsed params:', JSON.stringify(params));
+
+        const errorCode = params.errorCode ?? params.error_description;
         if (errorCode) {
           throw new Error(`OAuth error: ${errorCode}`);
         }
@@ -514,13 +518,11 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         }
 
         // Implicit flow fallback: callback may contain access_token/refresh_token.
-        const accessToken = params.access_token;
-        const refreshToken = params.refresh_token;
-        if (accessToken && refreshToken) {
+        if (params.access_token && params.refresh_token) {
           const { data: sessionData, error: sessionError } =
             await supabase.auth.setSession({
-              access_token: accessToken,
-              refresh_token: refreshToken,
+              access_token: params.access_token,
+              refresh_token: params.refresh_token,
             });
           if (sessionError) throw sessionError;
           return sessionData;
@@ -605,6 +607,56 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     isSigningInWithGoogle: signInWithGoogleMutation.isPending,
   }), [user, session, isAuthenticated, isDemoMode, isLoading, syncStatus, signUp, signIn, signOut, deleteAccount, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, deleteAccountMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
 });
+
+type CallbackParams = {
+  code?: string;
+  access_token?: string;
+  refresh_token?: string;
+  errorCode?: string;
+  error_description?: string;
+  [key: string]: string | undefined;
+};
+
+function parseCallbackParams(url: string): CallbackParams {
+  const params: CallbackParams = {};
+  // Split off the fragment (#...) first, then the query (?...).
+  let queryPart = url;
+  const hashIndex = queryPart.indexOf('#');
+  let fragmentPart = '';
+  if (hashIndex !== -1) {
+    fragmentPart = queryPart.slice(hashIndex + 1);
+    queryPart = queryPart.slice(0, hashIndex);
+  }
+  const questionIndex = queryPart.indexOf('?');
+  if (questionIndex !== -1) {
+    queryPart = queryPart.slice(questionIndex + 1);
+  } else {
+    queryPart = '';
+  }
+  const decode = (s: string) => {
+    try {
+      return decodeURIComponent(s.replace(/\+/g, ' '));
+    } catch {
+      return s;
+    }
+  };
+  for (const part of [queryPart, fragmentPart]) {
+    if (!part) continue;
+    for (const pair of part.split('&')) {
+      if (!pair) continue;
+      const eq = pair.indexOf('=');
+      const key = eq === -1 ? pair : pair.slice(0, eq);
+      const value = eq === -1 ? '' : pair.slice(eq + 1);
+      const decodedKey = decode(key);
+      if (decodedKey === 'errorCode') {
+        params.errorCode = decode(value);
+      } else if (!(decodedKey in params)) {
+        params[decodedKey] = decode(value);
+      }
+    }
+  }
+  return params;
+}
 
 function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {
   // Use composite key (mountainId + createdAt) so repeat summits of the same peak survive
