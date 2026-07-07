@@ -7,6 +7,7 @@ import { supabase, supabaseConfigured } from '@/lib/supabase';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
+import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import type { Session, User } from '@supabase/supabase-js';
 import type { SummitRecord } from '@/contexts/SummitContext';
 import type { Mountain } from '@/constants/mountains';
@@ -463,10 +464,10 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       // be intercepted by the browser — Supabase would fall back to the Site
       // URL and the app would never receive the auth code. Use the current
       // https origin instead so the browser popup can redirect back to us.
-      const redirectUrl =
-        Platform.OS === 'web' && typeof window !== 'undefined' && window.location?.origin
-          ? window.location.origin
-          : AuthSession.makeRedirectUri();
+      const isWeb = Platform.OS === 'web' && typeof window !== 'undefined' && !!window.location?.origin;
+      const redirectUrl = isWeb
+        ? window.location.origin
+        : AuthSession.makeRedirectUri({ path: 'auth/callback' });
       console.log('[Auth] Google OAuth redirect URL:', redirectUrl);
 
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -485,38 +486,70 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         redirectUrl,
       );
 
+      console.log('[Auth] Google OAuth result type:', result.type);
+      if (result.type === 'success') {
+        console.log('[Auth] Google OAuth result url:', result.url);
+      }
+
       if (result.type !== 'success') {
         throw new Error('AUTH_CANCELLED');
       }
 
       const url = result.url;
-      console.log('[Auth] Google OAuth callback URL:', url);
 
-      // PKCE flow: callback contains ?code=... — exchange it for a session.
-      // Implicit flow fallback: callback may contain access_token/refresh_token.
-      const params = new URL(url);
-      const code = params.searchParams.get('code');
+      // Native/Expo Go path: expo-auth-session's QueryParams handles exp:// URLs
+      // reliably (new URL() can mangle non-https schemes).
+      if (!isWeb) {
+        const { params, errorCode } = QueryParams.getQueryParams(url);
+        if (errorCode) {
+          throw new Error(`OAuth error: ${errorCode}`);
+        }
 
-      if (code) {
+        // PKCE flow: callback contains ?code=... — exchange it for a session.
+        if (params.code) {
+          const { data: sessionData, error: sessionError } =
+            await supabase.auth.exchangeCodeForSession(params.code);
+          if (sessionError) throw sessionError;
+          return sessionData;
+        }
+
+        // Implicit flow fallback: callback may contain access_token/refresh_token.
+        const accessToken = params.access_token;
+        const refreshToken = params.refresh_token;
+        if (accessToken && refreshToken) {
+          const { data: sessionData, error: sessionError } =
+            await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+          if (sessionError) throw sessionError;
+          return sessionData;
+        }
+
+        throw new Error('Could not extract tokens from callback');
+      }
+
+      // Web path: new URL() is reliable for https origins.
+      const webParams = new URL(url);
+      const webCode = webParams.searchParams.get('code');
+      if (webCode) {
         const { data: sessionData, error: sessionError } =
           await supabase.auth.exchangeCodeForSession(url);
         if (sessionError) throw sessionError;
         return sessionData;
       }
 
-      // Implicit flow fallback (older Supabase projects)
-      const accessToken =
-        params.searchParams.get('access_token') ||
-        params.hash?.match(/access_token=([^&]*)/)?.[1];
-      const refreshToken =
-        params.searchParams.get('refresh_token') ||
-        params.hash?.match(/refresh_token=([^&]*)/)?.[1];
-
-      if (accessToken && refreshToken) {
+      const webAccessToken =
+        webParams.searchParams.get('access_token') ||
+        webParams.hash?.match(/access_token=([^&]*)/)?.[1];
+      const webRefreshToken =
+        webParams.searchParams.get('refresh_token') ||
+        webParams.hash?.match(/refresh_token=([^&]*)/)?.[1];
+      if (webAccessToken && webRefreshToken) {
         const { data: sessionData, error: sessionError } =
           await supabase.auth.setSession({
-            access_token: accessToken,
-            refresh_token: refreshToken,
+            access_token: webAccessToken,
+            refresh_token: webRefreshToken,
           });
         if (sessionError) throw sessionError;
         return sessionData;
