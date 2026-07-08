@@ -48,7 +48,13 @@ export default function MountainsScreen() {
     let filtered = allMountains;
 
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter((m) => m.category === selectedCategory);
+      filtered = filtered.filter((m) => {
+        if (selectedCategory === '8000m') {
+          return m.elevation >= 8000;
+        }
+        if (m.category === selectedCategory) return true;
+        return m.tags?.includes(selectedCategory) ?? false;
+      });
     }
 
     if (summitedOnly) {

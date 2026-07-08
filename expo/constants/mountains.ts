@@ -15,6 +15,7 @@ export interface Mountain {
   country: string;
   range: string;
   category: MountainCategory;
+  tags?: MountainCategory[];
   difficulty: string;
   description: string;
   firstAscent: string;
@@ -2156,5 +2157,84 @@ export const mountains: Mountain[] = [
     description: 'A striking glaciated peak in the Cordillera Blanca near the scenic Llanganuco Valley. Less crowded than nearby Pisco, Yanapaccha offers moderately steep snow slopes with some crevasse negotiation — an ideal acclimatization climb for experienced mountaineers. The name means "black waterfall" in Quechua, though its west face gleams white with glacial ice.',
     firstAscent: '1954 - Ortenburger, Michael, Matthews, Irvin, Creswell & Ayres',
     iconEmoji: '🏔️',
+  },
+  {
+    id: 'monch',
+    name: 'Mönch',
+    elevation: 4107,
+    elevationFt: 13474,
+    latitude: 46.5503,
+    longitude: 7.9667,
+    country: 'Switzerland',
+    range: 'Bernese Alps',
+    category: 'alps',
+    difficulty: 'Hard',
+    description: 'The Mönch is a prominent peak in the Bernese Alps, forming the famous Eiger-Mönch-Jungfrau trio above the Swiss village of Grindelwald. Its steep, glaciated upper slopes require solid crampon and ice axe skills, while the summit offers one of the most iconic panoramas in the Alps.',
+    firstAscent: '1857 - Christian Almer, Christian Kaufmann, Ulrich Kaufmann and Sigismund Porges',
+    iconEmoji: '🏔️',
+    routes: ['South-east Ridge', 'Eigerjoch route'],
+    camps: [
+      { name: 'Mönchsjoch Hut', elevation: 3657 },
+      { name: 'High Camp', elevation: 3850 },
+    ],
+  },
+  {
+    id: 'kosciuszko',
+    name: 'Mount Kosciuszko',
+    elevation: 2228,
+    elevationFt: 7310,
+    latitude: -36.4556,
+    longitude: 148.2633,
+    country: 'Australia',
+    range: 'Snowy Mountains',
+    category: '7summits',
+    difficulty: 'Easy',
+    description: 'The highest peak in mainland Australia and a member of the Bass version of the Seven Summits. A non-technical walk-up in Kosciuszko National Park, popular with hikers and those completing the Seven Summits challenge.',
+    firstAscent: '1840 - Paweł Edmund Strzelecki',
+    iconEmoji: '🇦🇺',
+    routes: ['Kosciuszko Walk', 'Main Range Track'],
+    camps: [
+      { name: 'Rawson Pass', elevation: 2050 },
+      { name: 'Seaman’s Hut', elevation: 2030 },
+    ],
+  },
+  {
+    id: 'half-dome',
+    name: 'Half Dome',
+    elevation: 2694,
+    elevationFt: 8839,
+    latitude: 37.7459,
+    longitude: -119.5327,
+    country: 'USA (California)',
+    range: 'Sierra Nevada',
+    category: 'other',
+    difficulty: 'Hard',
+    description: 'A world-famous granite dome in Yosemite National Park. Its sheer northwest face and rounded summit are one of the most recognizable silhouettes in the world. The cable route is a legendary day hike, while the technical faces attract elite climbers.',
+    firstAscent: '1875 - George G. Anderson',
+    iconEmoji: '⛰️',
+    routes: ['Cable Route', 'Regular Northwest Face', 'Snake Dike'],
+    camps: [
+      { name: 'Little Yosemite Valley', elevation: 1830 },
+      { name: 'Half Dome Backpackers Camp', elevation: 1980 },
+    ],
+  },
+  {
+    id: 'table-mountain',
+    name: 'Table Mountain',
+    elevation: 1086,
+    elevationFt: 3563,
+    latitude: -33.9628,
+    longitude: 18.4033,
+    country: 'South Africa',
+    range: 'Cape Peninsula',
+    category: 'other',
+    difficulty: 'Easy',
+    description: 'A flat-topped mountain overlooking Cape Town and one of the most iconic landmarks in Africa. The summit is accessible via hiking trails and the Table Mountain Aerial Cableway, offering dramatic views of the city and the Atlantic.',
+    firstAscent: '1503 - Antonio de Saldanha (first recorded)',
+    iconEmoji: '⛰️',
+    routes: ['Platteklip Gorge', 'India Venster', 'Cable Car'],
+    camps: [
+      { name: 'Table Mountain Café', elevation: 1067 },
+    ],
   },
 ];

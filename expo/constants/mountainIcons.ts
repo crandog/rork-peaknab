@@ -121,6 +121,10 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'tre-cime': 'https://r2-pub.rork.com/generated-images/ea4ac21c-6a4a-4f46-8b32-66f8879c2c1c.png',
   'mt-meru-tanzania': 'https://r2-pub.rork.com/generated-images/2898416a-1906-40d0-9e61-df20143fa13b.png',
   'yanapaccha': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/1a143e00-dc89-4ce1-be9f-78d10698ece8.png',
+  'monch': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d099ea3e-5748-4596-82a3-4a984df0e963.png',
+  'kosciuszko': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/b2e4a14c-0bb0-4101-a7d9-679ef4963d3c.png',
+  'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d73f911e-7e80-47f3-80d2-eaa901818b93.png',
+  'table-mountain': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c762a757-4c0d-482e-a8b2-6f8e765e7719.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/5e4ed8ff-d88c-4d01-ad81-d5aab5a6b46c.png';
