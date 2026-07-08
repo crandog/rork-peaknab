@@ -325,19 +325,20 @@ const styles = StyleSheet.create({
   chipScrollView: {
     flexGrow: 0,
     flexShrink: 0,
-    marginBottom: 0,
-    paddingBottom: 10,
-    backgroundColor: 'rgba(255,255,255,0.0)',
-    overflow: 'hidden',
+    marginBottom: 12,
+    paddingBottom: 6,
+    backgroundColor: 'transparent',
   },
   mountainsSection: {
     flex: 1,
     backgroundColor: Colors.white,
-    marginTop: 8,
+    marginTop: 4,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 2,
     overflow: 'hidden',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(200,215,230,0.35)',
   },
   mountainList: {
     flex: 1,
@@ -473,6 +474,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(200,215,230,0.45)',
     minHeight: 36,
     justifyContent: 'center' as const,
+    overflow: 'hidden',
   },
   summitedChip: {
     flexDirection: 'row' as const,
