@@ -7,6 +7,7 @@ import { supabase, supabaseConfigured } from '@/lib/supabase';
 import { getLastPushedUpdatedAt, clearLastPushedUpdatedAt } from '@/lib/cloudSync';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as AuthSession from 'expo-auth-session';
+import * as Crypto from 'expo-crypto';
 import * as WebBrowser from 'expo-web-browser';
 import type { Session, User } from '@supabase/supabase-js';
 import type { SummitRecord } from '@/contexts/SummitContext';
@@ -489,11 +490,23 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
   const signInWithAppleMutation = useMutation({
     mutationFn: async () => {
+      // Apple Sign-In nonce flow: generate a raw nonce, hash it (SHA-256, hex),
+      // send the HASH to Apple so it is embedded in the JWT `nonce` claim, and
+      // send the RAW nonce to Supabase so it can hash it and verify the match.
+      const rawNonce = Crypto.randomUUID();
+      const hashedNonce = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        rawNonce,
+        { encoding: Crypto.CryptoEncoding.HEX },
+      );
+      console.log('[Auth] Apple sign in: nonce generated, hashed length:', hashedNonce.length);
+
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
         ],
+        nonce: hashedNonce,
       });
 
       if (!credential.identityToken) {
@@ -503,6 +516,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       const { data, error } = await supabase.auth.signInWithIdToken({
         provider: 'apple',
         token: credential.identityToken,
+        nonce: rawNonce,
       });
 
       if (error) throw error;

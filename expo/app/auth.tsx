@@ -16,6 +16,7 @@ import { useRouter } from 'expo-router';
 import { Stack } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
+import * as AppleAuthentication from 'expo-apple-authentication';
 import { ArrowLeft, Mail, Lock, Eye, EyeOff, Cloud, Mountain, Chrome } from 'lucide-react-native';
 
 import Colors from '@/constants/colors';
@@ -51,7 +52,17 @@ export default function AuthScreen() {
   const confirmRef = useRef<TextInput>(null);
 
   const isLoading = isSigningIn || isSigningUp || isSigningInWithApple || isSigningInWithGoogle;
-  const showAppleButton = Platform.OS === 'ios';
+  const [isAppleAvailable, setIsAppleAvailable] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return;
+    let mounted = true;
+    void AppleAuthentication.isAvailableAsync().then((available) => {
+      if (mounted) setIsAppleAvailable(available);
+    });
+    return () => { mounted = false; };
+  }, []);
+  const showAppleButton = isAppleAvailable;
 
   const toggleMode = useCallback(() => {
     if (Platform.OS !== 'web') {
