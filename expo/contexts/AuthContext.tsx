@@ -426,11 +426,14 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       const currentUser = user;
       if (!currentUser) throw new Error('No user to delete');
 
+      // The SECURITY DEFINER RPC deletes both user_data and auth.users for
+      // auth.uid() — no client-supplied user id. Attempt a client-side
+      // user_data delete first as a best-effort fallback if the RPC fails.
       try {
         await supabase.from('user_data').delete().eq('user_id', currentUser.id);
-        console.log('[Auth] Deleted user_data row');
+        console.log('[Auth] Deleted user_data row (client-side fallback)');
       } catch (e) {
-        console.log('[Auth] Error deleting user_data:', e);
+        console.log('[Auth] Error deleting user_data (will rely on RPC):', e);
       }
 
       const { error: rpcError } = await supabase.rpc('delete_user');
@@ -443,7 +446,14 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       console.log('[Auth] Auth user deleted via RPC');
 
       await AsyncStorage.multiRemove([SUMMIT_STORAGE_KEY, CUSTOM_MOUNTAINS_KEY]);
-      await supabase.auth.signOut();
+      // The auth user no longer exists server-side, so signOut() may throw —
+      // wrap it so local cleanup always runs.
+      try {
+        await supabase.auth.signOut();
+      } catch (e) {
+        console.log('[Auth] signOut after delete (expected, user already gone):', e);
+      }
+      clearLastPushedUpdatedAt();
       setUser(null);
       setSession(null);
       queryClient.setQueryData(['summits'], []);
