@@ -126,6 +126,19 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/794bcfb4-9a14-4011-9cd3-2c447e63d94c.png',
   'table-mountain': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c762a757-4c0d-482e-a8b2-6f8e765e7719.png',
   'shkhara': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/31ec1110-b4ad-4fd1-9965-c88ad7c25124.png',
+  'mount-rinjani': 'https://r2-pub.rork.com/generated-images/5e4ed8ff-d88c-4d01-ad81-d5aab5a6b46c.png',
+  'mount-agung': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/ee3eacd8-0644-4d24-b4eb-617fa7001dd6.png',
+  'mount-mayon': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/09a20a90-3155-49b2-a119-d87642c3dafc.png',
+  'mount-vesuvius': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/2d5777c4-d2f7-4edf-a197-f231259099ba.png',
+  'villarrica': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/01ea76a3-dc82-4ff6-a36f-c6c47500def6.png',
+  'mount-taranaki': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/e9d63e6f-fcfa-4363-87d4-cda4ca09adfa.png',
+  'mount-ngauruhoe': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d5fe4ef3-0236-4ffd-90da-b3b274a863a3.png',
+  'mount-erebus': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/bac69e1f-b790-4c41-90a4-584b90989bdc.png',
+  'sakurajima': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/0a9bb32c-c249-4d9f-9273-9d08a6916060.png',
+  'mount-assiniboine': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/fae0507f-4169-4693-bf2a-fa693c29b408.png',
+  'el-capitan': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/833288c6-6b7e-4b63-8831-5ce6ccbd13f5.png',
+  'marmolada': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/32da3c42-06bd-4f2f-981b-dc468bccf5f1.png',
+  'piz-bernina': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/9285e486-0f0a-447d-9c00-424baf7dcdc7.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/5e4ed8ff-d88c-4d01-ad81-d5aab5a6b46c.png';

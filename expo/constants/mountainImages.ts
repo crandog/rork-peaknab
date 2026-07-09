@@ -125,6 +125,19 @@ export const mountainImages: Record<string, string> = {
   'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/66297b3c-5831-4452-ad72-dfc03ae81506.png',
   'table-mountain': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c762a757-4c0d-482e-a8b2-6f8e765e7719.png',
   'shkhara': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/415c629e-168a-4f7e-a67c-ff76e5a00c4a.png',
+  'mount-rinjani': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/8ba44592-6d8c-4c62-ae08-452ace789f26.png',
+  'mount-agung': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/46c0c80a-b1ec-4d03-a2a9-be1d10a79c23.png',
+  'mount-mayon': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/f02f62a1-1453-4ec2-9e9b-3397f230096d.png',
+  'mount-vesuvius': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/7012bf67-35e0-427c-9829-c1737721a7d2.png',
+  'villarrica': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/8fe2b490-4b5d-47ce-9893-53ce1088ceff.png',
+  'mount-taranaki': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/07939e2d-9bd0-49ff-bb2e-1055c8e70eac.png',
+  'mount-ngauruhoe': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/562671c5-7ac7-44db-8e69-e89ffeb54929.png',
+  'mount-erebus': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/2fbdcbcb-bce5-4425-8227-19283000f753.png',
+  'sakurajima': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d4134721-1df2-4f9c-b2f4-6db4f6fb5028.png',
+  'mount-assiniboine': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/f8474a60-1e62-45dd-8329-ac76ca0fedb2.png',
+  'el-capitan': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/478e8d19-f075-47cf-97de-d96d1143652d.png',
+  'marmolada': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c2999f81-18da-4ccf-836e-3afdf8251be1.png',
+  'piz-bernina': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/1c5b46f7-4f7f-455f-9a5e-d5cf08e4b52c.png',
 };
 
 export const defaultMountainImage = 'https://r2-pub.rork.com/generated-images/0e4d1cdd-2f27-4cae-bab8-413ba1bbaa53.png';
