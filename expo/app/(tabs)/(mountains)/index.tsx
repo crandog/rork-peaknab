@@ -23,6 +23,7 @@ const categories: Array<{ key: MountainCategory | 'all'; label: string }> = [
   { key: 'all', label: 'All Peaks' },
   { key: '7summits', label: '7 Summits' },
   { key: '8000m', label: '8000m' },
+  { key: 'volcanic', label: 'Volcanic' },
   { key: '14ers', label: '14ers' },
   { key: 'alps', label: 'Alps' },
   { key: 'andes', label: 'Andes' },

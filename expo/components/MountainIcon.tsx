@@ -20,6 +20,7 @@ const categoryEmojis: Record<string, string> = {
   'himalaya': '🏔️',
   'other': '⛰️',
   'custom': '📍',
+  'volcanic': '🌋',
 };
 
 function MountainIconComponent({ mountainId, category, size = 24 }: MountainIconProps) {

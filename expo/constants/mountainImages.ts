@@ -138,6 +138,18 @@ export const mountainImages: Record<string, string> = {
   'el-capitan': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/478e8d19-f075-47cf-97de-d96d1143652d.png',
   'marmolada': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c2999f81-18da-4ccf-836e-3afdf8251be1.png',
   'piz-bernina': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/1c5b46f7-4f7f-455f-9a5e-d5cf08e4b52c.png',
+  'antisana': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c04c7e63-7a76-4bee-aee7-bb4351ebf444.png',
+  'el-altar': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/2b6b8ddc-a2bb-4914-b6fe-d0cb24a857c8.png',
+  'artesonraju': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/e1327e3b-78fd-4659-bd41-35e5e8e44036.png',
+  'snowdon': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/4dedbfa8-e401-4c7d-9ade-9e4817946c59.png',
+  'scafell-pike': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d276452b-3265-4d03-a272-387b79338a99.png',
+  'mount-giluwe': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/a204db9d-b2fb-4b66-9434-ca7dc168597a.png',
+  'mount-sidley': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/338cb21a-98d1-430c-9462-7f532948bfac.png',
+  'carrauntoohil': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/41879e96-b505-4013-96a6-103cc6425c94.png',
+  'galdhopiggen': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/527d5807-e49f-46ae-97a3-a4c8c112e816.png',
+  'mount-kailash': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d1500af0-2ed6-47b4-9913-a0ec7fd75f95.png',
+  'mount-etna': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/df0fea02-0612-49d0-8104-6879c2d6365e.png',
+  'mauna-kea': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/5eb100b5-cfd9-40e9-8cdc-7b194e248772.png',
 };
 
 export const defaultMountainImage = 'https://r2-pub.rork.com/generated-images/0e4d1cdd-2f27-4cae-bab8-413ba1bbaa53.png';

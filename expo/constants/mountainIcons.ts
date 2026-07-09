@@ -139,6 +139,18 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'el-capitan': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/833288c6-6b7e-4b63-8831-5ce6ccbd13f5.png',
   'marmolada': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/32da3c42-06bd-4f2f-981b-dc468bccf5f1.png',
   'piz-bernina': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/9285e486-0f0a-447d-9c00-424baf7dcdc7.png',
+  'antisana': 'https://r2-pub.rork.com/generated-images/286bde7d-43c2-4b78-8c1f-7980bad8a9be.png',
+  'el-altar': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/17c18b00-742f-4f24-b52f-855c556bcd0d.png',
+  'artesonraju': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/74f80a85-9308-457a-9c38-17d015f39ee4.png',
+  'snowdon': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/bc46afc3-0139-454b-a79e-ad7771d5cf63.png',
+  'scafell-pike': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/5f20dbad-2950-464b-be4b-2f551cb07d0f.png',
+  'mount-giluwe': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/fdbb7020-95cd-4851-8f63-64a386dacb91.png',
+  'mount-sidley': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/22366db1-7407-4811-9b76-cececb938e2e.png',
+  'carrauntoohil': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/a381f3c4-442d-449a-ad14-156d5a0cf229.png',
+  'galdhopiggen': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/56e7d3e6-b043-446d-8f91-dd112fac185b.png',
+  'mount-kailash': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d1500af0-2ed6-47b4-9913-a0ec7fd75f95.png',
+  'mount-etna': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/f1eabde3-ef36-4b93-9a43-dcb7f3cc43c4.png',
+  'mauna-kea': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/affafd03-f326-4679-b0d3-c2722c3e4abe.png',
 };
 
 const DEFAULT_ICON = 'https://r2-pub.rork.com/generated-images/5e4ed8ff-d88c-4d01-ad81-d5aab5a6b46c.png';
