@@ -8,6 +8,7 @@ import { getLastPushedUpdatedAt, clearLastPushedUpdatedAt } from '@/lib/cloudSyn
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as AuthSession from 'expo-auth-session';
 import * as Crypto from 'expo-crypto';
+import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import * as WebBrowser from 'expo-web-browser';
 import type { Session, User } from '@supabase/supabase-js';
 import type { SummitRecord } from '@/contexts/SummitContext';
@@ -577,9 +578,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       );
 
       console.log('[Auth] Google OAuth result type:', result.type);
-      if (result.type === 'success') {
-        console.log('[Auth] Google OAuth result url:', result.url);
-      }
+      console.log('[Auth] Google OAuth result url:', result.type === 'success' ? result.url : '(none)');
 
       if (result.type !== 'success') {
         throw new Error('AUTH_CANCELLED');
@@ -587,15 +586,12 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
       const url = result.url;
 
-      // Native/Expo Go path. We avoid expo-auth-session's QueryParams.getQueryParams
-      // here because it internally uses new URL(), which mangles exp:// URLs (and the
-      // `--` segment Expo Go inserts) on Hermes — the params come back empty even when
-      // the code is present. Parse query + fragment manually instead.
+      // Native/Expo Go path: use expo-auth-session's QueryParams parser, which
+      // handles exp:// URLs (including the `--` segment Expo Go inserts) correctly.
       if (!isWeb) {
-        const params = parseCallbackParams(url);
+        const { params, errorCode } = QueryParams.getQueryParams(url);
         console.log('[Auth] Google OAuth parsed params:', JSON.stringify(params));
 
-        const errorCode = params.errorCode ?? params.error_description;
         if (errorCode) {
           throw new Error(`OAuth error: ${errorCode}`);
         }
