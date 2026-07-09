@@ -124,6 +124,7 @@ export const mountainImages: Record<string, string> = {
   'kosciuszko': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/b2e4a14c-0bb0-4101-a7d9-679ef4963d3c.png',
   'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d73f911e-7e80-47f3-80d2-eaa901818b93.png',
   'table-mountain': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c762a757-4c0d-482e-a8b2-6f8e765e7719.png',
+  'shkhara': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/415c629e-168a-4f7e-a67c-ff76e5a00c4a.png',
 };
 
 export const defaultMountainImage = 'https://r2-pub.rork.com/generated-images/0e4d1cdd-2f27-4cae-bab8-413ba1bbaa53.png';
