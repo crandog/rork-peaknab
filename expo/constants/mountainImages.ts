@@ -122,7 +122,7 @@ export const mountainImages: Record<string, string> = {
   'mt-meru-tanzania': 'https://r2-pub.rork.com/generated-images/c44db717-5c71-416d-a983-855497eb8f6b.png',
   'monch': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d099ea3e-5748-4596-82a3-4a984df0e963.png',
   'kosciuszko': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/b2e4a14c-0bb0-4101-a7d9-679ef4963d3c.png',
-  'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d73f911e-7e80-47f3-80d2-eaa901818b93.png',
+  'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/66297b3c-5831-4452-ad72-dfc03ae81506.png',
   'table-mountain': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c762a757-4c0d-482e-a8b2-6f8e765e7719.png',
   'shkhara': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/415c629e-168a-4f7e-a67c-ff76e5a00c4a.png',
 };

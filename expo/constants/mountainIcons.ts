@@ -123,7 +123,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'yanapaccha': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/1a143e00-dc89-4ce1-be9f-78d10698ece8.png',
   'monch': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d099ea3e-5748-4596-82a3-4a984df0e963.png',
   'kosciuszko': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/b2e4a14c-0bb0-4101-a7d9-679ef4963d3c.png',
-  'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d73f911e-7e80-47f3-80d2-eaa901818b93.png',
+  'half-dome': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/794bcfb4-9a14-4011-9cd3-2c447e63d94c.png',
   'table-mountain': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c762a757-4c0d-482e-a8b2-6f8e765e7719.png',
   'shkhara': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/31ec1110-b4ad-4fd1-9965-c88ad7c25124.png',
 };
