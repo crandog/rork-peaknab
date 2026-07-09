@@ -131,7 +131,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'mount-mayon': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c9bbb9fb-5fba-45e4-a40d-b33242c0f8d3.png',
   'mount-vesuvius': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/2d5777c4-d2f7-4edf-a197-f231259099ba.png',
   'villarrica': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/01ea76a3-dc82-4ff6-a36f-c6c47500def6.png',
-  'mount-taranaki': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/e9d63e6f-fcfa-4363-87d4-cda4ca09adfa.png',
+  'mount-taranaki': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/b6215354-f413-4999-a97a-a8875afff654.png',
   'mount-ngauruhoe': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/be2426f0-abf7-468d-ad87-2bbe3033e108.png',
   'mount-erebus': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/bac69e1f-b790-4c41-90a4-584b90989bdc.png',
   'sakurajima': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/0a9bb32c-c249-4d9f-9273-9d08a6916060.png',
