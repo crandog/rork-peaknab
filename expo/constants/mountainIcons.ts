@@ -130,7 +130,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'mount-agung': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/8a9dd8c9-46cf-4462-ae69-ce1c6c6ae29f.png',
   'mount-mayon': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c9bbb9fb-5fba-45e4-a40d-b33242c0f8d3.png',
   'mount-vesuvius': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/df2e83c0-9330-403c-a03a-5a394407b2ac.png',
-  'villarrica': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/76a51281-fb6d-49ac-b5ee-cfb96fe75f76.png',
+  'villarrica': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/a35dd383-6889-411b-b44a-54e4a662c290.png',
   'mount-taranaki': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/b6215354-f413-4999-a97a-a8875afff654.png',
   'mount-ngauruhoe': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/be2426f0-abf7-468d-ad87-2bbe3033e108.png',
   'mount-erebus': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/c243fc03-cee9-42e1-8567-fd6ac59120cf.png',
