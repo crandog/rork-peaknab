@@ -7,6 +7,7 @@ import { supabase, supabaseConfigured } from '@/lib/supabase';
 import { getLastPushedUpdatedAt, clearLastPushedUpdatedAt } from '@/lib/cloudSync';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as AuthSession from 'expo-auth-session';
+import * as QueryParams from 'expo-auth-session/build/QueryParams';
 import * as Crypto from 'expo-crypto';
 import * as WebBrowser from 'expo-web-browser';
 import type { Session, User } from '@supabase/supabase-js';
@@ -587,15 +588,12 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
 
       const url = result.url;
 
-      // Native/Expo Go path. We avoid expo-auth-session's QueryParams.getQueryParams
-      // here because it internally uses new URL(), which mangles exp:// URLs (and the
-      // `--` segment Expo Go inserts) on Hermes — the params come back empty even when
-      // the code is present. Parse query + fragment manually instead.
+      // Native/Expo Go path: parse the callback with expo-auth-session's
+      // QueryParams helper, which handles exp:// URLs reliably on Hermes.
       if (!isWeb) {
-        const params = parseCallbackParams(url);
-        console.log('[Auth] Google OAuth parsed params:', JSON.stringify(params));
+        const { params, errorCode } = QueryParams.getQueryParams(url);
+        console.log('[Auth] Google OAuth parsed params:', JSON.stringify(params), 'errorCode:', errorCode);
 
-        const errorCode = params.errorCode ?? params.error_description;
         if (errorCode) {
           throw new Error(`OAuth error: ${errorCode}`);
         }
@@ -720,56 +718,6 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     isSigningInWithGoogle: signInWithGoogleMutation.isPending,
   }), [user, session, isAuthenticated, isDemoMode, isLoading, syncStatus, signUp, signIn, signOut, deleteAccount, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, deleteAccountMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
 });
-
-type CallbackParams = {
-  code?: string;
-  access_token?: string;
-  refresh_token?: string;
-  errorCode?: string;
-  error_description?: string;
-  [key: string]: string | undefined;
-};
-
-function parseCallbackParams(url: string): CallbackParams {
-  const params: CallbackParams = {};
-  // Split off the fragment (#...) first, then the query (?...).
-  let queryPart = url;
-  const hashIndex = queryPart.indexOf('#');
-  let fragmentPart = '';
-  if (hashIndex !== -1) {
-    fragmentPart = queryPart.slice(hashIndex + 1);
-    queryPart = queryPart.slice(0, hashIndex);
-  }
-  const questionIndex = queryPart.indexOf('?');
-  if (questionIndex !== -1) {
-    queryPart = queryPart.slice(questionIndex + 1);
-  } else {
-    queryPart = '';
-  }
-  const decode = (s: string) => {
-    try {
-      return decodeURIComponent(s.replace(/\+/g, ' '));
-    } catch {
-      return s;
-    }
-  };
-  for (const part of [queryPart, fragmentPart]) {
-    if (!part) continue;
-    for (const pair of part.split('&')) {
-      if (!pair) continue;
-      const eq = pair.indexOf('=');
-      const key = eq === -1 ? pair : pair.slice(0, eq);
-      const value = eq === -1 ? '' : pair.slice(eq + 1);
-      const decodedKey = decode(key);
-      if (decodedKey === 'errorCode') {
-        params.errorCode = decode(value);
-      } else if (!(decodedKey in params)) {
-        params[decodedKey] = decode(value);
-      }
-    }
-  }
-  return params;
-}
 
 function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {
   // Use composite key (mountainId + createdAt) so repeat summits of the same peak survive
