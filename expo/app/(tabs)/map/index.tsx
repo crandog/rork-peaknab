@@ -34,7 +34,7 @@ type Cluster = {
   summited: boolean;
 };
 
-const MAPBOX_OUTDOORS_URL = `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
+const MAPBOX_STYLE_URL = `https://api.mapbox.com/styles/v1/ccstoudemire/cmrfjz1w5005z01s4hv1tebk9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
 
 const VOYAGER_BRASS = '#c8a24a';
 const VOYAGER_BRASS_LIGHT = '#f3ecd8';
@@ -42,12 +42,12 @@ const VOYAGER_BRASS_DARK = '#3a2e12';
 const VOYAGER_FRAME = '#5c503b';
 const VOYAGER_FRAME_INNER = '#8a7a5c';
 const VOYAGER_TITLE = '#3f3527';
-const VOYAGER_OVERLAY = 'rgba(205, 225, 232, 0.22)';
+const VOYAGER_OVERLAY = 'rgba(210, 225, 230, 0.06)';
 const FLAG_GOLD = '#d9a520';
 const FLAG_POLE = '#3a2e12';
 const FLAG_OUTLINE = '#4a3a10';
-const UNCLIMBED_DOT = 'rgba(138, 151, 160, 0.55)';
-const UNCLIMBED_DOT_OUTLINE = 'rgba(118, 131, 140, 0.65)';
+const UNCLIMBED_FILL = 'rgba(236, 231, 214, 0.5)';
+const UNCLIMBED_OUTLINE = '#6b5f49';
 
 function getClusterCellSize(latitudeDelta: number): number {
   if (latitudeDelta > 120) return 22;
@@ -142,10 +142,10 @@ function UnclimbedDot() {
       <Circle
         cx={7}
         cy={7}
-        r={4.5}
-        fill={UNCLIMBED_DOT}
-        stroke={UNCLIMBED_DOT_OUTLINE}
-        strokeWidth={1}
+        r={4}
+        fill={UNCLIMBED_FILL}
+        stroke={UNCLIMBED_OUTLINE}
+        strokeWidth={1.5}
       />
     </Svg>
   );
@@ -270,7 +270,7 @@ export default function MapScreen() {
             onMapReady={() => setMapReady(true)}
           >
             <UrlTile
-              urlTemplate={MAPBOX_OUTDOORS_URL}
+              urlTemplate={MAPBOX_STYLE_URL}
               maximumZ={19}
               flipY={false}
               tileSize={256}
