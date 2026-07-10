@@ -5,11 +5,13 @@ import {
   StyleSheet,
   Platform,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MapPin } from 'lucide-react-native';
 import Svg, { Circle, Path, Polygon, Text as SvgText } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
 import { MAPBOX_TOKEN } from '@/constants/mapConfig';
 import { useSummits } from '@/contexts/SummitContext';
@@ -48,6 +50,11 @@ const FLAG_POLE = '#3a2e12';
 const FLAG_OUTLINE = '#4a3a10';
 const UNCLIMBED_FILL = 'rgba(236, 231, 214, 0.5)';
 const UNCLIMBED_OUTLINE = '#6b5f49';
+
+const PARCHMENT_TEXTURE = require('../../../assets/images/parchment-texture.png');
+
+const VIGNETTE_SEPIA = 'rgba(74, 53, 28, 0.30)';
+const VIGNETTE_TRANSPARENT = 'rgba(74, 53, 28, 0)';
 
 function getClusterCellSize(latitudeDelta: number): number {
   if (latitudeDelta > 120) return 22;
@@ -322,6 +329,33 @@ export default function MapScreen() {
           </RNMapView>
 
           <View style={styles.frostOverlay} pointerEvents="none" />
+
+          {/* Parchment paper texture — fine grain overlay */}
+          <View style={styles.parchmentTextureWrap} pointerEvents="none">
+            <Image
+              source={PARCHMENT_TEXTURE}
+              style={styles.parchmentTextureImage}
+              resizeMode="repeat"
+            />
+          </View>
+
+          {/* Aged vignette — darker sepia at edges, transparent center */}
+          <View style={styles.vignetteContainer} pointerEvents="none">
+            <LinearGradient
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              colors={[VIGNETTE_SEPIA, VIGNETTE_TRANSPARENT, VIGNETTE_TRANSPARENT, VIGNETTE_SEPIA]}
+              locations={[0, 0.22, 0.78, 1]}
+              style={StyleSheet.absoluteFillObject}
+            />
+            <LinearGradient
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+              colors={[VIGNETTE_SEPIA, VIGNETTE_TRANSPARENT, VIGNETTE_TRANSPARENT, VIGNETTE_SEPIA]}
+              locations={[0, 0.22, 0.78, 1]}
+              style={StyleSheet.absoluteFillObject}
+            />
+          </View>
         </View>
       </View>
 
@@ -375,6 +409,16 @@ const styles = StyleSheet.create({
   frostOverlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: VOYAGER_OVERLAY,
+  },
+  parchmentTextureWrap: {
+    ...StyleSheet.absoluteFillObject,
+    opacity: 0.14,
+  },
+  parchmentTextureImage: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  vignetteContainer: {
+    ...StyleSheet.absoluteFillObject,
   },
   chartHeader: {
     position: 'absolute',
