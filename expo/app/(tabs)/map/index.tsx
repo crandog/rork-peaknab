@@ -9,6 +9,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MapPin, Mountain } from 'lucide-react-native';
+import Svg, { Circle, Path, Polygon, Text as SvgText } from 'react-native-svg';
 import Colors from '@/constants/colors';
 import { MAPBOX_TOKEN } from '@/constants/mapConfig';
 import { useSummits } from '@/contexts/SummitContext';
@@ -33,7 +34,15 @@ type Cluster = {
   summited: boolean;
 };
 
-const MAPBOX_DARK_URL = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
+const MAPBOX_OUTDOORS_URL = `https://api.mapbox.com/styles/v1/mapbox/outdoors-v12/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
+
+const VOYAGER_BRASS = '#c8a24a';
+const VOYAGER_BRASS_LIGHT = '#f3ecd8';
+const VOYAGER_BRASS_DARK = '#3a2e12';
+const VOYAGER_FRAME = '#5c503b';
+const VOYAGER_FRAME_INNER = '#8a7a5c';
+const VOYAGER_TITLE = '#3f3527';
+const VOYAGER_OVERLAY = 'rgba(205, 225, 232, 0.22)';
 
 function getClusterCellSize(latitudeDelta: number): number {
   if (latitudeDelta > 120) return 22;
@@ -70,6 +79,38 @@ function buildClusters(peaks: MarkerPeak[], region: Region): Cluster[] {
       summited: group.some((p) => p.summited),
     };
   });
+}
+
+function CompassRose() {
+  const size = 84;
+  const center = size / 2;
+  const radius = 38;
+  return (
+    <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <Circle cx={center} cy={center} r={radius} stroke={VOYAGER_BRASS} strokeWidth={2} fill="rgba(54, 48, 36, 0.28)" />
+      <Circle cx={center} cy={center} r={radius - 6} stroke={VOYAGER_FRAME_INNER} strokeWidth={1} fill="none" />
+      <Polygon
+        points={`${center},${center - 26} ${center - 9},${center + 10} ${center},${center + 4} ${center + 9},${center + 10}`}
+        fill={VOYAGER_BRASS}
+      />
+      <Polygon
+        points={`${center},${center + 26} ${center - 9},${center - 10} ${center},${center - 4} ${center + 9},${center - 10}`}
+        fill={VOYAGER_FRAME}
+      />
+      <Path d={`M${center} ${center - 32} L${center} ${center - 24}`} stroke={VOYAGER_BRASS_LIGHT} strokeWidth={2} strokeLinecap="round" />
+      <SvgText
+        x={center}
+        y={center - 22}
+        textAnchor="middle"
+        fill={VOYAGER_BRASS_LIGHT}
+        fontSize={10}
+        fontWeight="bold"
+        fontFamily="serif"
+      >
+        N
+      </SvgText>
+    </Svg>
+  );
 }
 
 export default function MapScreen() {
@@ -112,7 +153,7 @@ export default function MapScreen() {
       .map((m) => ({ latitude: m.latitude, longitude: m.longitude }));
     if (coords.length === 0) return;
     mapRef.current.fitToCoordinates(coords, {
-      edgePadding: { top: 140, right: 40, bottom: 140, left: 40 },
+      edgePadding: { top: 160, right: 60, bottom: 160, left: 60 },
       animated: true,
     });
   }, [summitedMountains, allMountains]);
@@ -130,7 +171,7 @@ export default function MapScreen() {
       .map((m) => ({ latitude: m.latitude, longitude: m.longitude }));
     if (coords.length === 0) return;
     mapRef.current.fitToCoordinates(coords, {
-      edgePadding: { top: 120, right: 40, bottom: 120, left: 40 },
+      edgePadding: { top: 140, right: 60, bottom: 140, left: 60 },
       animated: true,
     });
   }, []);
@@ -176,93 +217,88 @@ export default function MapScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.mapHeader, { paddingTop: insets.top + 8 }]}>
-        <Text style={styles.mapTitle}>Summit Map</Text>
-        <View style={styles.mapBadge}>
-          <Text style={styles.mapBadgeText}>
-            {summitedMountains.length} / {allMountains.length} Summited
-          </Text>
+      <View style={styles.mapFrameOuter}>
+        <View style={styles.mapFrameInner}>
+          <RNMapView
+            ref={mapRef}
+            style={styles.map}
+            initialRegion={region}
+            onRegionChangeComplete={setRegion}
+            mapType="none"
+            showsCompass={false}
+            showsScale={false}
+            rotateEnabled={false}
+            pitchEnabled={false}
+            onMapReady={() => setMapReady(true)}
+          >
+            <UrlTile
+              urlTemplate={MAPBOX_OUTDOORS_URL}
+              maximumZ={19}
+              flipY={false}
+              tileSize={256}
+            />
+            {clusters.map((cluster) => {
+              if (cluster.count > 1) {
+                return (
+                  <RNMarker
+                    key={cluster.id}
+                    coordinate={{
+                      latitude: cluster.latitude,
+                      longitude: cluster.longitude,
+                    }}
+                    tracksViewChanges={false}
+                    onPress={() => handleClusterPress(cluster)}
+                  >
+                    <View style={styles.clusterBubble}>
+                      <Text style={styles.clusterCount}>{cluster.count}</Text>
+                    </View>
+                  </RNMarker>
+                );
+              }
+
+              const peak = cluster.peaks[0];
+              if (!peak) return null;
+
+              return (
+                <RNMarker
+                  key={peak.id}
+                  coordinate={{
+                    latitude: peak.latitude,
+                    longitude: peak.longitude,
+                  }}
+                  title={peak.name}
+                  description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
+                  tracksViewChanges={false}
+                  onCalloutPress={() => navigateToMountain(peak.id)}
+                >
+                  {peak.summited ? (
+                    <View style={styles.summitedMarker}>
+                      <Mountain color={Colors.textDark} size={18} strokeWidth={2.5} />
+                    </View>
+                  ) : (
+                    <View style={styles.unclimbedMarker}>
+                      <Mountain color={Colors.textMuted} size={18} strokeWidth={2} />
+                    </View>
+                  )}
+                </RNMarker>
+              );
+            })}
+          </RNMapView>
+
+          <View style={styles.frostOverlay} pointerEvents="none" />
         </View>
       </View>
-      <RNMapView
-        ref={mapRef}
-        style={styles.map}
-        initialRegion={region}
-        onRegionChangeComplete={setRegion}
-        mapType="none"
-        showsCompass={false}
-        showsScale={false}
-        rotateEnabled={false}
-        pitchEnabled={false}
-        onMapReady={() => setMapReady(true)}
-      >
-        <UrlTile
-          urlTemplate={MAPBOX_DARK_URL}
-          maximumZ={19}
-          flipY={false}
-          tileSize={256}
-        />
-        {clusters.map((cluster) => {
-          if (cluster.count > 1) {
-            return (
-              <RNMarker
-                key={cluster.id}
-                coordinate={{
-                  latitude: cluster.latitude,
-                  longitude: cluster.longitude,
-                }}
-                tracksViewChanges={false}
-                onPress={() => handleClusterPress(cluster)}
-              >
-                <View
-                  style={[
-                    styles.clusterBubble,
-                    cluster.summited && styles.clusterBubbleSummited,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.clusterCount,
-                      cluster.summited && styles.clusterCountSummited,
-                    ]}
-                  >
-                    {cluster.count}
-                  </Text>
-                </View>
-              </RNMarker>
-            );
-          }
 
-          const peak = cluster.peaks[0];
-          if (!peak) return null;
+      <View style={[styles.chartHeader, { paddingTop: insets.top + 16 }]} pointerEvents="none">
+        <Text style={styles.chartTitle} numberOfLines={1}>Summit Map</Text>
+        <Text style={styles.chartSubtitle}>PeakNab · expedition chart</Text>
+      </View>
 
-          return (
-            <RNMarker
-              key={peak.id}
-              coordinate={{
-                latitude: peak.latitude,
-                longitude: peak.longitude,
-              }}
-              title={peak.name}
-              description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
-              tracksViewChanges={false}
-              onCalloutPress={() => navigateToMountain(peak.id)}
-            >
-              {peak.summited ? (
-                <View style={styles.summitedMarker}>
-                  <Mountain color={Colors.textDark} size={18} strokeWidth={2.5} />
-                </View>
-              ) : (
-                <View style={styles.unclimbedMarker}>
-                  <Mountain color={Colors.textMuted} size={18} strokeWidth={2} />
-                </View>
-              )}
-            </RNMarker>
-          );
-        })}
-      </RNMapView>
+      <View style={[styles.compassWrap, { paddingTop: insets.top + 16 }]} pointerEvents="none">
+        <CompassRose />
+      </View>
 
-      <View style={styles.mapLegend}>
+      <View style={styles.mapLegend} pointerEvents="box-none">
         <View style={styles.legendItem}>
           <View style={styles.legendSummitedMarker}>
             <Mountain color={Colors.textDark} size={10} strokeWidth={2.5} />
@@ -285,39 +321,59 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.snow,
   },
-  mapHeader: {
+  mapFrameOuter: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    zIndex: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 10,
-    backgroundColor: Colors.overlay,
+    bottom: 0,
+    borderWidth: 8,
+    borderColor: VOYAGER_FRAME,
+    backgroundColor: VOYAGER_FRAME,
   },
-  mapTitle: {
-    fontSize: 22,
-    fontWeight: '700' as const,
-    color: Colors.text,
-  },
-  mapBadge: {
-    backgroundColor: Colors.frost,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-  },
-  mapBadgeText: {
-    color: Colors.primary,
-    fontSize: 12,
-    fontWeight: '600' as const,
+  mapFrameInner: {
+    flex: 1,
+    borderWidth: 2,
+    borderColor: VOYAGER_FRAME_INNER,
+    overflow: 'hidden',
   },
   map: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
+  },
+  frostOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: VOYAGER_OVERLAY,
+  },
+  chartHeader: {
+    position: 'absolute',
+    top: 16,
+    left: 22,
+    zIndex: 20,
+    maxWidth: '55%',
+  },
+  chartTitle: {
+    fontSize: 26,
+    fontWeight: '700' as const,
+    color: VOYAGER_TITLE,
+    fontFamily: 'serif',
+    textShadowColor: 'rgba(243, 236, 216, 0.7)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  chartSubtitle: {
+    fontSize: 13,
+    color: VOYAGER_FRAME,
+    fontStyle: 'italic',
+    marginTop: 2,
+    textShadowColor: 'rgba(243, 236, 216, 0.7)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  compassWrap: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+    zIndex: 20,
   },
   summitedMarker: {
     width: 38,
@@ -348,41 +404,35 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: 'rgba(91, 142, 194, 0.92)',
+    backgroundColor: VOYAGER_BRASS,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderWidth: 3,
+    borderColor: VOYAGER_BRASS_LIGHT,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.35,
     shadowRadius: 4,
     elevation: 5,
   },
-  clusterBubbleSummited: {
-    backgroundColor: 'rgba(212, 168, 67, 0.92)',
-    borderColor: 'rgba(255, 255, 255, 0.9)',
-  },
   clusterCount: {
-    color: '#FFFFFF',
+    color: VOYAGER_BRASS_DARK,
     fontSize: 16,
     fontWeight: '700' as const,
   },
-  clusterCountSummited: {
-    color: Colors.textDark,
-  },
   mapLegend: {
     position: 'absolute',
-    bottom: 20,
-    left: 20,
+    bottom: 22,
+    left: 22,
     flexDirection: 'row',
     gap: 16,
-    backgroundColor: Colors.overlay,
+    backgroundColor: 'rgba(243, 236, 216, 0.88)',
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderWidth: 1.5,
+    borderColor: VOYAGER_FRAME_INNER,
+    zIndex: 20,
   },
   legendItem: {
     flexDirection: 'row',
@@ -408,7 +458,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.textMuted,
   },
   legendText: {
-    color: Colors.text,
+    color: VOYAGER_BRASS_DARK,
     fontSize: 12,
     fontWeight: '500' as const,
   },
