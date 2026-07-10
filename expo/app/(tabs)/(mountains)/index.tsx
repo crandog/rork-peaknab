@@ -134,7 +134,7 @@ export default function MountainsScreen() {
         <View style={styles.titleRow}>
           <View style={styles.logoContainer}>
             <Image
-              source={{ uri: 'https://r2-pub.rork.com/attachments/yysoti63i6d0rv4sldqgm.png' }}
+              source={require('../../../assets/images/icon.png')}
               style={styles.logoIcon}
               resizeMode="cover"
             />
