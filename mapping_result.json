@@ -1,0 +1,22 @@
+{
+  "mapping": {
+    "villarrica": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/66421fe9-8124-4d93-a886-e5546c33097b.png",
+    "everest": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/f8ec2410-5481-482f-bcb1-3bab448642b7.png",
+    "aconcagua": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/9f59909c-34e1-419b-a55f-6598de5082e5.png",
+    "denali": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/ea02a172-6d99-4e06-84be-f0c815a32f5e.png",
+    "kilimanjaro": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/d471346d-bdad-407b-acbe-6c7229aefcd8.png",
+    "elbrus": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/3c08294e-ec18-4260-a7f5-84884a93246b.png",
+    "vinson": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/9b3d0f98-7cf5-4500-8330-5671299a022c.png",
+    "carstensz": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/27118729-db44-42b9-8041-abf37a7ce042.png",
+    "k2": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/afd64a28-8015-4242-9d9e-314703990926.png",
+    "kangchenjunga": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/7f669022-fc2d-4caf-9b48-1c12ed061063.png",
+    "makalu": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/82728bda-70db-4fc2-8668-0eeb46b9a55c.png",
+    "cho-oyu": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/32bb9987-2e08-4dce-a44c-9f2fd7cb7866.png",
+    "dhaulagiri": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/8066a4e1-9f0c-4616-be27-fa8706ac03dd.png",
+    "nanga-parbat": "https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/568e42e8-dd82-42f7-8e58-1d216608542e.png"
+  },
+  "failed": [
+    "lhotse",
+    "manaslu"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "mapping": {},
+  "failed": [
+    "lhotse",
+    "manaslu"
+  ]
+}
