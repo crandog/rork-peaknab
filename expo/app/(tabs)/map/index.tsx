@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,18 +8,83 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MapPin } from 'lucide-react-native';
+import { MapPin, Mountain } from 'lucide-react-native';
 import Colors from '@/constants/colors';
+import { MAPBOX_TOKEN } from '@/constants/mapConfig';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
-import RNMapView, { Marker as RNMarker, Region } from 'react-native-maps';
+import RNMapView, {
+  Marker as RNMarker,
+  Region,
+  UrlTile,
+  LatLng,
+} from 'react-native-maps';
+import type { Mountain as MountainType } from '@/constants/mountains';
+
+type MarkerPeak = MountainType & { summited: boolean };
+
+type Cluster = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  count: number;
+  peaks: MarkerPeak[];
+  summited: boolean;
+};
+
+const MAPBOX_DARK_URL = `https://api.mapbox.com/styles/v1/mapbox/dark-v11/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
+
+function getClusterCellSize(latitudeDelta: number): number {
+  if (latitudeDelta > 120) return 22;
+  if (latitudeDelta > 80) return 16;
+  if (latitudeDelta > 40) return 10;
+  if (latitudeDelta > 20) return 6;
+  if (latitudeDelta > 10) return 3;
+  if (latitudeDelta > 5) return 1.5;
+  return 0.6;
+}
+
+function buildClusters(peaks: MarkerPeak[], region: Region): Cluster[] {
+  const cellSize = getClusterCellSize(region.latitudeDelta);
+  const groups = new Map<string, MarkerPeak[]>();
+
+  for (const peak of peaks) {
+    const latKey = Math.floor(peak.latitude / cellSize);
+    const lonKey = Math.floor(peak.longitude / cellSize);
+    const key = `${latKey}_${lonKey}`;
+    const group = groups.get(key) ?? [];
+    group.push(peak);
+    groups.set(key, group);
+  }
+
+  return Array.from(groups.entries()).map(([key, group]) => {
+    const avgLat = group.reduce((sum, p) => sum + p.latitude, 0) / group.length;
+    const avgLon = group.reduce((sum, p) => sum + p.longitude, 0) / group.length;
+    return {
+      id: key,
+      latitude: avgLat,
+      longitude: avgLon,
+      count: group.length,
+      peaks: group,
+      summited: group.some((p) => p.summited),
+    };
+  });
+}
 
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { records, isSummited } = useSummits();
   const allMountains = useAllMountains();
+  const mapRef = useRef<RNMapView>(null);
+  const [region, setRegion] = useState<Region>({
+    latitude: 20,
+    longitude: 30,
+    latitudeDelta: 160,
+    longitudeDelta: 160,
+  });
+  const [mapReady, setMapReady] = useState(false);
 
   const navigateToMountain = useCallback((id: string) => {
     router.push(`/mountain/${id}`);
@@ -29,27 +94,46 @@ export default function MapScreen() {
     return allMountains.filter((m) => isSummited(m.id));
   }, [records, isSummited, allMountains]);
 
-  const [region, setRegion] = useState<Region>({
-    latitude: 20,
-    longitude: 30,
-    latitudeDelta: 160,
-    longitudeDelta: 160,
-  });
-
-  const allMountainMarkers = useMemo(() => {
-    const zoom = Math.max(region.latitudeDelta, region.longitudeDelta);
-    let minElevation = 0;
-    if (zoom > 100) minElevation = 7500;
-    else if (zoom > 50) minElevation = 6500;
-    else if (zoom > 20) minElevation = 5000;
-    else if (zoom > 8) minElevation = 3500;
-    else minElevation = 0;
-
+  const allMountainMarkers = useMemo<MarkerPeak[]>(() => {
     return allMountains
       .map((m) => ({ ...m, summited: isSummited(m.id) }))
-      .filter((m) => m.summited || m.elevation >= minElevation)
       .filter((m) => !(m.latitude === 0 && m.longitude === 0));
-  }, [records, isSummited, allMountains, region.latitudeDelta, region.longitudeDelta]);
+  }, [records, isSummited, allMountains]);
+
+  const clusters = useMemo(() => {
+    return buildClusters(allMountainMarkers, region);
+  }, [allMountainMarkers, region]);
+
+  const fitToPeaks = useCallback(() => {
+    if (!mapRef.current) return;
+    const target = summitedMountains.length > 0 ? summitedMountains : allMountains;
+    const coords: LatLng[] = target
+      .filter((m) => !(m.latitude === 0 && m.longitude === 0))
+      .map((m) => ({ latitude: m.latitude, longitude: m.longitude }));
+    if (coords.length === 0) return;
+    mapRef.current.fitToCoordinates(coords, {
+      edgePadding: { top: 140, right: 40, bottom: 140, left: 40 },
+      animated: true,
+    });
+  }, [summitedMountains, allMountains]);
+
+  useEffect(() => {
+    if (!mapReady) return;
+    const timer = setTimeout(() => fitToPeaks(), 400);
+    return () => clearTimeout(timer);
+  }, [mapReady, fitToPeaks]);
+
+  const handleClusterPress = useCallback((cluster: Cluster) => {
+    if (!mapRef.current || cluster.count === 1) return;
+    const coords: LatLng[] = cluster.peaks
+      .filter((m) => !(m.latitude === 0 && m.longitude === 0))
+      .map((m) => ({ latitude: m.latitude, longitude: m.longitude }));
+    if (coords.length === 0) return;
+    mapRef.current.fitToCoordinates(coords, {
+      edgePadding: { top: 120, right: 40, bottom: 120, left: 40 },
+      animated: true,
+    });
+  }, []);
 
   if (Platform.OS === 'web') {
     return (
@@ -101,43 +185,95 @@ export default function MapScreen() {
         </View>
       </View>
       <RNMapView
+        ref={mapRef}
         style={styles.map}
         initialRegion={region}
         onRegionChangeComplete={setRegion}
-        mapType={Platform.OS === 'ios' ? 'standard' : 'terrain'}
-        showsCompass
-        showsScale
+        mapType="none"
+        showsCompass={false}
+        showsScale={false}
         rotateEnabled={false}
         pitchEnabled={false}
+        onMapReady={() => setMapReady(true)}
       >
-        {allMountainMarkers.map((m) => (
-          <RNMarker
-            key={m.id}
-            coordinate={{
-              latitude: m.latitude,
-              longitude: m.longitude,
-            }}
-            title={m.name}
-            description={`${m.elevation.toLocaleString()}m - ${m.country}`}
-            pinColor={m.summited ? '#22C55E' : '#EF4444'}
-            opacity={m.summited ? 1 : 0.85}
-            tracksViewChanges={false}
-            onCalloutPress={() => navigateToMountain(m.id)}
-          />
-        ))}
+        <UrlTile
+          urlTemplate={MAPBOX_DARK_URL}
+          maximumZ={19}
+          flipY={false}
+          tileSize={256}
+        />
+        {clusters.map((cluster) => {
+          if (cluster.count > 1) {
+            return (
+              <RNMarker
+                key={cluster.id}
+                coordinate={{
+                  latitude: cluster.latitude,
+                  longitude: cluster.longitude,
+                }}
+                tracksViewChanges={false}
+                onPress={() => handleClusterPress(cluster)}
+              >
+                <View
+                  style={[
+                    styles.clusterBubble,
+                    cluster.summited && styles.clusterBubbleSummited,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.clusterCount,
+                      cluster.summited && styles.clusterCountSummited,
+                    ]}
+                  >
+                    {cluster.count}
+                  </Text>
+                </View>
+              </RNMarker>
+            );
+          }
+
+          const peak = cluster.peaks[0];
+          if (!peak) return null;
+
+          return (
+            <RNMarker
+              key={peak.id}
+              coordinate={{
+                latitude: peak.latitude,
+                longitude: peak.longitude,
+              }}
+              title={peak.name}
+              description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
+              tracksViewChanges={false}
+              onCalloutPress={() => navigateToMountain(peak.id)}
+            >
+              {peak.summited ? (
+                <View style={styles.summitedMarker}>
+                  <Mountain color={Colors.textDark} size={18} strokeWidth={2.5} />
+                </View>
+              ) : (
+                <View style={styles.unclimbedMarker}>
+                  <Mountain color={Colors.textMuted} size={18} strokeWidth={2} />
+                </View>
+              )}
+            </RNMarker>
+          );
+        })}
       </RNMapView>
 
       <View style={styles.mapLegend}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#22C55E' }]} />
+          <View style={styles.legendSummitedMarker}>
+            <Mountain color={Colors.textDark} size={10} strokeWidth={2.5} />
+          </View>
           <Text style={styles.legendText}>Summited</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: '#EF4444' }]} />
+          <View style={styles.legendUnclimbedMarker}>
+            <Mountain color={Colors.textMuted} size={10} strokeWidth={2} />
+          </View>
           <Text style={styles.legendText}>Unclimbed</Text>
-        </View>
-        <View style={styles.legendItem}>
-          <Text style={styles.legendHint}>Zoom in for more</Text>
         </View>
       </View>
     </View>
@@ -183,6 +319,58 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
+  summitedMarker: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: Colors.gold,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.gold,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3,
+    elevation: 4,
+  },
+  unclimbedMarker: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: Colors.textMuted,
+  },
+  clusterBubble: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: 'rgba(91, 142, 194, 0.92)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.35,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  clusterBubbleSummited: {
+    backgroundColor: 'rgba(212, 168, 67, 0.92)',
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+  },
+  clusterCount: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700' as const,
+  },
+  clusterCountSummited: {
+    color: Colors.textDark,
+  },
   mapLegend: {
     position: 'absolute',
     bottom: 20,
@@ -201,20 +389,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
   },
-  legendDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+  legendSummitedMarker: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: Colors.gold,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  legendUnclimbedMarker: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: Colors.textMuted,
   },
   legendText: {
     color: Colors.text,
     fontSize: 12,
     fontWeight: '500' as const,
-  },
-  legendHint: {
-    color: Colors.textMuted,
-    fontSize: 11,
-    fontStyle: 'italic' as const,
   },
   fallbackContainer: {
     flex: 1,
