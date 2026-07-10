@@ -34,7 +34,7 @@ type Cluster = {
   summited: boolean;
 };
 
-const MAPBOX_STYLE_URL = `https://api.mapbox.com/styles/v1/ccstoudemire/cmrfjz1w5005z01s4hv1tebk9/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
+const MAPBOX_STYLE_URL = `https://api.mapbox.com/styles/v1/ccstoudemire/cmrfl3x3p006201s4e8m50d2y/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
 
 const VOYAGER_BRASS = '#c8a24a';
 const VOYAGER_BRASS_LIGHT = '#f3ecd8';
