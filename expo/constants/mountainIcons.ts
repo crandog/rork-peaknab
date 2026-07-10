@@ -10,7 +10,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'kangchenjunga': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/3e7eec26-3be9-47f0-ab8f-a894cef38049.png',
   'lhotse': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/aa0c4eca-f7f5-439c-b7af-b0bc2dc2efc6.png',
   'makalu': 'https://r2-pub.rork.com/generated-images/35b259ee-2118-42e9-9deb-b52d3ed0305d.png',
-  'cho-oyu': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/acef1fa2-cc8b-4304-a00c-f5a7f11882f8.png',
+  'cho-oyu': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/134f6d67-5b7c-4206-a4ab-bc4ad53d9d5b.png',
   'dhaulagiri': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/9aa146c1-6944-4cb0-91d3-e499f3be22e9.png',
   'manaslu': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/0b8274aa-4efc-467e-a183-a04f62fbe8e2.png',
   'nanga-parbat': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/dfffe50b-216b-4c77-a724-577949d1e7da.png',
