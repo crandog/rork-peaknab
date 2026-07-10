@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { MapPin, Mountain } from 'lucide-react-native';
+import { MapPin } from 'lucide-react-native';
 import Svg, { Circle, Path, Polygon, Text as SvgText } from 'react-native-svg';
 import Colors from '@/constants/colors';
 import { MAPBOX_TOKEN } from '@/constants/mapConfig';
@@ -43,6 +43,11 @@ const VOYAGER_FRAME = '#5c503b';
 const VOYAGER_FRAME_INNER = '#8a7a5c';
 const VOYAGER_TITLE = '#3f3527';
 const VOYAGER_OVERLAY = 'rgba(205, 225, 232, 0.22)';
+const FLAG_GOLD = '#d9a520';
+const FLAG_POLE = '#3a2e12';
+const FLAG_OUTLINE = '#4a3a10';
+const UNCLIMBED_DOT = 'rgba(138, 151, 160, 0.55)';
+const UNCLIMBED_DOT_OUTLINE = 'rgba(118, 131, 140, 0.65)';
 
 function getClusterCellSize(latitudeDelta: number): number {
   if (latitudeDelta > 120) return 22;
@@ -109,6 +114,39 @@ function CompassRose() {
       >
         N
       </SvgText>
+    </Svg>
+  );
+}
+
+function SummitFlag({ scale = 1 }: { scale?: number }) {
+  const width = 30 * scale;
+  const height = 42 * scale;
+  return (
+    <Svg width={width} height={height} viewBox="0 0 30 42">
+      <Path d="M15 38 L15 7" stroke={FLAG_POLE} strokeWidth={3} strokeLinecap="round" />
+      <Circle cx={15} cy={38} r={3.5} fill={FLAG_GOLD} stroke={FLAG_OUTLINE} strokeWidth={1} />
+      <Polygon
+        points="15,5 29,12 15,19"
+        fill={FLAG_GOLD}
+        stroke={FLAG_OUTLINE}
+        strokeWidth={1.5}
+        strokeLinejoin="round"
+      />
+    </Svg>
+  );
+}
+
+function UnclimbedDot() {
+  return (
+    <Svg width={14} height={14} viewBox="0 0 14 14">
+      <Circle
+        cx={7}
+        cy={7}
+        r={4.5}
+        fill={UNCLIMBED_DOT}
+        stroke={UNCLIMBED_DOT_OUTLINE}
+        strokeWidth={1}
+      />
     </Svg>
   );
 }
@@ -269,16 +307,14 @@ export default function MapScreen() {
                   title={peak.name}
                   description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
                   tracksViewChanges={false}
+                  anchor={{ x: 0.5, y: 1.0 }}
+                  centerOffset={{ x: 0, y: -21 }}
                   onCalloutPress={() => navigateToMountain(peak.id)}
                 >
                   {peak.summited ? (
-                    <View style={styles.summitedMarker}>
-                      <Mountain color={Colors.textDark} size={18} strokeWidth={2.5} />
-                    </View>
+                    <SummitFlag />
                   ) : (
-                    <View style={styles.unclimbedMarker}>
-                      <Mountain color={Colors.textMuted} size={18} strokeWidth={2} />
-                    </View>
+                    <UnclimbedDot />
                   )}
                 </RNMarker>
               );
@@ -300,16 +336,12 @@ export default function MapScreen() {
 
       <View style={styles.mapLegend} pointerEvents="box-none">
         <View style={styles.legendItem}>
-          <View style={styles.legendSummitedMarker}>
-            <Mountain color={Colors.textDark} size={10} strokeWidth={2.5} />
-          </View>
+          <SummitFlag scale={0.7} />
           <Text style={styles.legendText}>Summited</Text>
         </View>
         <View style={styles.legendItem}>
-          <View style={styles.legendUnclimbedMarker}>
-            <Mountain color={Colors.textMuted} size={10} strokeWidth={2} />
-          </View>
-          <Text style={styles.legendText}>Unclimbed</Text>
+          <UnclimbedDot />
+          <Text style={styles.legendText}>Not yet climbed</Text>
         </View>
       </View>
     </View>
@@ -375,31 +407,6 @@ const styles = StyleSheet.create({
     right: 14,
     zIndex: 20,
   },
-  summitedMarker: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: Colors.gold,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.gold,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
-    elevation: 4,
-  },
-  unclimbedMarker: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: Colors.textMuted,
-  },
   clusterBubble: {
     width: 46,
     height: 46,
@@ -438,24 +445,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-  },
-  legendSummitedMarker: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: Colors.gold,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  legendUnclimbedMarker: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: Colors.textMuted,
   },
   legendText: {
     color: VOYAGER_BRASS_DARK,
