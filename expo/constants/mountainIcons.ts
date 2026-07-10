@@ -35,7 +35,7 @@ const MOUNTAIN_ICON_MAP: Record<string, string> = {
   'capitol-peak': 'https://r2-pub.rork.com/generated-images/8b9c48e9-a8ee-46b9-9feb-6b50bb2f8aad.png',
   'maroon-peak': 'https://r2-pub.rork.com/generated-images/97ace44c-34b4-4db0-98d7-d9784e13ab87.png',
   'mont-blanc': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/b0689917-a511-43aa-83b0-367c8557458f.png',
-  'matterhorn': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/9e99b23b-4ae2-4fce-9870-c2a95e79a502.png',
+  'matterhorn': 'https://r2-pub.rork.com/attachments/c4m5cgdok7k4ybmdri4u7.png',
   'eiger': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/3cf08e5d-26d1-409c-9cb8-e717746381c9.png',
   'jungfrau': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/038fdf87-4ce9-4b8c-991c-52e6c77214b8.png',
   'gran-paradiso': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/36286461-006e-4f34-aa81-3db612ba0126.png',
