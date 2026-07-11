@@ -158,6 +158,21 @@ function UnclimbedDot() {
   );
 }
 
+function UnclimbedDotScale() {
+  return (
+    <Svg width={9} height={9} viewBox="0 0 14 14">
+      <Circle
+        cx={7}
+        cy={7}
+        r={4}
+        fill={UNCLIMBED_FILL}
+        stroke={UNCLIMBED_OUTLINE}
+        strokeWidth={1.5}
+      />
+    </Svg>
+  );
+}
+
 export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -361,7 +376,6 @@ export default function MapScreen() {
 
       <View style={[styles.chartHeader, { paddingTop: insets.top + 16 }]} pointerEvents="none">
         <Text style={styles.chartTitle} numberOfLines={1}>Summit Map</Text>
-        <Text style={styles.chartSubtitle}>PeakNab · expedition chart</Text>
       </View>
 
       <View style={[styles.compassWrap, { paddingTop: insets.top + 16 }]} pointerEvents="none">
@@ -370,12 +384,12 @@ export default function MapScreen() {
 
       <View style={styles.mapLegend} pointerEvents="box-none">
         <View style={styles.legendItem}>
-          <SummitFlag scale={0.7} />
+          <SummitFlag scale={0.42} />
           <Text style={styles.legendText}>Summited</Text>
         </View>
         <View style={styles.legendItem}>
-          <UnclimbedDot />
-          <Text style={styles.legendText}>Not yet climbed</Text>
+          <UnclimbedDotScale />
+          <Text style={styles.legendText}>Unclimbed</Text>
         </View>
       </View>
     </View>
@@ -428,19 +442,10 @@ const styles = StyleSheet.create({
     maxWidth: '55%',
   },
   chartTitle: {
-    fontSize: 26,
-    fontWeight: '700' as const,
+    fontSize: 14,
+    fontWeight: '600' as const,
     color: VOYAGER_TITLE,
     fontFamily: 'serif',
-    textShadowColor: 'rgba(243, 236, 216, 0.7)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  chartSubtitle: {
-    fontSize: 13,
-    color: VOYAGER_FRAME,
-    fontStyle: 'italic',
-    marginTop: 2,
     textShadowColor: 'rgba(243, 236, 216, 0.7)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
@@ -473,26 +478,26 @@ const styles = StyleSheet.create({
   },
   mapLegend: {
     position: 'absolute',
-    bottom: 22,
-    left: 22,
+    bottom: 16,
+    left: 16,
     flexDirection: 'row',
-    gap: 16,
-    backgroundColor: 'rgba(243, 236, 216, 0.88)',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 12,
-    borderWidth: 1.5,
+    gap: 8,
+    backgroundColor: 'rgba(243, 236, 216, 0.82)',
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    borderRadius: 8,
+    borderWidth: 1,
     borderColor: VOYAGER_FRAME_INNER,
     zIndex: 20,
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 3,
   },
   legendText: {
     color: VOYAGER_BRASS_DARK,
-    fontSize: 12,
+    fontSize: 9,
     fontWeight: '500' as const,
   },
   fallbackContainer: {
