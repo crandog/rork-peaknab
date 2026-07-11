@@ -45,11 +45,11 @@ const VOYAGER_FRAME = '#5c503b';
 const VOYAGER_FRAME_INNER = '#8a7a5c';
 const VOYAGER_TITLE = '#3f3527';
 const VOYAGER_OVERLAY = 'rgba(210, 225, 230, 0.06)';
-const FLAG_GOLD = '#d9a520';
-const FLAG_POLE = '#3a2e12';
-const FLAG_OUTLINE = '#4a3a10';
-const UNCLIMBED_FILL = 'rgba(236, 231, 214, 0.5)';
-const UNCLIMBED_OUTLINE = '#6b5f49';
+const SUMMITED_FILL = '#d4941f';
+const SUMMITED_BORDER = '#3a2e12';
+const CHECKMARK_WHITE = '#ffffff';
+const UNCLIMBED_FILL = '#faf6ec';
+const UNCLIMBED_RING = '#5a4326';
 
 const PARCHMENT_TEXTURE = require('../../../assets/images/parchment-texture.png');
 
@@ -57,13 +57,13 @@ const VIGNETTE_SEPIA = 'rgba(74, 53, 28, 0.30)';
 const VIGNETTE_TRANSPARENT = 'rgba(74, 53, 28, 0)';
 
 function getClusterCellSize(latitudeDelta: number): number {
-  if (latitudeDelta > 120) return 22;
-  if (latitudeDelta > 80) return 16;
-  if (latitudeDelta > 40) return 10;
-  if (latitudeDelta > 20) return 6;
-  if (latitudeDelta > 10) return 3;
-  if (latitudeDelta > 5) return 1.5;
-  return 0.6;
+  if (latitudeDelta > 120) return 15;
+  if (latitudeDelta > 80) return 10;
+  if (latitudeDelta > 40) return 6;
+  if (latitudeDelta > 20) return 3;
+  if (latitudeDelta > 10) return 1.5;
+  if (latitudeDelta > 5) return 0.8;
+  return 0.3;
 }
 
 function buildClusters(peaks: MarkerPeak[], region: Region): Cluster[] {
@@ -125,50 +125,26 @@ function CompassRose() {
   );
 }
 
-function SummitFlag({ scale = 1 }: { scale?: number }) {
-  const width = 30 * scale;
-  const height = 42 * scale;
+function SummitedMarker({ size = 26 }: { size?: number }) {
   return (
-    <Svg width={width} height={height} viewBox="0 0 30 42">
-      <Path d="M15 38 L15 7" stroke={FLAG_POLE} strokeWidth={3} strokeLinecap="round" />
-      <Circle cx={15} cy={38} r={3.5} fill={FLAG_GOLD} stroke={FLAG_OUTLINE} strokeWidth={1} />
-      <Polygon
-        points="15,5 29,12 15,19"
-        fill={FLAG_GOLD}
-        stroke={FLAG_OUTLINE}
-        strokeWidth={1.5}
+    <Svg width={size} height={size} viewBox="0 0 26 26">
+      <Circle cx={13} cy={13} r={11} fill={SUMMITED_FILL} stroke={SUMMITED_BORDER} strokeWidth={2} />
+      <Path
+        d="M7.5 13.5 L11.5 17.5 L18.5 9.5"
+        stroke={CHECKMARK_WHITE}
+        strokeWidth={2.5}
+        strokeLinecap="round"
         strokeLinejoin="round"
+        fill="none"
       />
     </Svg>
   );
 }
 
-function UnclimbedDot() {
+function UnclimbedMarker({ size = 15 }: { size?: number }) {
   return (
-    <Svg width={14} height={14} viewBox="0 0 14 14">
-      <Circle
-        cx={7}
-        cy={7}
-        r={4}
-        fill={UNCLIMBED_FILL}
-        stroke={UNCLIMBED_OUTLINE}
-        strokeWidth={1.5}
-      />
-    </Svg>
-  );
-}
-
-function UnclimbedDotScale() {
-  return (
-    <Svg width={9} height={9} viewBox="0 0 14 14">
-      <Circle
-        cx={7}
-        cy={7}
-        r={4}
-        fill={UNCLIMBED_FILL}
-        stroke={UNCLIMBED_OUTLINE}
-        strokeWidth={1.5}
-      />
+    <Svg width={size} height={size} viewBox="0 0 15 15">
+      <Circle cx={7.5} cy={7.5} r={6} fill={UNCLIMBED_FILL} stroke={UNCLIMBED_RING} strokeWidth={2} />
     </Svg>
   );
 }
@@ -329,14 +305,13 @@ export default function MapScreen() {
                   title={peak.name}
                   description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
                   tracksViewChanges={false}
-                  anchor={{ x: 0.5, y: 1.0 }}
-                  centerOffset={{ x: 0, y: -21 }}
+                  anchor={{ x: 0.5, y: 0.5 }}
                   onCalloutPress={() => navigateToMountain(peak.id)}
                 >
                   {peak.summited ? (
-                    <SummitFlag />
+                    <SummitedMarker />
                   ) : (
-                    <UnclimbedDot />
+                    <UnclimbedMarker />
                   )}
                 </RNMarker>
               );
@@ -384,11 +359,11 @@ export default function MapScreen() {
 
       <View style={styles.mapLegend} pointerEvents="box-none">
         <View style={styles.legendItem}>
-          <SummitFlag scale={0.42} />
+          <SummitedMarker size={14} />
           <Text style={styles.legendText}>Summited</Text>
         </View>
         <View style={styles.legendItem}>
-          <UnclimbedDotScale />
+          <UnclimbedMarker size={12} />
           <Text style={styles.legendText}>Unclimbed</Text>
         </View>
       </View>
