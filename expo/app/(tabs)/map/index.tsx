@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MapPin } from 'lucide-react-native';
-import Svg, { Circle, Path, Polygon, Text as SvgText } from 'react-native-svg';
+import Svg, { Circle, Ellipse, Line, Path, Polygon, Rect, Text as SvgText } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
 import { MAPBOX_TOKEN } from '@/constants/mapConfig';
@@ -50,6 +50,21 @@ const FLAG_POLE = '#3a2e12';
 const FLAG_OUTLINE = '#4a3a10';
 const UNCLIMBED_FILL = 'rgba(236, 231, 214, 0.5)';
 const UNCLIMBED_OUTLINE = '#6b5f49';
+
+const CARTOUCHE_FILL = '#e8dcbf';
+const CARTOUCHE_BORDER = '#6f5636';
+const CARTOUCHE_INNER = '#8a7a5c';
+const CARTOUCHE_TITLE_CLR = '#46331c';
+const CARTOUCHE_SUBTITLE_CLR = '#6b5236';
+const ICEBERG_FILL = '#cfe0e6';
+const ICEBERG_CAP = '#eef4f6';
+const ICEBERG_OUTLINE = '#5a4326';
+
+const ICEBERG_COORDS: ReadonlyArray<{ latitude: number; longitude: number }> = [
+  { latitude: 60, longitude: -42 },
+  { latitude: -62, longitude: -55 },
+  { latitude: -60, longitude: 60 },
+];
 
 const PARCHMENT_TEXTURE = require('../../../assets/images/parchment-texture.png');
 
@@ -153,6 +168,66 @@ function UnclimbedDot() {
         fill={UNCLIMBED_FILL}
         stroke={UNCLIMBED_OUTLINE}
         strokeWidth={1.5}
+      />
+    </Svg>
+  );
+}
+
+function CartoucheTitle() {
+  const w = 260;
+  const h = 76;
+  return (
+    <Svg width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+      {/* Left scroll curl end */}
+      <Ellipse cx={24} cy={38} rx={9} ry={16} fill={CARTOUCHE_FILL} stroke={CARTOUCHE_BORDER} strokeWidth={1.6} />
+      <Path d="M 24 24 C 20 24, 18 28, 18 32 C 18 36, 20 40, 24 40" fill="none" stroke={CARTOUCHE_INNER} strokeWidth={0.8} />
+      {/* Right scroll curl end */}
+      <Ellipse cx={236} cy={38} rx={9} ry={16} fill={CARTOUCHE_FILL} stroke={CARTOUCHE_BORDER} strokeWidth={1.6} />
+      <Path d="M 236 24 C 240 24, 242 28, 242 32 C 242 36, 240 40, 236 40" fill="none" stroke={CARTOUCHE_INNER} strokeWidth={0.8} />
+      {/* Main banner panel */}
+      <Rect x={24} y={14} width={212} height={48} rx={4} fill={CARTOUCHE_FILL} stroke={CARTOUCHE_BORDER} strokeWidth={1.6} />
+      {/* Inner double-line frame */}
+      <Rect x={30} y={18} width={200} height={40} rx={3} fill="none" stroke={CARTOUCHE_INNER} strokeWidth={0.6} />
+      <Rect x={33} y={21} width={194} height={34} rx={2} fill="none" stroke={CARTOUCHE_INNER} strokeWidth={0.4} />
+      {/* Title text */}
+      <SvgText x={130} y={38} textAnchor="middle" fill={CARTOUCHE_TITLE_CLR} fontSize={22} fontFamily="serif" fontWeight="bold">
+        Summit Map
+      </SvgText>
+      {/* Subtitle */}
+      <SvgText x={130} y={52} textAnchor="middle" fill={CARTOUCHE_SUBTITLE_CLR} fontSize={11} fontFamily="serif" fontStyle="italic">
+        PeakNab · an explorer's chart
+      </SvgText>
+    </Svg>
+  );
+}
+
+function IcebergMarker() {
+  return (
+    <Svg width={26} height={30} viewBox="0 0 26 30" opacity={0.8}>
+      {/* Full iceberg body — angular ice chunk above and below water */}
+      <Path
+        d="M 3 17 L 6 9 L 9 13 L 12 6 L 15 11 L 18 8 L 23 17 L 25 28 L 1 28 Z"
+        fill={ICEBERG_FILL}
+        stroke={ICEBERG_OUTLINE}
+        strokeWidth={0.8}
+        strokeLinejoin="round"
+      />
+      {/* Snowy cap — lighter tips on the jagged peaks */}
+      <Polygon
+        points="5,13 6,9 9,13 12,6 15,11 18,8 21,13"
+        fill={ICEBERG_CAP}
+        stroke="none"
+      />
+      {/* Faint dashed waterline */}
+      <Line
+        x1="2"
+        y1="17"
+        x2="24"
+        y2="17"
+        stroke={ICEBERG_OUTLINE}
+        strokeWidth={0.6}
+        strokeDasharray="2 2"
+        opacity={0.5}
       />
     </Svg>
   );
@@ -326,6 +401,22 @@ export default function MapScreen() {
                 </RNMarker>
               );
             })}
+
+            {/* Decorative icebergs — non-interactive, pan/zoom with map */}
+            {ICEBERG_COORDS.map((coord, idx) => (
+              <RNMarker
+                key={`iceberg-${idx}`}
+                coordinate={{
+                  latitude: coord.latitude,
+                  longitude: coord.longitude,
+                }}
+                tracksViewChanges={false}
+                anchor={{ x: 0.5, y: 1.0 }}
+                opacity={0.8}
+              >
+                <IcebergMarker />
+              </RNMarker>
+            ))}
           </RNMapView>
 
           <View style={styles.frostOverlay} pointerEvents="none" />
@@ -359,9 +450,8 @@ export default function MapScreen() {
         </View>
       </View>
 
-      <View style={[styles.chartHeader, { paddingTop: insets.top + 16 }]} pointerEvents="none">
-        <Text style={styles.chartTitle} numberOfLines={1}>Summit Map</Text>
-        <Text style={styles.chartSubtitle}>PeakNab · expedition chart</Text>
+      <View style={[styles.cartoucheWrap, { paddingTop: insets.top + 12 }]} pointerEvents="none">
+        <CartoucheTitle />
       </View>
 
       <View style={[styles.compassWrap, { paddingTop: insets.top + 16 }]} pointerEvents="none">
@@ -420,30 +510,13 @@ const styles = StyleSheet.create({
   vignetteContainer: {
     ...StyleSheet.absoluteFillObject,
   },
-  chartHeader: {
+  cartoucheWrap: {
     position: 'absolute',
-    top: 16,
-    left: 22,
+    top: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
     zIndex: 20,
-    maxWidth: '55%',
-  },
-  chartTitle: {
-    fontSize: 26,
-    fontWeight: '700' as const,
-    color: VOYAGER_TITLE,
-    fontFamily: 'serif',
-    textShadowColor: 'rgba(243, 236, 216, 0.7)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  },
-  chartSubtitle: {
-    fontSize: 13,
-    color: VOYAGER_FRAME,
-    fontStyle: 'italic',
-    marginTop: 2,
-    textShadowColor: 'rgba(243, 236, 216, 0.7)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   compassWrap: {
     position: 'absolute',
