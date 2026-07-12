@@ -350,7 +350,7 @@ export default function MapScreen() {
         </View>
       </View>
 
-      <View style={[styles.cartoucheWrap, { paddingTop: insets.top + 12 }]} pointerEvents="none">
+      <View style={[styles.cartoucheWrap, { top: insets.top + 10 }]} pointerEvents="none">
         <Image source={CARTOUCHE_IMAGE} style={styles.cartoucheImage} resizeMode="contain" />
         <Text style={styles.cartoucheTitle} numberOfLines={1}>Summit Map</Text>
       </View>
@@ -413,27 +413,24 @@ const styles = StyleSheet.create({
   },
   cartoucheWrap: {
     position: 'absolute',
-    top: 12,
-    left: 12,
-    zIndex: 20,
-    width: 170,
-    height: 90,
+    left: 0,
+    right: 0,
+    zIndex: 25,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   cartoucheImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    opacity: 0.92,
+    width: 300,
+    height: 200,
+    opacity: 0.95,
   },
   cartoucheTitle: {
-    fontSize: 14,
+    position: 'absolute',
+    fontSize: 20,
     fontWeight: '600' as const,
-    color: VOYAGER_TITLE,
+    color: '#3f2f1c',
     fontFamily: 'serif',
-    paddingTop: 8,
-    paddingHorizontal: 24,
+    textAlign: 'center',
+    top: 72,
     textShadowColor: 'rgba(243, 236, 216, 0.7)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
