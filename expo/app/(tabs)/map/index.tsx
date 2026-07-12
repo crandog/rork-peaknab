@@ -12,6 +12,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MapPin } from 'lucide-react-native';
 import Svg, { Circle, Path, Polygon, Text as SvgText } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
+import {
+  useFonts,
+  IMFellEnglish_400Regular,
+} from '@expo-google-fonts/im-fell-english';
 import Colors from '@/constants/colors';
 import { MAPBOX_TOKEN } from '@/constants/mapConfig';
 import { useSummits } from '@/contexts/SummitContext';
@@ -52,7 +56,7 @@ const UNCLIMBED_FILL = '#faf6ec';
 const UNCLIMBED_RING = '#5a4326';
 
 const PARCHMENT_TEXTURE = require('../../../assets/images/parchment-texture.png');
-const CARTOUCHE_IMAGE = { uri: 'https://r2-pub.rork.com/attachments/nbctrwmhlpp97fkurg1k4.png' };
+const CARTOUCHE_IMAGE = require('../../../assets/images/cartouche.png');
 
 const VIGNETTE_SEPIA = 'rgba(74, 53, 28, 0.30)';
 const VIGNETTE_TRANSPARENT = 'rgba(74, 53, 28, 0)';
@@ -154,6 +158,9 @@ export default function MapScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { records, isSummited } = useSummits();
+  const [fontsLoaded] = useFonts({
+    IMFellEnglish: IMFellEnglish_400Regular,
+  });
   const allMountains = useAllMountains();
   const mapRef = useRef<RNMapView>(null);
   const [region, setRegion] = useState<Region>({
@@ -426,9 +433,8 @@ const styles = StyleSheet.create({
   cartoucheTitle: {
     position: 'absolute',
     fontSize: 20,
-    fontWeight: '600' as const,
     color: '#3f2f1c',
-    fontFamily: 'serif',
+    fontFamily: 'IMFellEnglish',
     textAlign: 'center',
     top: 72,
     textShadowColor: 'rgba(243, 236, 216, 0.7)',
