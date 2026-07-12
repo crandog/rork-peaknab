@@ -52,6 +52,7 @@ const UNCLIMBED_FILL = '#faf6ec';
 const UNCLIMBED_RING = '#5a4326';
 
 const PARCHMENT_TEXTURE = require('../../../assets/images/parchment-texture.png');
+const CARTOUCHE_IMAGE = { uri: 'https://r2-pub.rork.com/attachments/nbctrwmhlpp97fkurg1k4.png' };
 
 const VIGNETTE_SEPIA = 'rgba(74, 53, 28, 0.30)';
 const VIGNETTE_TRANSPARENT = 'rgba(74, 53, 28, 0)';
@@ -349,8 +350,9 @@ export default function MapScreen() {
         </View>
       </View>
 
-      <View style={[styles.chartHeader, { paddingTop: insets.top + 16 }]} pointerEvents="none">
-        <Text style={styles.chartTitle} numberOfLines={1}>Summit Map</Text>
+      <View style={[styles.cartoucheWrap, { paddingTop: insets.top + 12 }]} pointerEvents="none">
+        <Image source={CARTOUCHE_IMAGE} style={styles.cartoucheImage} resizeMode="contain" />
+        <Text style={styles.cartoucheTitle} numberOfLines={1}>Summit Map</Text>
       </View>
 
       <View style={[styles.compassWrap, { paddingTop: insets.top + 16 }]} pointerEvents="none">
@@ -409,18 +411,29 @@ const styles = StyleSheet.create({
   vignetteContainer: {
     ...StyleSheet.absoluteFillObject,
   },
-  chartHeader: {
+  cartoucheWrap: {
     position: 'absolute',
-    top: 16,
-    left: 22,
+    top: 12,
+    left: 12,
     zIndex: 20,
-    maxWidth: '55%',
+    width: 170,
+    height: 90,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  chartTitle: {
+  cartoucheImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    opacity: 0.92,
+  },
+  cartoucheTitle: {
     fontSize: 14,
     fontWeight: '600' as const,
     color: VOYAGER_TITLE,
     fontFamily: 'serif',
+    paddingTop: 8,
+    paddingHorizontal: 24,
     textShadowColor: 'rgba(243, 236, 216, 0.7)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
