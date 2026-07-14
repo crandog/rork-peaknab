@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "PeakNab",
-    "slug": "summit-tracker",
+    "slug": "peaknab",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
