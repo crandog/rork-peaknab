@@ -1,0 +1,52 @@
+{
+  "theme": {
+    "style": "Warm parchment and aged map textures with brass, copper, and burnished gold accents, evoking vintage cartography and alpine expedition journals. Lighting is golden-hour warm with soft directional glow, like sun hitting a canvas tent at basecamp, and textures feel tactile — worn paper grain, leather, brushed metal. The mood is adventurous yet refined, grounded in earthy ochre and umber tones rather than cold or digital blue.",
+    "headlineFont": "'Plus Jakarta Sans', sans-serif — import via @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap')",
+    "headlineFontSize": 118,
+    "mockupIds": {
+      "iphone": "cosmic-orange",
+      "ipad": "space-gray"
+    },
+    "palette": {
+      "primary": "#C9A66B",
+      "secondary": "#5C3A21",
+      "accent": "#B8752E"
+    }
+  },
+  "slides": [
+    {
+      "label": "Explore",
+      "backgroundPrompt": "Abstract textured environment resembling an aged parchment surface with soft warm ochre and cream tones, layered with faint brushed copper streaks radiating diagonally from the lower right, subtle paper grain texture throughout, golden warm lighting glowing from the bottom edge casting long soft gradients upward, the upper 30% fading into a calm muted tan for text clarity, 8K quality, ultra smooth gradients, premium feel, no text, no letters, no UI elements, no device mockups",
+      "backgroundUrl": "https://r2-pub.rork.com/app-store-screenshots/d14f3e44-5a40-4315-9f12-66effa9e2bcc.png"
+    },
+    {
+      "label": "Detail",
+      "backgroundPrompt": "Rich cinematic scene with deep umber brown base and a single massive soft glow of warm brass light bleeding from the right edge, creating long horizontal gradients across the frame, fine dust particles catching light like alpine mist, the upper region darker and calm fading to near black-brown, 8K quality, ultra smooth gradients, premium feel, no text, no letters, no UI elements, no device mockups",
+      "backgroundUrl": "https://r2-pub.rork.com/app-store-screenshots/6689649d-d18b-4890-b8e5-15225892f9b9.png"
+    },
+    {
+      "label": "Log",
+      "backgroundPrompt": "Warm celebratory abstract composition with radiating arcs of molten gold and burnished copper light bursting from the lower center like a sunrise, dramatic rim lighting catching floating translucent parchment-colored shards, fine grain texture, the top portion softly dimmed to muted brown for overlay clarity, 8K quality, ultra smooth gradients, premium feel, no text, no letters, no UI elements, no device mockups",
+      "backgroundUrl": "https://r2-pub.rork.com/app-store-screenshots/72a7e76c-d701-4761-80ba-76c6e12010ff.png"
+    },
+    {
+      "label": "Map",
+      "backgroundPrompt": "Constellation of tiny warm brass and gold dots scattered across a vast deep umber expanse resembling an aged map surface, connected by hair-thin luminous copper threads, a soft diffused amber glow pooling in the lower center, the top region open, calm, and uncluttered in muted tan, 8K quality, ultra smooth gradients, premium feel, no text, no letters, no UI elements, no device mockups",
+      "backgroundUrl": "https://r2-pub.rork.com/app-store-screenshots/2c8776c7-616e-454f-be3a-d04ad0f10c5f.png"
+    },
+    {
+      "label": "Profile",
+      "backgroundPrompt": "Layered translucent planes of frosted warm parchment glass stacked at steep angles, each edge catching a thin line of glowing brass light, deep umber shadows between layers creating dramatic depth, upper portion fading to soft muted brown, 8K quality, ultra smooth gradients, premium feel, no text, no letters, no UI elements, no device mockups",
+      "backgroundUrl": "https://r2-pub.rork.com/app-store-screenshots/61cd4427-68b6-4f4a-bb6a-2bca9f73d689.png"
+    }
+  ],
+  "headlines": {
+    "en": {
+      "Explore": "World's Peaks<br>Await",
+      "Detail": "Every Peak<br>Has a Story",
+      "Log": "Log the<br>Summit",
+      "Map": "Your World<br>of Climbs",
+      "Profile": "Your Journey<br>Tallied"
+    }
+  }
+}
