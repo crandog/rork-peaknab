@@ -13,6 +13,10 @@ export interface SummitRecord {
   conditions: string;
   photoUri: string | null;
   createdAt: string;
+  route?: string;
+  timeToSummit?: string;
+  summitTime?: string;
+  roundTrip?: string;
 }
 
 const STORAGE_KEY = 'summit_records';

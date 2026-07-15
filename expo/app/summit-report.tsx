@@ -17,6 +17,7 @@ import * as Haptics from 'expo-haptics';
 import { Camera, Save, X } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import { useSummits } from '@/contexts/SummitContext';
+import { useFindMountain } from '@/hooks/useAllMountains';
 
 export default function SummitReportScreen() {
   const { mountainId, mountainName, createdAt } = useLocalSearchParams<{
@@ -39,6 +40,13 @@ export default function SummitReportScreen() {
   const [report, setReport] = useState(summitRecord?.report ?? '');
   const [conditions, setConditions] = useState(summitRecord?.conditions ?? '');
   const [photoUri, setPhotoUri] = useState<string | null>(summitRecord?.photoUri ?? null);
+  const [route, setRoute] = useState(summitRecord?.route ?? '');
+  const [summitTime, setSummitTime] = useState(summitRecord?.summitTime ?? '');
+  const [timeToSummit, setTimeToSummit] = useState(summitRecord?.timeToSummit ?? '');
+  const [roundTrip, setRoundTrip] = useState(summitRecord?.roundTrip ?? '');
+
+  const mountain = useFindMountain(mountainId);
+  const availableRoutes = useMemo(() => mountain?.routes ?? [], [mountain]);
   const saveScale = useRef(new Animated.Value(1)).current;
 
   const handleSavePress = useCallback(() => {
@@ -68,6 +76,10 @@ export default function SummitReportScreen() {
       report: report.trim(),
       conditions: conditions.trim(),
       photoUri,
+      route: route.trim() || undefined,
+      summitTime: summitTime.trim() || undefined,
+      timeToSummit: timeToSummit.trim() || undefined,
+      roundTrip: roundTrip.trim() || undefined,
     }, createdAt);
 
     if (Platform.OS !== 'web') {
@@ -77,7 +89,7 @@ export default function SummitReportScreen() {
     Alert.alert('Saved!', 'Your summit report has been saved.', [
       { text: 'OK', onPress: () => router.back() },
     ]);
-  }, [mountainId, createdAt, report, photoUri, updateSummit, router]);
+  }, [mountainId, createdAt, report, conditions, photoUri, route, summitTime, timeToSummit, roundTrip, updateSummit, router]);
 
   return (
     <View style={styles.container}>
@@ -112,6 +124,66 @@ export default function SummitReportScreen() {
             onChangeText={setReport}
             multiline
             textAlignVertical="top"
+          />
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Climb details (optional)</Text>
+          {availableRoutes.length > 0 && (
+            <View style={styles.routeChipsContainer}>
+              {availableRoutes.map((r) => (
+                <TouchableOpacity
+                  key={r}
+                  style={[
+                    styles.routeChip,
+                    route === r && styles.routeChipActive,
+                  ]}
+                  onPress={() => setRoute(r)}
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.routeChipText,
+                      route === r && styles.routeChipTextActive,
+                    ]}
+                  >
+                    {r}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+          <Text style={styles.fieldLabel}>Route</Text>
+          <TextInput
+            style={styles.conditionsInput}
+            placeholder="Machame Route"
+            placeholderTextColor={Colors.textMuted}
+            value={route}
+            onChangeText={setRoute}
+          />
+          <Text style={styles.fieldLabel}>Summit time</Text>
+          <TextInput
+            style={styles.conditionsInput}
+            placeholder="6:20 AM"
+            placeholderTextColor={Colors.textMuted}
+            value={summitTime}
+            onChangeText={setSummitTime}
+          />
+          <Text style={styles.fieldLabel}>Time to summit</Text>
+          <TextInput
+            style={styles.conditionsInput}
+            placeholder="8h from high camp"
+            placeholderTextColor={Colors.textMuted}
+            value={timeToSummit}
+            onChangeText={setTimeToSummit}
+          />
+          <Text style={styles.fieldLabel}>Round trip</Text>
+          <TextInput
+            style={styles.conditionsInput}
+            placeholder="12h"
+            placeholderTextColor={Colors.textMuted}
+            value={roundTrip}
+            onChangeText={setRoundTrip}
           />
         </View>
 
@@ -271,6 +343,39 @@ const styles = StyleSheet.create({
     color: Colors.primary,
     fontSize: 14,
     fontWeight: '600' as const,
+  },
+  routeChipsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginBottom: 12,
+  },
+  routeChip: {
+    backgroundColor: Colors.frost,
+    borderRadius: 14,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  routeChipActive: {
+    backgroundColor: Colors.primary,
+    borderColor: Colors.primary,
+  },
+  routeChipText: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.textSecondary,
+  },
+  routeChipTextActive: {
+    color: '#fff',
+  },
+  fieldLabel: {
+    fontSize: 13,
+    fontWeight: '500' as const,
+    color: Colors.textSecondary,
+    marginTop: 10,
+    marginBottom: 5,
   },
   saveButton: {
     flexDirection: 'row',
