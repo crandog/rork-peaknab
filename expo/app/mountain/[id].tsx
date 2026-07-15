@@ -282,17 +282,30 @@ export default function MountainDetailScreen() {
               </View>
             </View>
           </View>
-          <TouchableOpacity
-            style={styles.reportEditButton}
-            onPress={() => router.push({
-              pathname: '/summit-report' as any,
-              params: { mountainId: mountain.id, mountainName: mountain.name, createdAt: record.createdAt },
-            })}
-            activeOpacity={0.7}
-          >
-            <FileText color={Colors.primary} size={14} />
-            <Text style={styles.reportEditText}>Edit</Text>
-          </TouchableOpacity>
+          <View style={styles.reportCardActions2}>
+            <TouchableOpacity
+              style={styles.reportEditButton}
+              onPress={() => router.push({
+                pathname: '/share-card' as any,
+                params: { mountainId: mountain.id, createdAt: record.createdAt },
+              })}
+              activeOpacity={0.7}
+            >
+              <Share2 color={Colors.primary} size={14} />
+              <Text style={styles.reportEditText}>Share card</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.reportEditButton}
+              onPress={() => router.push({
+                pathname: '/summit-report' as any,
+                params: { mountainId: mountain.id, mountainName: mountain.name, createdAt: record.createdAt },
+              })}
+              activeOpacity={0.7}
+            >
+              <FileText color={Colors.primary} size={14} />
+              <Text style={styles.reportEditText}>Edit</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {record.photoUri && (
@@ -1050,6 +1063,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 8,
+  },
+  reportCardActions2: {
+    flexDirection: 'row',
+    gap: 8,
   },
   reportEditText: {
     fontSize: 12,

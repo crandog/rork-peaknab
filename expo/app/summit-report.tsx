@@ -86,10 +86,21 @@ export default function SummitReportScreen() {
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
 
+    const recordCreatedAt = createdAt ?? summitRecord?.createdAt;
     Alert.alert('Saved!', 'Your summit report has been saved.', [
-      { text: 'OK', onPress: () => router.back() },
+      { text: 'Share summit', onPress: () => {
+        if (mountainId && recordCreatedAt) {
+          router.push({
+            pathname: '/share-card' as any,
+            params: { mountainId, createdAt: recordCreatedAt },
+          });
+        } else {
+          router.back();
+        }
+      }},
+      { text: 'Done', onPress: () => router.back() },
     ]);
-  }, [mountainId, createdAt, report, conditions, photoUri, route, summitTime, timeToSummit, roundTrip, updateSummit, router]);
+  }, [mountainId, createdAt, summitRecord, report, conditions, photoUri, route, summitTime, timeToSummit, roundTrip, updateSummit, router]);
 
   return (
     <View style={styles.container}>

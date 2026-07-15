@@ -268,31 +268,19 @@ export default function ProfileScreen() {
     }
   }, [summitCount, totalElevation, totalElevationFt, countriesVisited, rangesClimbed, highestSummit, categoryProgress, overallCompletion]);
 
-  const handleShareSummit = useCallback(async (mountainId: string) => {
+  const handleShareSummit = useCallback((mountainId: string) => {
     if (Platform.OS !== 'web') {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
 
-    const mountain = allMountains.find((m) => m.id === mountainId);
     const record = records.find((r) => r.mountainId === mountainId);
-    if (!mountain || !record) return;
+    if (!record) return;
 
-    const message = [
-      `Summit Achievement!`,
-      ``,
-      `${mountain.iconEmoji} I summited ${mountain.name}!`,
-      `${mountain.country} · ${mountain.range}`,
-      `${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
-      `${record.date}`,
-      record.report ? `\n"${record.report}"` : '',
-    ].filter(Boolean).join('\n');
-
-    try {
-      await Share.share({ message });
-    } catch (e) {
-      console.log('Share cancelled or failed', e);
-    }
-  }, [records, allMountains]);
+    router.push({
+      pathname: '/share-card' as any,
+      params: { mountainId, createdAt: record.createdAt },
+    });
+  }, [records, router]);
 
   return (
     <View style={styles.container}>
