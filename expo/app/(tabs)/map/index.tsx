@@ -17,6 +17,7 @@ import { MAPBOX_TOKEN } from '@/constants/mapConfig';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
+import { getMountainIconUrl } from '@/constants/mountainIcons';
 import RNMapView, {
   Marker as RNMarker,
   Region,
@@ -141,6 +142,51 @@ function UnclimbedMarker({ size = 15 }: { size?: number }) {
     <Svg width={size} height={size} viewBox="0 0 15 15">
       <Circle cx={7.5} cy={7.5} r={6} fill={UNCLIMBED_FILL} stroke={UNCLIMBED_RING} strokeWidth={2} />
     </Svg>
+  );
+}
+
+function PeakIconMarker({
+  peak,
+  showName,
+  onPressNavigate,
+}: {
+  peak: MarkerPeak;
+  showName: boolean;
+  onPressNavigate: (id: string) => void;
+}) {
+  const [tracking, setTracking] = useState(true);
+  const iconUrl = getMountainIconUrl(peak.id);
+
+  return (
+    <RNMarker
+      key={peak.id}
+      coordinate={{
+        latitude: peak.latitude,
+        longitude: peak.longitude,
+      }}
+      title={peak.name}
+      description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
+      tracksViewChanges={tracking}
+      anchor={{ x: 0.5, y: 1 }}
+      onCalloutPress={() => onPressNavigate(peak.id)}
+    >
+      <View style={styles.peakIconContainer}>
+        <Image
+          source={{ uri: iconUrl }}
+          style={styles.peakIconImage}
+          resizeMode="contain"
+          onLoad={() => setTracking(false)}
+        />
+        <View style={styles.peakSealOverlay} pointerEvents="none">
+          <SummitedMarker size={18} />
+        </View>
+        {showName && (
+          <View style={styles.peakNameLabel}>
+            <Text style={styles.peakNameText} numberOfLines={1}>{peak.name}</Text>
+          </View>
+        )}
+      </View>
+    </RNMarker>
   );
 }
 
@@ -290,6 +336,17 @@ export default function MapScreen() {
               const peak = cluster.peaks[0];
               if (!peak) return null;
 
+              if (peak.summited) {
+                return (
+                  <PeakIconMarker
+                    key={peak.id}
+                    peak={peak}
+                    showName={region.latitudeDelta <= 3}
+                    onPressNavigate={navigateToMountain}
+                  />
+                );
+              }
+
               return (
                 <RNMarker
                   key={peak.id}
@@ -303,11 +360,7 @@ export default function MapScreen() {
                   anchor={{ x: 0.5, y: 0.5 }}
                   onCalloutPress={() => navigateToMountain(peak.id)}
                 >
-                  {peak.summited ? (
-                    <SummitedMarker />
-                  ) : (
-                    <UnclimbedMarker />
-                  )}
+                  <UnclimbedMarker />
                 </RNMarker>
               );
             })}
@@ -425,6 +478,32 @@ const styles = StyleSheet.create({
     color: Colors.white,
     fontSize: 16,
     fontWeight: '700' as const,
+  },
+  peakIconContainer: {
+    alignItems: 'center',
+  },
+  peakIconImage: {
+    width: 44,
+    height: 44,
+  },
+  peakSealOverlay: {
+    position: 'absolute',
+    top: -2,
+    right: -6,
+  },
+  peakNameLabel: {
+    marginTop: 2,
+    backgroundColor: 'rgba(243, 236, 216, 0.85)',
+    borderWidth: 1,
+    borderColor: VOYAGER_FRAME_INNER,
+    borderRadius: 4,
+    paddingHorizontal: 5,
+    overflow: 'hidden' as const,
+  },
+  peakNameText: {
+    fontSize: 10,
+    fontWeight: '700' as const,
+    color: VOYAGER_BRASS_DARK,
   },
   mapLegend: {
     position: 'absolute',
