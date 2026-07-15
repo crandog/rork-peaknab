@@ -124,18 +124,14 @@ function CompassRose() {
   );
 }
 
-function SummitedMarker({ size = 26 }: { size?: number }) {
+function SummitedMarker({ size = 28 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 26 26">
-      <Circle cx={13} cy={13} r={11} fill={SUMMITED_FILL} stroke={SUMMITED_BORDER} strokeWidth={2} />
-      <Path
-        d="M7.5 13.5 L11.5 17.5 L18.5 9.5"
-        stroke={CHECKMARK_WHITE}
-        strokeWidth={2.5}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
+      <Circle cx={13} cy={13} r={10} fill="#C0392B" />
+      <Circle cx={19.5} cy={7.5} r={3.2} fill="#C0392B" />
+      <Circle cx={9} cy={20} r={2.6} fill="#C0392B" />
+      <Circle cx={13} cy={13} r={7} fill="none" stroke="#8E2A1F" strokeWidth={1.2} />
+      <Path d="M8.5 13.5 L11.5 16.5 L17.5 9.5" stroke="#ffffff" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </Svg>
   );
 }
@@ -414,11 +410,11 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: VOYAGER_BRASS,
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 3,
-    borderColor: VOYAGER_BRASS_LIGHT,
+    borderColor: '#E4EEF8',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.35,
@@ -426,7 +422,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   clusterCount: {
-    color: VOYAGER_BRASS_DARK,
+    color: Colors.white,
     fontSize: 16,
     fontWeight: '700' as const,
   },
