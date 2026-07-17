@@ -188,7 +188,7 @@ export default function SummitReportScreen() {
             value={timeToSummit}
             onChangeText={setTimeToSummit}
           />
-          <Text style={styles.fieldLabel}>Round trip</Text>
+          <Text style={styles.fieldLabel}>Summit day length</Text>
           <TextInput
             style={styles.conditionsInput}
             placeholder="12h"

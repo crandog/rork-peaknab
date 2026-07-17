@@ -283,7 +283,7 @@ function ExpeditionCard({ mountain, record, enabled, width, height }: CardProps)
     rows.push({ label: 'TIME TO SUMMIT', value: record.timeToSummit });
   }
   if (enabled.roundTrip && record?.roundTrip) {
-    rows.push({ label: 'ROUND TRIP', value: record.roundTrip });
+    rows.push({ label: 'SUMMIT DAY LENGTH', value: record.roundTrip });
   }
   if (enabled.conditions && record?.conditions) {
     rows.push({ label: 'CONDITIONS', value: record.conditions });
@@ -420,7 +420,7 @@ function StoryCard({ mountain, record, enabled, showQR, width, height }: CardPro
     gridFields.push({ label: 'TIME', value: record.timeToSummit });
   }
   if (enabled.roundTrip && record?.roundTrip) {
-    gridFields.push({ label: 'ROUND TRIP', value: record.roundTrip });
+    gridFields.push({ label: 'SUMMIT DAY LENGTH', value: record.roundTrip });
   }
   if (enabled.conditions && record?.conditions) {
     gridFields.push({ label: 'CONDITIONS', value: record.conditions });
@@ -572,7 +572,7 @@ export default function ShareCardScreen() {
     if (record?.summitTime) fields.push({ key: 'summitTime', label: 'Summit time' });
     if (record?.route) fields.push({ key: 'route', label: 'Route' });
     if (record?.timeToSummit) fields.push({ key: 'timeToSummit', label: 'Time to summit' });
-    if (record?.roundTrip) fields.push({ key: 'roundTrip', label: 'Round trip' });
+    if (record?.roundTrip) fields.push({ key: 'roundTrip', label: 'Summit day length' });
     if (record?.conditions) fields.push({ key: 'conditions', label: 'Conditions' });
     if (mountain && getAccolade(mountain)) fields.push({ key: 'accolade', label: 'Accolade' });
     if (mountain) fields.push({ key: 'o2', label: 'O2' });
