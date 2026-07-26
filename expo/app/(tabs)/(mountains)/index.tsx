@@ -13,6 +13,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown, Mountain, Trophy } from 'lucide-react-native';
+import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
 import { MountainCategory } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';

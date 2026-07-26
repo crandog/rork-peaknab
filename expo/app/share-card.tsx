@@ -20,6 +20,7 @@ import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
 import qrcode from 'qrcode-generator';
+import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
 import { useSummits, type SummitRecord } from '@/contexts/SummitContext';
 import { useFindMountain } from '@/hooks/useAllMountains';
@@ -701,16 +702,18 @@ export default function ShareCardScreen() {
           <Text style={styles.toggleSectionLabel}>Include on card</Text>
           <View style={styles.toggleChips}>
             {availableFields.map(f => (
-              <TouchableOpacity
-                key={f.key}
-                style={[styles.toggleChip, enabled[f.key] && styles.toggleChipActive]}
-                onPress={() => toggleField(f.key)}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.toggleChipText, enabled[f.key] && styles.toggleChipTextActive]}>
-                  {f.label}
-                </Text>
-              </TouchableOpacity>
+              <View key={f.key} style={styles.toggleChipWrap}>
+                <TouchableOpacity
+                  style={[styles.toggleChip, enabled[f.key] && styles.toggleChipActive]}
+                  onPress={() => toggleField(f.key)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.toggleChipText, enabled[f.key] && styles.toggleChipTextActive]}>
+                    {f.label}
+                  </Text>
+                </TouchableOpacity>
+                {f.key === 'o2' && <OxygenInfoButton />}
+              </View>
             ))}
             <TouchableOpacity
               style={[styles.toggleChip, showQR && styles.toggleChipActive]}
@@ -807,6 +810,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
+  },
+  toggleChipWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   toggleChip: {
     paddingHorizontal: 14,

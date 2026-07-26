@@ -41,6 +41,7 @@ import { useSummits, SummitRecord } from '@/contexts/SummitContext';
 import { useCustomMountains } from '@/contexts/CustomMountainsContext';
 import { useFindMountain } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
+import OxygenInfoButton from '@/components/OxygenInfoButton';
 
 const HERO_HEIGHT = 320;
 
@@ -482,7 +483,10 @@ export default function MountainDetailScreen() {
                 <View style={[styles.infoRow, { borderBottomWidth: 0 }]}>
                   <View style={styles.infoIcon}><TrendingUp color={Colors.primary} size={18} /></View>
                   <View style={styles.infoDetail}>
-                    <Text style={styles.infoLabel}>O₂ at Summit</Text>
+                    <View style={styles.infoLabelRow}>
+                      <Text style={styles.infoLabel}>O₂ at Summit</Text>
+                      <OxygenInfoButton />
+                    </View>
                     <Text style={styles.infoValue}>~{effectiveO2}% effective O₂ ({o2Percentage}% of sea level)</Text>
                   </View>
                 </View>
@@ -1067,6 +1071,11 @@ const styles = StyleSheet.create({
   reportCardActions2: {
     flexDirection: 'row',
     gap: 8,
+  },
+  infoLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   reportEditText: {
     fontSize: 12,
