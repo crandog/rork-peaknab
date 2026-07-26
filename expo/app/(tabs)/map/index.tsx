@@ -13,7 +13,7 @@ import { MapPin } from 'lucide-react-native';
 import Svg, { Circle, Path, Polygon, Text as SvgText } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
-import { MAPBOX_TOKEN } from '@/constants/mapConfig';
+
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
@@ -37,7 +37,7 @@ type Cluster = {
   summited: boolean;
 };
 
-const MAPBOX_STYLE_URL = `https://api.mapbox.com/styles/v1/ccstoudemire/cmrfl3x3p006201s4e8m50d2y/tiles/256/{z}/{x}/{y}@2x?access_token=${MAPBOX_TOKEN}`;
+const ATLAS_STYLE_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}';
 
 const VOYAGER_BRASS = '#c8a24a';
 const VOYAGER_BRASS_LIGHT = '#f3ecd8';
@@ -48,8 +48,8 @@ const VOYAGER_OVERLAY = 'rgba(210, 225, 230, 0.06)';
 const SUMMITED_FILL = '#d4941f';
 const SUMMITED_BORDER = '#3a2e12';
 const CHECKMARK_WHITE = '#ffffff';
-const UNCLIMBED_FILL = '#faf6ec';
-const UNCLIMBED_RING = '#5a4326';
+const UNCLIMBED_FILL = '#6ba3c4';
+const UNCLIMBED_RING = '#f3e8cf';
 
 const PARCHMENT_TEXTURE = require('../../../assets/images/parchment-texture.png');
 
@@ -309,8 +309,8 @@ export default function MapScreen() {
             onMapReady={() => setMapReady(true)}
           >
             <UrlTile
-              urlTemplate={MAPBOX_STYLE_URL}
-              maximumZ={19}
+              urlTemplate={ATLAS_STYLE_URL}
+              maximumZ={16}
               flipY={false}
               tileSize={256}
             />
@@ -410,6 +410,10 @@ export default function MapScreen() {
           <UnclimbedMarker size={12} />
           <Text style={styles.legendText}>Unclimbed</Text>
         </View>
+      </View>
+
+      <View style={styles.attributionContainer} pointerEvents="none">
+        <Text style={styles.attributionText}>Tiles © Esri — National Geographic</Text>
       </View>
     </View>
   );
@@ -526,6 +530,21 @@ const styles = StyleSheet.create({
   },
   legendText: {
     color: VOYAGER_BRASS_DARK,
+    fontSize: 9,
+    fontWeight: '500' as const,
+  },
+  attributionContainer: {
+    position: 'absolute' as const,
+    bottom: 16,
+    right: 16,
+    backgroundColor: 'rgba(243, 232, 207, 0.72)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 6,
+    zIndex: 20,
+  },
+  attributionText: {
+    color: 'rgba(58, 46, 18, 0.72)',
     fontSize: 9,
     fontWeight: '500' as const,
   },
