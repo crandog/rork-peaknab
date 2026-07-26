@@ -10,6 +10,7 @@ import {
 import { Stack } from 'expo-router';
 import { Wind } from 'lucide-react-native';
 import Colors from '@/constants/colors';
+import OxygenInfoButton from '@/components/OxygenInfoButton';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const HERO_HEIGHT = 280;
@@ -71,7 +72,10 @@ export default function O2EquivalentScreen() {
             <View style={styles.heroIconWrap}>
               <Wind color="#FFFFFF" size={30} />
             </View>
-            <Text style={styles.heroTitle}>Oxygen at Altitude</Text>
+            <View style={styles.heroTitleRow}>
+              <Text style={styles.heroTitle}>Oxygen at Altitude</Text>
+              <OxygenInfoButton color="#FFFFFF" size={16} />
+            </View>
             <Text style={styles.heroSubtitle}>
               How thin air affects your body as you climb higher
             </Text>
@@ -213,6 +217,11 @@ const styles = StyleSheet.create({
     fontWeight: '800' as const,
     color: '#FFFFFF',
     letterSpacing: -0.5,
+  },
+  heroTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     marginBottom: 4,
   },
   heroSubtitle: {
