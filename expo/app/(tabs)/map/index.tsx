@@ -137,10 +137,20 @@ function SummitedMarker({ size = 28 }: { size?: number }) {
   );
 }
 
-function UnclimbedMarker({ size = 15 }: { size?: number }) {
+function UnclimbedMarker({ size = 30 }: { size?: number }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 15 15">
-      <Circle cx={7.5} cy={7.5} r={6} fill={UNCLIMBED_FILL} stroke={UNCLIMBED_RING} strokeWidth={2} />
+    <Svg width={size} height={size} viewBox="0 0 30 30">
+      <Path
+        d="M15 3 L27 26 L3 26 Z"
+        fill={UNCLIMBED_FILL}
+        stroke={UNCLIMBED_RING}
+        strokeWidth={2}
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M15 3 L20.5 14.5 L15 11.5 L9.5 14.5 Z"
+        fill="#ffffff"
+      />
     </Svg>
   );
 }
@@ -304,6 +314,10 @@ export default function MapScreen() {
             mapType="none"
             showsCompass={false}
             showsScale={false}
+            showsPointsOfInterest={false}
+            showsBuildings={false}
+            showsTraffic={false}
+            showsIndoors={false}
             rotateEnabled={false}
             pitchEnabled={false}
             onMapReady={() => setMapReady(true)}
@@ -360,7 +374,14 @@ export default function MapScreen() {
                   anchor={{ x: 0.5, y: 0.5 }}
                   onCalloutPress={() => navigateToMountain(peak.id)}
                 >
-                  <UnclimbedMarker />
+                  <View style={styles.unclimbedMarkerContainer}>
+                    <UnclimbedMarker />
+                    {region.latitudeDelta <= 3 && (
+                      <View style={styles.peakNameLabel}>
+                        <Text style={styles.peakNameText} numberOfLines={1}>{peak.name}</Text>
+                      </View>
+                    )}
+                  </View>
                 </RNMarker>
               );
             })}
@@ -494,6 +515,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -2,
     right: -6,
+  },
+  unclimbedMarkerContainer: {
+    alignItems: 'center',
   },
   peakNameLabel: {
     marginTop: 2,
