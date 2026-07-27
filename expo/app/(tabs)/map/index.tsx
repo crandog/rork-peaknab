@@ -327,6 +327,7 @@ export default function MapScreen() {
               maximumZ={16}
               flipY={false}
               tileSize={256}
+              shouldReplaceMapContent={true}
             />
             {clusters.map((cluster) => {
               if (cluster.count > 1) {
