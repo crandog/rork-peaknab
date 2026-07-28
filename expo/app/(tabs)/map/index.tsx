@@ -125,15 +125,11 @@ function CompassRose() {
   );
 }
 
-function SummitedMarker({ size = 28 }: { size?: number }) {
+function SummitedStamp() {
   return (
-    <Svg width={size} height={size} viewBox="0 0 26 26">
-      <Circle cx={13} cy={13} r={10} fill="#C0392B" />
-      <Circle cx={19.5} cy={7.5} r={3.2} fill="#C0392B" />
-      <Circle cx={9} cy={20} r={2.6} fill="#C0392B" />
-      <Circle cx={13} cy={13} r={7} fill="none" stroke="#8E2A1F" strokeWidth={1.2} />
-      <Path d="M8.5 13.5 L11.5 16.5 L17.5 9.5" stroke="#ffffff" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round" fill="none" />
-    </Svg>
+    <View style={styles.summitStamp}>
+      <Text style={styles.summitStampText}>SUMMITED</Text>
+    </View>
   );
 }
 
@@ -189,7 +185,7 @@ function PeakIconMarker({
           onLoad={() => setTracking(false)}
         />
         <View style={styles.peakSealOverlay} pointerEvents="none">
-          <SummitedMarker size={18} />
+          <SummitedStamp />
         </View>
         {showLabel && (
           <View style={[styles.peakNameLabel, isSelected && styles.peakNameLabelSelected]}>
@@ -451,7 +447,7 @@ export default function MapScreen() {
 
       <View style={styles.mapLegend} pointerEvents="box-none">
         <View style={styles.legendItem}>
-          <SummitedMarker size={14} />
+          <SummitedStamp />
           <Text style={styles.legendText}>Summited</Text>
         </View>
         <View style={styles.legendItem}>
@@ -538,10 +534,25 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
   },
+  summitStamp: {
+    borderWidth: 1.5,
+    borderColor: '#C0392B',
+    borderRadius: 3,
+    backgroundColor: 'rgba(192, 57, 43, 0.08)',
+    paddingHorizontal: 4,
+    paddingVertical: 1.5,
+    transform: [{ rotate: '-4deg' }],
+  },
+  summitStampText: {
+    fontSize: 7,
+    fontWeight: '900' as const,
+    color: '#C0392B',
+    letterSpacing: 1,
+  },
   peakSealOverlay: {
     position: 'absolute',
-    top: -2,
-    right: -6,
+    top: 0,
+    right: -8,
   },
   unclimbedMarkerContainer: {
     alignItems: 'center',
