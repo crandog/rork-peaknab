@@ -128,7 +128,7 @@ function CompassRose() {
 function SummitedStamp() {
   return (
     <View style={styles.summitStamp}>
-      <Text style={styles.summitStampText}>SUMMIT</Text>
+      <Text style={styles.summitStampText} numberOfLines={1}>SUMMIT</Text>
     </View>
   );
 }
@@ -542,6 +542,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 2,
     transform: [{ rotate: '-5deg' }],
+    flexShrink: 0,
+    alignSelf: 'flex-start',
   },
   summitStampText: {
     fontSize: 8,
@@ -554,6 +556,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: -8,
+    width: 'auto' as const,
   },
   unclimbedMarkerContainer: {
     alignItems: 'center',
