@@ -13,6 +13,7 @@ import { MapPin } from 'lucide-react-native';
 import Svg, { Circle, Path, Polygon, Text as SvgText } from 'react-native-svg';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '@/constants/colors';
+import { Image as ExpoImage } from 'expo-image';
 
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
@@ -125,9 +126,9 @@ function CompassRose() {
   );
 }
 
-function SummitedStamp() {
+function SummitedStamp({ scale = 1 }: { scale?: number }) {
   return (
-    <View style={styles.summitStamp}>
+    <View style={[styles.summitStamp, { transform: [{ rotate: '-8deg' }, { scale }] }]}>
       <Text style={styles.summitStampText} numberOfLines={1}>SUMMIT</Text>
     </View>
   );
@@ -156,15 +157,23 @@ function PeakIconMarker({
   showName,
   isSelected,
   onPress,
+  stampScale,
 }: {
   peak: MarkerPeak;
   showName: boolean;
   isSelected: boolean;
   onPress: () => void;
+  stampScale: number;
 }) {
   const [tracking, setTracking] = useState(true);
   const iconUrl = getMountainIconUrl(peak.id);
   const showLabel = showName || isSelected;
+
+  useEffect(() => {
+    setTracking(true);
+    const t = setTimeout(() => setTracking(false), 200);
+    return () => clearTimeout(t);
+  }, [stampScale]);
 
   return (
     <RNMarker
@@ -178,14 +187,15 @@ function PeakIconMarker({
       onPress={onPress}
     >
       <View style={styles.peakIconContainer}>
-        <Image
+        <ExpoImage
           source={{ uri: iconUrl }}
           style={styles.peakIconImage}
-          resizeMode="contain"
+          contentFit="contain"
+          cachePolicy="memory-disk"
           onLoad={() => setTracking(false)}
         />
         <View style={styles.peakSealOverlay} pointerEvents="none">
-          <SummitedStamp />
+          <SummitedStamp scale={stampScale} />
         </View>
         {showLabel && (
           <View style={[styles.peakNameLabel, isSelected && styles.peakNameLabelSelected]}>
@@ -255,6 +265,12 @@ export default function MapScreen() {
     return buildClusters(unclimbedMarkers, region);
   }, [unclimbedMarkers, region]);
 
+  const stampScale = useMemo(() => {
+    if (region.latitudeDelta > 40) return 0.55;
+    if (region.latitudeDelta > 15) return 0.75;
+    return 1.0;
+  }, [region.latitudeDelta]);
+
   const fitToPeaks = useCallback(() => {
     if (!mapRef.current) return;
     const target = summitedMountains.length > 0 ? summitedMountains : allMountains;
@@ -273,6 +289,16 @@ export default function MapScreen() {
     const timer = setTimeout(() => fitToPeaks(), 400);
     return () => clearTimeout(timer);
   }, [mapReady, fitToPeaks]);
+
+  useEffect(() => {
+    const urls = allMountains
+      .filter((m) => !(m.latitude === 0 && m.longitude === 0))
+      .map((m) => getMountainIconUrl(m.id))
+      .filter(Boolean);
+    if (urls.length > 0) {
+      ExpoImage.prefetch(urls).catch(() => {});
+    }
+  }, [allMountains]);
 
   const handleClusterPress = useCallback((cluster: Cluster) => {
     if (!mapRef.current || cluster.count === 1) return;
@@ -406,6 +432,7 @@ export default function MapScreen() {
                 showName={region.latitudeDelta <= 3}
                 isSelected={selectedPeakId === peak.id}
                 onPress={() => handlePeakTap(peak.id)}
+                stampScale={stampScale}
               />
             ))}
           </RNMapView>
@@ -535,29 +562,28 @@ const styles = StyleSheet.create({
     height: 44,
   },
   summitStamp: {
-    width: 58,
-    height: 16,
+    width: 42,
+    height: 12,
     borderWidth: 1,
     borderColor: '#C0392B',
     borderRadius: 1,
     backgroundColor: 'transparent',
-    paddingHorizontal: 5,
-    paddingVertical: 2,
+    paddingHorizontal: 3,
+    paddingVertical: 0,
     alignItems: 'center',
     justifyContent: 'center',
-    transform: [{ rotate: '-5deg' }],
   },
   summitStampText: {
-    fontSize: 8,
+    fontSize: 6,
     fontWeight: '800' as const,
     color: '#C0392B',
-    letterSpacing: 1.5,
+    letterSpacing: 1,
     textTransform: 'uppercase' as const,
   },
   peakSealOverlay: {
     position: 'absolute',
-    left: -7,
-    top: 14,
+    top: -2,
+    right: -6,
   },
   unclimbedMarkerContainer: {
     alignItems: 'center',
