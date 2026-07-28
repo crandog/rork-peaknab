@@ -128,7 +128,7 @@ function CompassRose() {
 function SummitedStamp() {
   return (
     <View style={styles.summitStamp}>
-      <Text style={styles.summitStampText}>SUMMITED</Text>
+      <Text style={styles.summitStampText}>SUMMIT</Text>
     </View>
   );
 }
@@ -535,19 +535,19 @@ const styles = StyleSheet.create({
     height: 44,
   },
   summitStamp: {
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: '#C0392B',
-    borderRadius: 3,
-    backgroundColor: 'rgba(192, 57, 43, 0.08)',
-    paddingHorizontal: 4,
-    paddingVertical: 1.5,
+    borderRadius: 2,
+    backgroundColor: 'transparent',
+    paddingHorizontal: 3,
+    paddingVertical: 1,
     transform: [{ rotate: '-4deg' }],
   },
   summitStampText: {
-    fontSize: 7,
-    fontWeight: '900' as const,
+    fontSize: 6,
+    fontWeight: '700' as const,
     color: '#C0392B',
-    letterSpacing: 1,
+    letterSpacing: 0.8,
   },
   peakSealOverlay: {
     position: 'absolute',
