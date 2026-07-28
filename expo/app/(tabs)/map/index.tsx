@@ -158,14 +158,17 @@ function UnclimbedMarker({ size = 30 }: { size?: number }) {
 function PeakIconMarker({
   peak,
   showName,
-  onPressNavigate,
+  isSelected,
+  onPress,
 }: {
   peak: MarkerPeak;
   showName: boolean;
-  onPressNavigate: (id: string) => void;
+  isSelected: boolean;
+  onPress: () => void;
 }) {
   const [tracking, setTracking] = useState(true);
   const iconUrl = getMountainIconUrl(peak.id);
+  const showLabel = showName || isSelected;
 
   return (
     <RNMarker
@@ -174,11 +177,9 @@ function PeakIconMarker({
         latitude: peak.latitude,
         longitude: peak.longitude,
       }}
-      title={peak.name}
-      description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
-      tracksViewChanges={tracking}
+      tracksViewChanges={tracking || isSelected}
       anchor={{ x: 0.5, y: 1 }}
-      onCalloutPress={() => onPressNavigate(peak.id)}
+      onPress={onPress}
     >
       <View style={styles.peakIconContainer}>
         <Image
@@ -190,8 +191,8 @@ function PeakIconMarker({
         <View style={styles.peakSealOverlay} pointerEvents="none">
           <SummitedMarker size={18} />
         </View>
-        {showName && (
-          <View style={styles.peakNameLabel}>
+        {showLabel && (
+          <View style={[styles.peakNameLabel, isSelected && styles.peakNameLabelSelected]}>
             <Text style={styles.peakNameText} numberOfLines={1}>{peak.name}</Text>
           </View>
         )}
@@ -217,6 +218,22 @@ export default function MapScreen() {
   const navigateToMountain = useCallback((id: string) => {
     router.push(`/mountain/${id}`);
   }, [router]);
+
+  const [selectedPeakId, setSelectedPeakId] = useState<string | null>(null);
+
+  const handlePeakTap = useCallback((id: string) => {
+    if (selectedPeakId === id) {
+      setSelectedPeakId(null);
+      navigateToMountain(id);
+    } else {
+      setSelectedPeakId(id);
+    }
+  }, [selectedPeakId, navigateToMountain]);
+
+  const handleRegionChange = useCallback((r: Region) => {
+    setRegion(r);
+    setSelectedPeakId(null);
+  }, []);
 
   const summitedMountains = useMemo(() => {
     return allMountains.filter((m) => isSummited(m.id));
@@ -320,7 +337,7 @@ export default function MapScreen() {
             ref={mapRef}
             style={styles.map}
             initialRegion={region}
-            onRegionChangeComplete={setRegion}
+            onRegionChangeComplete={handleRegionChange}
             mapType="none"
             showsCompass={false}
             showsScale={false}
@@ -361,6 +378,9 @@ export default function MapScreen() {
               const peak = cluster.peaks[0];
               if (!peak) return null;
 
+              const isSelected = selectedPeakId === peak.id;
+              const showLabel = region.latitudeDelta <= 3 || isSelected;
+
               return (
                 <RNMarker
                   key={peak.id}
@@ -368,16 +388,14 @@ export default function MapScreen() {
                     latitude: peak.latitude,
                     longitude: peak.longitude,
                   }}
-                  title={peak.name}
-                  description={`${peak.elevation.toLocaleString()}m - ${peak.country}`}
-                  tracksViewChanges={false}
+                  tracksViewChanges={isSelected}
                   anchor={{ x: 0.5, y: 0.5 }}
-                  onCalloutPress={() => navigateToMountain(peak.id)}
+                  onPress={() => handlePeakTap(peak.id)}
                 >
                   <View style={styles.unclimbedMarkerContainer}>
                     <UnclimbedMarker />
-                    {region.latitudeDelta <= 3 && (
-                      <View style={styles.peakNameLabel}>
+                    {showLabel && (
+                      <View style={[styles.peakNameLabel, isSelected && styles.peakNameLabelSelected]}>
                         <Text style={styles.peakNameText} numberOfLines={1}>{peak.name}</Text>
                       </View>
                     )}
@@ -390,7 +408,8 @@ export default function MapScreen() {
                 key={peak.id}
                 peak={peak}
                 showName={region.latitudeDelta <= 3}
-                onPressNavigate={navigateToMountain}
+                isSelected={selectedPeakId === peak.id}
+                onPress={() => handlePeakTap(peak.id)}
               />
             ))}
           </RNMapView>
@@ -535,6 +554,12 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingHorizontal: 5,
     overflow: 'hidden' as const,
+  },
+  peakNameLabelSelected: {
+    backgroundColor: 'rgba(243, 236, 216, 0.97)',
+    borderColor: VOYAGER_BRASS,
+    borderWidth: 1.5,
+    paddingHorizontal: 6,
   },
   peakNameText: {
     fontSize: 10,
