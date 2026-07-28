@@ -174,7 +174,7 @@ function PeakIconMarker({
         longitude: peak.longitude,
       }}
       tracksViewChanges={tracking || isSelected}
-      anchor={{ x: 0.5, y: 1 }}
+      anchor={{ x: 0.5, y: 0.5 }}
       onPress={onPress}
     >
       <View style={styles.peakIconContainer}>
@@ -535,15 +535,17 @@ const styles = StyleSheet.create({
     height: 44,
   },
   summitStamp: {
+    width: 58,
+    height: 16,
     borderWidth: 1,
     borderColor: '#C0392B',
     borderRadius: 1,
     backgroundColor: 'transparent',
     paddingHorizontal: 5,
     paddingVertical: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
     transform: [{ rotate: '-5deg' }],
-    flexShrink: 0,
-    alignSelf: 'flex-start',
   },
   summitStampText: {
     fontSize: 8,
@@ -554,9 +556,8 @@ const styles = StyleSheet.create({
   },
   peakSealOverlay: {
     position: 'absolute',
-    top: 0,
-    right: -8,
-    width: 'auto' as const,
+    left: -7,
+    top: 14,
   },
   unclimbedMarkerContainer: {
     alignItems: 'center',
