@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
 import { Mountain } from '@/constants/mountains';
-import { debouncedCloudPush } from '@/lib/cloudSync';
+import { debouncedCloudPush, enqueueTombstone, setPendingSyncFlag, Tombstone } from '@/lib/cloudSync';
 
 const STORAGE_KEY = 'custom_mountains';
 
@@ -32,7 +32,7 @@ export const [CustomMountainsProvider, useCustomMountains] = createContextHook((
     },
     onSuccess: (data) => {
       queryClient.setQueryData(['custom_mountains'], data);
-      void debouncedCloudPush();
+      void debouncedCloudPush(queryClient);
     },
   });
 
@@ -49,6 +49,12 @@ export const [CustomMountainsProvider, useCustomMountains] = createContextHook((
     setCustomMountains((prev) => {
       const updated = prev.filter((m) => m.id !== id);
       saveMutation.mutate(updated);
+      void enqueueTombstone({
+        kind: 'mountain' as const,
+        mountainId: id,
+        createdAt: '',
+        deletedAt: new Date().toISOString(),
+      } satisfies Tombstone).then(() => setPendingSyncFlag());
       console.log('[CustomMountains] Removed mountain:', id);
       return updated;
     });

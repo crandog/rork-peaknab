@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
 import { mountains, Mountain } from '@/constants/mountains';
-import { debouncedCloudPush } from '@/lib/cloudSync';
+import { debouncedCloudPush, enqueueTombstone, setPendingSyncFlag, Tombstone } from '@/lib/cloudSync';
 import { useCustomMountains } from '@/contexts/CustomMountainsContext';
 
 export interface SummitRecord {
@@ -47,7 +47,7 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
     },
     onSuccess: (data) => {
       queryClient.setQueryData(['summits'], data);
-      void debouncedCloudPush();
+      void debouncedCloudPush(queryClient);
     },
   });
 
@@ -61,8 +61,21 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
 
   const removeSummit = useCallback((mountainId: string) => {
     setRecords((prev) => {
+      const removed = prev.filter((r) => r.mountainId === mountainId);
       const updated = prev.filter((r) => r.mountainId !== mountainId);
       saveMutation.mutate(updated);
+      // Enqueue a tombstone for every removed record so cross-device reconcile
+      // propagates the deletion. Also set the pending-sync flag.
+      void Promise.all(
+        removed.map((r) =>
+          enqueueTombstone({
+            kind: 'summit' as const,
+            mountainId,
+            createdAt: r.createdAt,
+            deletedAt: new Date().toISOString(),
+          } satisfies Tombstone),
+        ),
+      ).then(() => setPendingSyncFlag());
       return updated;
     });
   }, [saveMutation]);
@@ -74,6 +87,12 @@ export const [SummitProvider, useSummits] = createContextHook(() => {
       const updated = [...prev];
       updated.splice(idx, 1);
       saveMutation.mutate(updated);
+      void enqueueTombstone({
+        kind: 'summit' as const,
+        mountainId,
+        createdAt,
+        deletedAt: new Date().toISOString(),
+      } satisfies Tombstone).then(() => setPendingSyncFlag());
       return updated;
     });
   }, [saveMutation]);

@@ -1,10 +1,16 @@
-import { useState, useEffect, useCallback, useMemo } from 'react';
-import { Alert, Platform } from 'react-native';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { Alert, Platform, AppState, type AppStateStatus } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import createContextHook from '@nkzw/create-context-hook';
 import { supabase, supabaseConfigured } from '@/lib/supabase';
-import { getLastPushedUpdatedAt, clearLastPushedUpdatedAt } from '@/lib/cloudSync';
+import {
+  reconcile,
+  flushPendingWrites,
+  applyRealtimeUpdate,
+  clearLastPushedUpdatedAt,
+  hasPendingWrites,
+} from '@/lib/cloudSync';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as AuthSession from 'expo-auth-session';
 import * as QueryParams from 'expo-auth-session/build/QueryParams';
@@ -17,6 +23,7 @@ import type { Mountain } from '@/constants/mountains';
 const SUMMIT_STORAGE_KEY = 'summit_records';
 const CUSTOM_MOUNTAINS_KEY = 'custom_mountains';
 const DEMO_SESSION_KEY = 'demo_session';
+const SESSION_BACKUP_KEY = 'peaknab_session_backup';
 
 const DEMO_EMAIL = 'appreview@peaknab.com';
 const DEMO_PASSWORD = 'ReviewPeakNab2026!';
@@ -61,6 +68,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
   const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [syncStatus, setSyncStatus] = useState<SyncStatus>('idle');
+  const reconcilingRef = useRef(false);
 
   useEffect(() => {
     const checkDemoSession = async () => {
@@ -95,12 +103,34 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         setUser(s?.user ?? null);
         setIsLoading(false);
         console.log('[Auth] Initial session:', s ? 'logged in' : 'anonymous');
+
+        // Persist session for offline use. AsyncStorage already stores it via
+        // the supabase-js storage adapter, but we keep an explicit backup so
+        // we can detect "was logged in but session expired" separately.
+        if (s) {
+          void AsyncStorage.setItem(SESSION_BACKUP_KEY, JSON.stringify(s)).then(() => {
+            // If there are pending writes from a previous offline session, flush now.
+            void hasPendingWrites().then((pending) => {
+              if (pending) {
+                console.log('[Auth] Pending writes detected on cold start, flushing');
+                void flushPendingWrites(s.user.id, queryClient).catch((e) =>
+                  console.log('[Auth] Cold-start flush failed:', e),
+                );
+              }
+            });
+          });
+        }
       });
 
       const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
         console.log('[Auth] State changed:', _event);
         setSession(s);
         setUser(s?.user ?? null);
+        if (s) {
+          void AsyncStorage.setItem(SESSION_BACKUP_KEY, JSON.stringify(s));
+        } else {
+          void AsyncStorage.removeItem(SESSION_BACKUP_KEY);
+        }
       });
 
       return () => subscription.unsubscribe();
@@ -130,34 +160,18 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
             const newRow = payload.new;
             console.log('[Auth] Realtime user_data update, updated_at:', newRow.updated_at);
 
-            // Echo guard: skip our own push coming back through Realtime.
-            const lastPush = getLastPushedUpdatedAt();
-            if (lastPush && newRow.updated_at === lastPush) {
-              console.log('[Auth] Realtime echo — skipping own push');
-              return;
-            }
-
             const cloudSummits: SummitRecord[] = newRow.summits ?? [];
             const cloudMountains: Mountain[] = newRow.custom_mountains ?? [];
 
-            // Merge with local to preserve any records not yet pushed.
-            const [summitsRaw, mountainsRaw] = await Promise.all([
-              AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
-              AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
-            ]);
-            const localSummits: SummitRecord[] = summitsRaw ? JSON.parse(summitsRaw) : [];
-            const localMountains: Mountain[] = mountainsRaw ? JSON.parse(mountainsRaw) : [];
-
-            const mergedSummits = mergeSummits(localSummits, cloudSummits);
-            const mergedMountains = mergeMountains(localMountains, cloudMountains);
-
-            await AsyncStorage.setItem(SUMMIT_STORAGE_KEY, JSON.stringify(mergedSummits));
-            await AsyncStorage.setItem(CUSTOM_MOUNTAINS_KEY, JSON.stringify(mergedMountains));
-
-            queryClient.setQueryData(['summits'], mergedSummits);
-            queryClient.setQueryData(['custom_mountains'], mergedMountains);
-
-            console.log('[Auth] Realtime merge applied. Summits:', mergedSummits.length, 'Mountains:', mergedMountains.length);
+            // Use the shared realtime merge helper (handles echo guard, tombstones,
+            // field-aware union, AsyncStorage + cache writes).
+            await applyRealtimeUpdate(
+              userId,
+              cloudSummits,
+              cloudMountains,
+              newRow.updated_at,
+              queryClient,
+            );
           } catch (error) {
             console.log('[Auth] Realtime handler error:', error);
           }
@@ -181,7 +195,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     onSuccess: async (data) => {
       console.log('[Auth] Signed up successfully');
       if (data.session) {
-        await migrateLocalDataToCloud(data.session.user.id);
+        await doReconcile(data.session.user.id);
       }
     },
     onError: (error: Error) => {
@@ -217,7 +231,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
         return;
       }
       console.log('[Auth] Signed in successfully');
-      await syncDataFromCloud(data.user.id);
+      await doReconcile(data.user.id);
     },
     onError: (error: Error) => {
       console.log('[Auth] Sign in error:', error.message);
@@ -248,155 +262,55 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     },
   });
 
-  const migrateLocalDataToCloud = useCallback(async (userId: string) => {
+  const doReconcile = useCallback(async (userId: string) => {
+    if (reconcilingRef.current) {
+      console.log('[Auth] Reconcile already in progress, skipping');
+      return;
+    }
+    reconcilingRef.current = true;
+    setSyncStatus('syncing');
     try {
-      setSyncStatus('syncing');
-      console.log('[Auth] Migrating local data to cloud for user:', userId);
-
-      const [summitsRaw, mountainsRaw] = await Promise.all([
-        AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
-        AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
-      ]);
-
-      const localSummits: SummitRecord[] = summitsRaw ? JSON.parse(summitsRaw) : [];
-      const localMountains: Mountain[] = mountainsRaw ? JSON.parse(mountainsRaw) : [];
-
-      const { data: existing } = await supabase
-        .from('user_data')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
-
-      if (existing) {
-        const cloudSummits: SummitRecord[] = existing.summits ?? [];
-        const cloudMountains: Mountain[] = existing.custom_mountains ?? [];
-
-        const mergedSummits = mergeSummits(localSummits, cloudSummits);
-        const mergedMountains = mergeMountains(localMountains, cloudMountains);
-
-        await supabase
-          .from('user_data')
-          .update({
-            summits: mergedSummits,
-            custom_mountains: mergedMountains,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('user_id', userId);
-
-        await AsyncStorage.setItem(SUMMIT_STORAGE_KEY, JSON.stringify(mergedSummits));
-        await AsyncStorage.setItem(CUSTOM_MOUNTAINS_KEY, JSON.stringify(mergedMountains));
-
-        queryClient.setQueryData(['summits'], mergedSummits);
-        queryClient.setQueryData(['custom_mountains'], mergedMountains);
-
-        console.log('[Auth] Merged and synced data. Summits:', mergedSummits.length, 'Mountains:', mergedMountains.length);
-      } else {
-        await supabase
-          .from('user_data')
-          .insert({
-            user_id: userId,
-            summits: localSummits,
-            custom_mountains: localMountains,
-            updated_at: new Date().toISOString(),
-          });
-
-        console.log('[Auth] Initial upload. Summits:', localSummits.length, 'Mountains:', localMountains.length);
-      }
-
+      const result = await reconcile(userId, queryClient);
       setSyncStatus('synced');
+      console.log('[Auth] Reconcile done. Summits:', result.summits.length, 'Tombstones:', result.tombstonesApplied);
     } catch (error) {
-      console.log('[Auth] Migration error:', error);
       setSyncStatus('error');
+      // Surface the error — no silent catch. Keep it non-blocking (console +
+      // status) so the user can retry via the profile screen.
+      console.warn('[Auth] Reconcile failed:', error);
+    } finally {
+      reconcilingRef.current = false;
     }
   }, [queryClient]);
 
-  const syncDataFromCloud = useCallback(async (userId: string) => {
-    try {
-      setSyncStatus('syncing');
-      console.log('[Auth] Syncing data from cloud for user:', userId);
+  // AppState listener: when the app returns to the foreground, flush any pending
+  // writes (from offline edits or a failed push) so cross-device sync stays current.
+  useEffect(() => {
+    if (!user || isDemoMode || !supabaseConfigured) return;
+    const userId = user.id;
 
-      const { data: cloudData } = await supabase
-        .from('user_data')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
-
-      const [summitsRaw, mountainsRaw] = await Promise.all([
-        AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
-        AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
-      ]);
-
-      const localSummits: SummitRecord[] = summitsRaw ? JSON.parse(summitsRaw) : [];
-      const localMountains: Mountain[] = mountainsRaw ? JSON.parse(mountainsRaw) : [];
-
-      if (cloudData) {
-        const cloudSummits: SummitRecord[] = cloudData.summits ?? [];
-        const cloudMountains: Mountain[] = cloudData.custom_mountains ?? [];
-
-        const mergedSummits = mergeSummits(localSummits, cloudSummits);
-        const mergedMountains = mergeMountains(localMountains, cloudMountains);
-
-        await AsyncStorage.setItem(SUMMIT_STORAGE_KEY, JSON.stringify(mergedSummits));
-        await AsyncStorage.setItem(CUSTOM_MOUNTAINS_KEY, JSON.stringify(mergedMountains));
-
-        await supabase
-          .from('user_data')
-          .update({
-            summits: mergedSummits,
-            custom_mountains: mergedMountains,
-            updated_at: new Date().toISOString(),
+    const handleAppStateChange = (nextState: AppStateStatus) => {
+      if (nextState === 'active') {
+        console.log('[Auth] App became active, flushing pending writes');
+        void flushPendingWrites(userId, queryClient)
+          .then(() => {
+            // After a flush, also reconcile to pull any changes from other devices.
+            void doReconcile(userId);
           })
-          .eq('user_id', userId);
-
-        queryClient.setQueryData(['summits'], mergedSummits);
-        queryClient.setQueryData(['custom_mountains'], mergedMountains);
-
-        console.log('[Auth] Cloud sync complete. Summits:', mergedSummits.length);
-      } else {
-        await supabase
-          .from('user_data')
-          .insert({
-            user_id: userId,
-            summits: localSummits,
-            custom_mountains: localMountains,
-            updated_at: new Date().toISOString(),
-          });
-
-        console.log('[Auth] No cloud data found, uploaded local data');
+          .catch((e) => console.log('[Auth] App-focus flush failed:', e));
       }
+    };
 
-      setSyncStatus('synced');
-    } catch (error) {
-      console.log('[Auth] Sync error:', error);
-      setSyncStatus('error');
-    }
-  }, [queryClient]);
+    const sub = AppState.addEventListener('change', handleAppStateChange);
+    return () => sub.remove();
+  }, [user, isDemoMode, supabaseConfigured, queryClient, doReconcile]);
 
+  // Keep pushToCloud as a thin wrapper around reconcile so the profile screen
+  // "Sync now" button keeps working without UI changes.
   const pushToCloud = useCallback(async () => {
     if (!user) return;
-    try {
-      const [summitsRaw, mountainsRaw] = await Promise.all([
-        AsyncStorage.getItem(SUMMIT_STORAGE_KEY),
-        AsyncStorage.getItem(CUSTOM_MOUNTAINS_KEY),
-      ]);
-
-      const summits = summitsRaw ? JSON.parse(summitsRaw) : [];
-      const customMountains = mountainsRaw ? JSON.parse(mountainsRaw) : [];
-
-      await supabase
-        .from('user_data')
-        .upsert({
-          user_id: user.id,
-          summits,
-          custom_mountains: customMountains,
-          updated_at: new Date().toISOString(),
-        }, { onConflict: 'user_id' });
-
-      console.log('[Auth] Pushed data to cloud');
-    } catch (error) {
-      console.log('[Auth] Push error:', error);
-    }
-  }, [user]);
+    await doReconcile(user.id);
+  }, [user, doReconcile]);
 
   const signUp = useCallback((email: string, password: string) => {
     signUpMutation.mutate({ email, password });
@@ -536,7 +450,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     onSuccess: async (data) => {
       console.log('[Auth] Apple sign in successful');
       if (data.session) {
-        await syncDataFromCloud(data.session.user.id);
+        await doReconcile(data.session.user.id);
       }
     },
     onError: (error: Error) => {
@@ -673,7 +587,7 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
     onSuccess: async (data) => {
       console.log('[Auth] Google sign in successful');
       if (data.session) {
-        await syncDataFromCloud(data.session.user.id);
+        await doReconcile(data.session.user.id);
       }
     },
     onError: (error: Error) => {
@@ -719,31 +633,4 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
   }), [user, session, isAuthenticated, isDemoMode, isLoading, syncStatus, signUp, signIn, signOut, deleteAccount, pushToCloud, signUpMutation.isPending, signInMutation.isPending, signOutMutation.isPending, deleteAccountMutation.isPending, signInWithApple, signInWithGoogle, signInWithAppleMutation.isPending, signInWithGoogleMutation.isPending]);
 });
 
-function mergeSummits(local: SummitRecord[], cloud: SummitRecord[]): SummitRecord[] {
-  // Use composite key (mountainId + createdAt) so repeat summits of the same peak survive
-  const map = new Map<string, SummitRecord>();
-  for (const record of cloud) {
-    map.set(`${record.mountainId}|${record.createdAt}`, record);
-  }
-  for (const record of local) {
-    // Accept local record if cloud doesn't have this specific summit, or local is newer
-    const existing = map.get(`${record.mountainId}|${record.createdAt}`);
-    if (!existing) {
-      map.set(`${record.mountainId}|${record.createdAt}`, record);
-    }
-  }
-  return Array.from(map.values());
-}
 
-function mergeMountains(local: Mountain[], cloud: Mountain[]): Mountain[] {
-  const map = new Map<string, Mountain>();
-  for (const m of cloud) {
-    map.set(m.id, m);
-  }
-  for (const m of local) {
-    if (!map.has(m.id)) {
-      map.set(m.id, m);
-    }
-  }
-  return Array.from(map.values());
-}

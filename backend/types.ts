@@ -18,6 +18,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      summit_tombstones: {
+        Row: {
+          created_at: string
+          deleted_at: string
+          id: string
+          kind: string
+          mountain_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string
+          id?: string
+          kind?: string
+          mountain_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string
+          id?: string
+          kind?: string
+          mountain_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_data: {
         Row: {
           custom_mountains: Json
