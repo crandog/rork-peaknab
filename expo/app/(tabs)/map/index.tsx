@@ -228,9 +228,19 @@ export default function MapScreen() {
       .filter((m) => !(m.latitude === 0 && m.longitude === 0));
   }, [records, isSummited, allMountains]);
 
+  const summitedMarkers = useMemo(
+    () => allMountainMarkers.filter((m) => m.summited),
+    [allMountainMarkers],
+  );
+
+  const unclimbedMarkers = useMemo(
+    () => allMountainMarkers.filter((m) => !m.summited),
+    [allMountainMarkers],
+  );
+
   const clusters = useMemo(() => {
-    return buildClusters(allMountainMarkers, region);
-  }, [allMountainMarkers, region]);
+    return buildClusters(unclimbedMarkers, region);
+  }, [unclimbedMarkers, region]);
 
   const fitToPeaks = useCallback(() => {
     if (!mapRef.current) return;
@@ -351,17 +361,6 @@ export default function MapScreen() {
               const peak = cluster.peaks[0];
               if (!peak) return null;
 
-              if (peak.summited) {
-                return (
-                  <PeakIconMarker
-                    key={peak.id}
-                    peak={peak}
-                    showName={region.latitudeDelta <= 3}
-                    onPressNavigate={navigateToMountain}
-                  />
-                );
-              }
-
               return (
                 <RNMarker
                   key={peak.id}
@@ -386,6 +385,14 @@ export default function MapScreen() {
                 </RNMarker>
               );
             })}
+            {summitedMarkers.map((peak) => (
+              <PeakIconMarker
+                key={peak.id}
+                peak={peak}
+                showName={region.latitudeDelta <= 3}
+                onPressNavigate={navigateToMountain}
+              />
+            ))}
           </RNMapView>
 
           <View style={styles.frostOverlay} pointerEvents="none" />
