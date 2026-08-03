@@ -8,7 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-  Share,
+  Share as RNShare,
   Linking,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -663,7 +663,7 @@ export default function ShareCardScreen() {
         // iOS: Share.share with url (file) + message (caption with link) —
         // both the image and the tappable link appear in Messages, WhatsApp,
         // Mail, X, etc.
-        await Share.share({
+        await RNShare.share({
           url: uri,
           message: SHARE_CAPTION,
           title: 'Share your summit',
