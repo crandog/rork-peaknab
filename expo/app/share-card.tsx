@@ -48,7 +48,7 @@ const SHARE_CAPTION = `Climbed with PeakNab — ${APP_LINK}`;
 // Without it, Instagram shows: "The app you shared from doesn't currently
 // support sharing to Stories." The link sticker also requires this App ID
 // to be associated with your Instagram Business/Creator account.
-const FACEBOOK_APP_ID = '';
+const FACEBOOK_APP_ID = '1537221244821147';
 
 function getAccolade(mountain: Mountain): string | undefined {
   const accolades: Record<string, string> = {
