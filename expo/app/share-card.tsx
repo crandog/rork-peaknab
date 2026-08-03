@@ -8,17 +8,20 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
+  Share,
+  Linking,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { X, Share } from 'lucide-react-native';
+import { X, Share as ShareIcon } from 'lucide-react-native';
 import Svg, { Circle, Path, Rect } from 'react-native-svg';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
+import * as MediaLibrary from 'expo-media-library';
 import qrcode from 'qrcode-generator';
 import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
@@ -37,8 +40,16 @@ const CARD_WIDTH = SCREEN_WIDTH - 40;
 const CARD_HEIGHT = CARD_WIDTH * 5 / 4;
 const STORY_WIDTH = CARD_HEIGHT * 9 / 16;
 
-// TODO: swap with real App Store link once available
-const APP_LINK = 'https://peaknab.com/get';
+const APP_LINK = 'https://apps.apple.com/app/id6790620432';
+const SHARE_CAPTION = `Climbed with PeakNab — ${APP_LINK}`;
+
+// Facebook/Meta App ID for Instagram Stories deep-link sharing.
+// Create one at https://developers.facebook.com/apps/ (select "Consumer" type,
+// add the "Instagram Graph API" product). Enter the numeric App ID here.
+// Without it, Instagram shows: "The app you shared from doesn't currently
+// support sharing to Stories." The link sticker also requires this App ID
+// to be associated with your Instagram Business/Creator account.
+const FACEBOOK_APP_ID = '';
 
 function getAccolade(mountain: Mountain): string | undefined {
   const accolades: Record<string, string> = {
@@ -606,22 +617,86 @@ export default function ShareCardScreen() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-      } else {
-        const uri = await captureRef(cardRef, {
-          format: 'png',
-          quality: 1,
-          result: 'tmpfile',
-          width: 1080,
-          height: cardStyle === 'story' ? 1920 : 1350,
+        return;
+      }
+
+      // Native: capture the card image
+      const uri = (await captureRef(cardRef, {
+        format: 'png',
+        quality: 1,
+        result: 'tmpfile',
+        width: 1080,
+        height: cardStyle === 'story' ? 1920 : 1350,
+      })) as string;
+
+      // Story format on iOS: try Instagram Stories deep link
+      if (cardStyle === 'story' && Platform.OS === 'ios') {
+        const canOpenInstagram = await Linking.canOpenURL('instagram-stories://share');
+
+        if (canOpenInstagram && FACEBOOK_APP_ID) {
+          // Save image to Photos so the user can select it as the story
+          // background in Instagram.
+          try {
+            const { status } = await MediaLibrary.requestPermissionsAsync();
+            if (status === 'granted') {
+              await MediaLibrary.createAssetAsync(uri);
+            }
+          } catch (e) {
+            console.log('[Share] Camera roll save failed:', e);
+          }
+
+          // Open Instagram Stories. Instagram reads the background image
+          // from the system pasteboard using a custom UTI key
+          // (com.instagram.sharedSticker.backgroundImage). In Expo Go we
+          // cannot write custom pasteboard items, so the user selects the
+          // saved image manually from their gallery. The link sticker URL
+          // is copied to the clipboard for the user to paste.
+          await Linking.openURL(
+            `instagram-stories://share?source_application=${FACEBOOK_APP_ID}`,
+          );
+
+          await Clipboard.setStringAsync(APP_LINK);
+          Alert.alert(
+            'Add to your story',
+            'Your summit card is saved to Photos. In Instagram:\n\n' +
+            '1. Tap the gallery icon (bottom-left)\n' +
+            '2. Select your summit card\n' +
+            '3. Tap the sticker icon, add a Link sticker, and paste:\n\n' +
+            APP_LINK,
+          );
+          return;
+        }
+
+        if (!FACEBOOK_APP_ID) {
+          console.log('[Share] No FACEBOOK_APP_ID — Instagram Stories deep link unavailable');
+        }
+      }
+
+      // Standard share: image + tappable App Store link
+      if (Platform.OS === 'ios') {
+        // iOS: Share.share with url (file) + message (caption with link) —
+        // both the image and the tappable link appear in Messages, WhatsApp,
+        // Mail, X, etc.
+        await Share.share({
+          url: uri,
+          message: SHARE_CAPTION,
+          title: 'Share your summit',
         });
-        await Sharing.shareAsync(uri as string, {
+      } else {
+        // Android: Sharing.shareAsync for the image; clipboard for the link
+        await Sharing.shareAsync(uri, {
           mimeType: 'image/png',
           dialogTitle: 'Share your summit',
         });
       }
 
-      await Clipboard.setStringAsync('Climbed with PeakNab — https://peaknab.com/get');
-      Alert.alert('Caption copied', 'Paste it with your post.');
+      await Clipboard.setStringAsync(SHARE_CAPTION);
+      Alert.alert(
+        'Link copied',
+        Platform.OS === 'ios'
+          ? 'The App Store link was included in your share and copied to your clipboard.'
+          : 'Caption with App Store link copied — paste it with your post.',
+      );
     } catch (e) {
       console.log('Share cancelled or failed', e);
     }
@@ -730,7 +805,7 @@ export default function ShareCardScreen() {
 
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
         <TouchableOpacity style={styles.shareButton} onPress={handleShare} activeOpacity={0.85}>
-          <Share color="#fff" size={18} />
+          <ShareIcon color="#fff" size={18} />
           <Text style={styles.shareButtonText}>Share</Text>
         </TouchableOpacity>
       </View>

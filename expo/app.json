@@ -18,7 +18,12 @@
       "bundleIdentifier": "app.rork.peaknab",
       "usesAppleSignIn": true,
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "PeakNab uses your photo library so you can attach a photo to your summit records."
+        "NSPhotoLibraryUsageDescription": "PeakNab uses your photo library so you can attach a photo to your summit records.",
+        "NSPhotoLibraryAddUsageDescription": "PeakNab saves summit share cards to your photo library so you can post them to Instagram Stories.",
+        "LSApplicationQueriesSchemes": [
+          "instagram-stories",
+          "instagram"
+        ]
       }
     },
     "android": {
@@ -40,7 +45,15 @@
       ],
       "expo-font",
       "expo-web-browser",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "PeakNab saves summit share cards to your photo library so you can post them to Instagram Stories.",
+          "photosAddPermission": true,
+          "isTransitive": true
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
