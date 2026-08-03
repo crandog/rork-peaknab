@@ -45,28 +45,22 @@ const SHARE_CAPTION = `Climbed with PeakNab — ${APP_LINK}`;
 // Create one at https://developers.facebook.com/apps/ (select "Consumer" type,
 // add the "Instagram Graph API" product). Enter the numeric App ID here.
 // Without it, Instagram shows: "The app you shared from doesn't currently
-// support sharing to Stories." The attribution link sticker also requires
-// this App ID to be associated with your Instagram Business/Creator account.
+// support sharing to Stories." The link sticker also requires this App ID
+// to be associated with your Instagram Business/Creator account.
+//
+// NOTE: The Strava-style "View on PeakNab" attribution link requires
+// react-native-share's Share.shareSingle with attributionURL, which is a
+// native module that cannot be bundled in Expo Go. When you build with EAS
+// (dev-client or TestFlight/App Store), add `react-native-share` and use:
+//   Share.shareSingle({
+//     social: Share.Social.INSTAGRAM_STORIES,
+//     appId: FACEBOOK_APP_ID,
+//     backgroundImage: uri,
+//     attributionURL: APP_LINK,
+//   });
+// For now, the Linking-based approach below opens Instagram Stories with
+// the source_application param and copies the App Store link to clipboard.
 const FACEBOOK_APP_ID = '1537221244821147';
-
-// react-native-share is a native module that won't exist in Expo Go.
-// We try/catch the require so the screen never crashes in Expo Go; if the
-// native bridge is available (real device / TestFlight / App Store build),
-// we use Share.shareSingle with the INSTAGRAM_STORIES social target to get
-// the Strava-style "View on PeakNab" attribution link via attributionURL.
-// If the module is missing (Expo Go), we gracefully fall back to the system
-// share sheet with the tappable App Store link.
-let RNShareModule: typeof import('react-native-share')['default'] | null = null;
-let RNShareInstaStories: string | null = null;
-try {
-  const RNS = require('react-native-share');
-  RNShareModule = RNS.default;
-  RNShareInstaStories = RNS.Social.INSTAGRAM_STORIES as string;
-} catch {
-  // Expo Go: native module not available — fall back to system share sheet
-  RNShareModule = null;
-  RNShareInstaStories = null;
-}
 
 function getAccolade(mountain: Mountain): string | undefined {
   const accolades: Record<string, string> = {
@@ -583,30 +577,13 @@ export default function ShareCardScreen() {
         height: cardStyle === 'story' ? 1920 : 1350,
       })) as string;
 
-      // Story format on iOS: try react-native-share Instagram Stories deep
-      // link with attributionURL for the Strava-style "View on PeakNab" link.
-      // Falls back to the current Linking-based approach if the native module
-      // isn't available (Expo Go) or Instagram isn't installed.
+      // Story format on iOS: open Instagram Stories via deep link.
+      // The Strava-style "View on PeakNab" attribution link requires
+      // react-native-share (native module), which needs an EAS build.
+      // In Expo Go we use the Linking-based approach: open Instagram Stories
+      // with source_application, copy the App Store link to clipboard, and
+      // show instructions for the user to add a Link sticker manually.
       if (cardStyle === 'story' && Platform.OS === 'ios') {
-        // Attempt react-native-share path (only works in real builds, not Expo Go)
-        if (RNShareModule && RNShareInstaStories) {
-          try {
-            await RNShareModule.shareSingle({
-              social: RNShareInstaStories as any,
-              appId: FACEBOOK_APP_ID,
-              backgroundImage: uri,
-              attributionURL: APP_LINK,
-              backgroundTopColor: '#0a1a2e',
-              backgroundBottomColor: '#0D2244',
-            });
-            return; // Success — Instagram Stories opened with the card + attribution link
-          } catch (igError: any) {
-            console.log('[Share] react-native-share Instagram Stories failed, falling back', igError?.message);
-            // Fall through to Linking-based approach below
-          }
-        }
-
-        // Fallback: Linking-based Instagram Stories deep link (works in Expo Go)
         const canOpenInstagram = await Linking.canOpenURL('instagram-stories://share');
 
         if (canOpenInstagram && FACEBOOK_APP_ID) {

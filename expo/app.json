@@ -45,18 +45,7 @@
       ],
       "expo-font",
       "expo-web-browser",
-      "expo-secure-store",
-      [
-        "react-native-share",
-        {
-          "ios": [
-            "instagram"
-          ],
-          "android": [
-            "com.instagram.android"
-          ]
-        }
-      ]
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
