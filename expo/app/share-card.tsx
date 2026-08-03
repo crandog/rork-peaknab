@@ -16,12 +16,11 @@ import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { X, Share as ShareIcon } from 'lucide-react-native';
-import Svg, { Circle, Path, Rect } from 'react-native-svg';
+import Svg, { Circle, Path } from 'react-native-svg';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import qrcode from 'qrcode-generator';
 import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
 import { useSummits, type SummitRecord } from '@/contexts/SummitContext';
@@ -147,60 +146,15 @@ function SnowOverlay({ width, height }: { width: number; height: number }) {
   );
 }
 
-function QRCode({ value, size, color = '#fff' }: { value: string; size: number; color?: string }) {
-  const modules = useMemo(() => {
-    const q = qrcode(0, 'M');
-    q.addData(value);
-    q.make();
-    const count = q.getModuleCount();
-    const cells: { x: number; y: number }[] = [];
-    for (let row = 0; row < count; row++) {
-      for (let col = 0; col < count; col++) {
-        if (q.isDark(row, col)) {
-          cells.push({ x: col, y: row });
-        }
-      }
-    }
-    return { cells, count };
-  }, [value]);
-
-  const moduleSize = size / modules.count;
-
-  return (
-    <Svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {modules.cells.map((cell, i) => (
-        <Rect
-          key={i}
-          x={cell.x * moduleSize}
-          y={cell.y * moduleSize}
-          width={moduleSize}
-          height={moduleSize}
-          fill={color}
-        />
-      ))}
-    </Svg>
-  );
-}
-
-function QRTile({ size = 44 }: { size?: number }) {
-  return (
-    <View style={styles.qrTile}>
-      <QRCode value={APP_LINK} size={size} color="#fff" />
-      <Text style={styles.qrTileCaption}>Get PeakNab</Text>
-    </View>
-  );
-}
-
 interface CardProps {
   mountain: Mountain;
   record: SummitRecord | undefined;
   enabled: Record<FieldKey, boolean>;
-  showQR: boolean;
   width: number;
   height: number;
 }
 
-function StampCard({ mountain, record, enabled, showQR, width, height }: CardProps) {
+function StampCard({ mountain, record, enabled, width, height }: CardProps) {
   const iconUrl = getMountainIconUrl(mountain.id);
   const accolade = getAccolade(mountain);
 
@@ -259,14 +213,7 @@ function StampCard({ mountain, record, enabled, showQR, width, height }: CardPro
         )}
         <View style={styles.stampFooter}>
           <Text style={styles.stampDateLine}>{dateLine}</Text>
-          <View style={styles.stampFooterRight}>
-            <Wordmark color={Colors.primary} size={13} />
-            {showQR && (
-              <View style={styles.stampQR}>
-                <QRCode value={APP_LINK} size={24} color="#fff" />
-              </View>
-            )}
-          </View>
+          <Wordmark color={Colors.primary} size={13} />
         </View>
       </View>
     </View>
@@ -334,7 +281,7 @@ function ExpeditionCard({ mountain, record, enabled, width, height }: CardProps)
   );
 }
 
-function PhotoCard({ mountain, record, enabled, showQR, width, height }: CardProps) {
+function PhotoCard({ mountain, record, enabled, width, height }: CardProps) {
   const photoSource = record?.photoUri ?? getMountainImage(mountain.id);
   const accolade = getAccolade(mountain);
 
@@ -382,7 +329,7 @@ function PhotoCard({ mountain, record, enabled, showQR, width, height }: CardPro
           <Text style={styles.photoBadgeText}>SUMMITED</Text>
         </View>
       </View>
-      <View style={[styles.photoBottom, showQR && styles.photoBottomWithQR]}>
+      <View style={styles.photoBottom}>
         <Text style={styles.photoPeakName}>{mountain.name}</Text>
         <Text style={styles.photoLocationDate}>
           {mountain.country} · {mountain.range} · {mountain.elevation.toLocaleString()}m
@@ -403,16 +350,11 @@ function PhotoCard({ mountain, record, enabled, showQR, width, height }: CardPro
           </View>
         )}
       </View>
-      {showQR && (
-        <View style={styles.photoQRTile}>
-          <QRTile size={44} />
-        </View>
-      )}
     </View>
   );
 }
 
-function StoryCard({ mountain, record, enabled, showQR, width, height }: CardProps) {
+function StoryCard({ mountain, record, enabled, width, height }: CardProps) {
   const photoSource = record?.photoUri ?? getMountainImage(mountain.id);
   const accolade = getAccolade(mountain);
 
@@ -475,7 +417,7 @@ function StoryCard({ mountain, record, enabled, showQR, width, height }: CardPro
 
         <View style={{ flex: 1 }} />
 
-        <View style={[styles.storyPanel, showQR && styles.storyPanelWithQR]}>
+        <View style={styles.storyPanel}>
           <Text style={styles.storySummittedLabel}>SUMMITED</Text>
           <Text style={styles.storyPeakName}>{mountain.name}</Text>
           <Text style={styles.storyElevationLine}>
@@ -521,11 +463,6 @@ function StoryCard({ mountain, record, enabled, showQR, width, height }: CardPro
           <Text style={styles.storyDiamond}>{'◆'}</Text>
         </View>
       </View>
-      {showQR && (
-        <View style={styles.storyQRTile}>
-          <QRTile size={44} />
-        </View>
-      )}
     </View>
   );
 }
@@ -547,7 +484,6 @@ export default function ShareCardScreen() {
   }, [mountainId, createdAt, getSummitByCreatedAt]);
 
   const [cardStyle, setCardStyle] = useState<CardStyle>('stamp');
-  const [showQR, setShowQR] = useState(true);
 
   const [enabled, setEnabled] = useState<Record<FieldKey, boolean>>({
     date: true,
@@ -707,7 +643,7 @@ export default function ShareCardScreen() {
     : { width: CARD_WIDTH, height: CARD_HEIGHT };
 
   const renderCard = () => {
-    const props: CardProps = { mountain, record, enabled, showQR, ...cardDimensions };
+    const props: CardProps = { mountain, record, enabled, ...cardDimensions };
     switch (cardStyle) {
       case 'stamp': return <StampCard {...props} />;
       case 'expedition': return <ExpeditionCard {...props} />;
@@ -776,15 +712,6 @@ export default function ShareCardScreen() {
                 {f.key === 'o2' && <OxygenInfoButton />}
               </View>
             ))}
-            <TouchableOpacity
-              style={[styles.toggleChip, showQR && styles.toggleChipActive]}
-              onPress={() => setShowQR(prev => !prev)}
-              activeOpacity={0.7}
-            >
-              <Text style={[styles.toggleChipText, showQR && styles.toggleChipTextActive]}>
-                App QR
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
       </ScrollView>
@@ -1338,47 +1265,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#D4A843',
     marginTop: 4,
-  },
-  // QR tile styles
-  qrTile: {
-    backgroundColor: 'rgba(11, 28, 58, 0.85)',
-    borderRadius: 6,
-    padding: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  qrTileCaption: {
-    fontSize: 7,
-    color: 'rgba(255,255,255,0.8)',
-    marginTop: 2,
-    fontWeight: '600' as const,
-  },
-  stampFooterRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  stampQR: {
-    backgroundColor: 'rgba(11, 28, 58, 0.85)',
-    borderRadius: 4,
-    padding: 3,
-  },
-  photoQRTile: {
-    position: 'absolute' as const,
-    bottom: 16,
-    right: 16,
-    zIndex: 15,
-  },
-  storyQRTile: {
-    position: 'absolute' as const,
-    bottom: 16,
-    right: 16,
-    zIndex: 15,
-  },
-  photoBottomWithQR: {
-    right: 72,
-  },
-  storyPanelWithQR: {
-    marginBottom: 70,
   },
 });
