@@ -134,9 +134,9 @@ function SummitedStamp({ scale = 1 }: { scale?: number }) {
   );
 }
 
-function UnclimbedMarker({ size = 30 }: { size?: number }) {
+function UnclimbedMarker({ size = 18 }: { size?: number }) {
   return (
-    <Svg width={size} height={size} viewBox="0 0 30 30">
+    <Svg width={size} height={size} viewBox="0 0 30 30" style={{ opacity: 0.45 }}>
       <Path
         d="M15 3 L27 26 L3 26 Z"
         fill={UNCLIMBED_FILL}
