@@ -21,7 +21,6 @@ import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 import * as Clipboard from 'expo-clipboard';
 import * as Haptics from 'expo-haptics';
-import * as MediaLibrary from 'expo-media-library';
 import qrcode from 'qrcode-generator';
 import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
@@ -634,23 +633,11 @@ export default function ShareCardScreen() {
         const canOpenInstagram = await Linking.canOpenURL('instagram-stories://share');
 
         if (canOpenInstagram && FACEBOOK_APP_ID) {
-          // Save image to Photos so the user can select it as the story
-          // background in Instagram.
-          try {
-            const { status } = await MediaLibrary.requestPermissionsAsync();
-            if (status === 'granted') {
-              await MediaLibrary.createAssetAsync(uri);
-            }
-          } catch (e) {
-            console.log('[Share] Camera roll save failed:', e);
-          }
-
-          // Open Instagram Stories. Instagram reads the background image
-          // from the system pasteboard using a custom UTI key
-          // (com.instagram.sharedSticker.backgroundImage). In Expo Go we
-          // cannot write custom pasteboard items, so the user selects the
-          // saved image manually from their gallery. The link sticker URL
-          // is copied to the clipboard for the user to paste.
+          // Open Instagram Stories with the source_application param.
+          // In Expo Go we cannot write custom pasteboard items with the
+          // com.instagram.sharedSticker.backgroundImage UTI key, so the
+          // user selects the image from their share sheet / Photos manually.
+          // The link sticker URL is copied to the clipboard for pasting.
           await Linking.openURL(
             `instagram-stories://share?source_application=${FACEBOOK_APP_ID}`,
           );
@@ -658,10 +645,9 @@ export default function ShareCardScreen() {
           await Clipboard.setStringAsync(APP_LINK);
           Alert.alert(
             'Add to your story',
-            'Your summit card is saved to Photos. In Instagram:\n\n' +
-            '1. Tap the gallery icon (bottom-left)\n' +
-            '2. Select your summit card\n' +
-            '3. Tap the sticker icon, add a Link sticker, and paste:\n\n' +
+            'In Instagram:\n\n' +
+            '1. Select your summit card from the share sheet\n' +
+            '2. Tap the sticker icon, add a Link sticker, and paste:\n\n' +
             APP_LINK,
           );
           return;
