@@ -31,6 +31,7 @@ import type { Mountain } from '@/constants/mountains';
 
 type CardStyle = 'stamp' | 'expedition' | 'photo' | 'story';
 type FieldKey = 'date' | 'summitTime' | 'route' | 'timeToSummit' | 'roundTrip' | 'conditions' | 'accolade' | 'o2';
+type UnitMode = 'meters' | 'feet' | 'both';
 
 const SERIF_FONT = Platform.OS === 'ios' ? 'Georgia' : 'serif';
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -113,6 +114,18 @@ function getFirstSentence(text: string): string {
   return sentence;
 }
 
+function formatElevation(mountain: Mountain, mode: UnitMode, uppercase = false): string {
+  const m = mountain.elevation.toLocaleString();
+  const ft = mountain.elevationFt.toLocaleString();
+  const mSuffix = uppercase ? 'M' : 'm';
+  const ftSuffix = uppercase ? 'FT' : 'ft';
+  switch (mode) {
+    case 'meters': return `${m} ${mSuffix}`;
+    case 'feet': return `${ft} ${ftSuffix}`;
+    case 'both': return `${m} ${mSuffix} · ${ft} ${ftSuffix}`;
+  }
+}
+
 function WaxSeal({ size = 54 }: { size?: number }) {
   return (
     <Svg width={size} height={size} viewBox="0 0 26 26">
@@ -163,11 +176,12 @@ interface CardProps {
   mountain: Mountain;
   record: SummitRecord | undefined;
   enabled: Record<FieldKey, boolean>;
+  unitMode: UnitMode;
   width: number;
   height: number;
 }
 
-function StampCard({ mountain, record, enabled, width, height }: CardProps) {
+function StampCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
   const iconUrl = getMountainIconUrl(mountain.id);
   const accolade = getAccolade(mountain);
 
@@ -206,7 +220,7 @@ function StampCard({ mountain, record, enabled, width, height }: CardProps) {
         <View style={styles.stampInfo}>
           <Text style={styles.stampPeakName}>{mountain.name}</Text>
           <Text style={styles.stampLocation}>
-            {mountain.country} · {mountain.range} · {mountain.elevation.toLocaleString()}m / {mountain.elevationFt.toLocaleString()}ft
+            {mountain.country} · {mountain.range} · {formatElevation(mountain, unitMode)}
           </Text>
           {enabled.accolade && accolade && (
             <View style={styles.stampAccoladePill}>
@@ -233,7 +247,7 @@ function StampCard({ mountain, record, enabled, width, height }: CardProps) {
   );
 }
 
-function ExpeditionCard({ mountain, record, enabled, width, height }: CardProps) {
+function ExpeditionCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
   const iconUrl = getMountainIconUrl(mountain.id);
   const accolade = getAccolade(mountain);
 
@@ -242,7 +256,7 @@ function ExpeditionCard({ mountain, record, enabled, width, height }: CardProps)
     : formatLongDate(record?.date ?? '');
 
   const rows: { label: string; value: string }[] = [
-    { label: 'ELEVATION', value: `${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft` },
+    { label: 'ELEVATION', value: formatElevation(mountain, unitMode) },
   ];
   if (enabled.date) {
     rows.push({ label: 'SUMMITED', value: summitedValue });
@@ -266,7 +280,7 @@ function ExpeditionCard({ mountain, record, enabled, width, height }: CardProps)
         <Text style={styles.expeditionHeader}>SUMMIT RECORD</Text>
         <Text style={styles.expeditionPeakName}>{mountain.name}</Text>
         <Text style={styles.expeditionLocation}>
-          {mountain.country} · {mountain.range} · {mountain.elevation.toLocaleString()}m
+          {mountain.country} · {mountain.range} · {formatElevation(mountain, unitMode)}
         </Text>
         {enabled.accolade && accolade && (
           <Text style={styles.expeditionAccolade}>{accolade}</Text>
@@ -294,7 +308,7 @@ function ExpeditionCard({ mountain, record, enabled, width, height }: CardProps)
   );
 }
 
-function PhotoCard({ mountain, record, enabled, width, height }: CardProps) {
+function PhotoCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
   const photoSource = record?.photoUri ?? getMountainImage(mountain.id);
   const accolade = getAccolade(mountain);
 
@@ -345,7 +359,7 @@ function PhotoCard({ mountain, record, enabled, width, height }: CardProps) {
       <View style={styles.photoBottom}>
         <Text style={styles.photoPeakName}>{mountain.name}</Text>
         <Text style={styles.photoLocationDate}>
-          {mountain.country} · {mountain.range} · {mountain.elevation.toLocaleString()}m
+          {mountain.country} · {mountain.range} · {formatElevation(mountain, unitMode)}
           {enabled.date && record?.date ? ` · ${formatShortDate(record.date)}` : ''}
         </Text>
         {chips.length > 0 && (
@@ -367,7 +381,7 @@ function PhotoCard({ mountain, record, enabled, width, height }: CardProps) {
   );
 }
 
-function StoryCard({ mountain, record, enabled, width, height }: CardProps) {
+function StoryCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
   const photoSource = record?.photoUri ?? getMountainImage(mountain.id);
   const accolade = getAccolade(mountain);
 
@@ -431,10 +445,12 @@ function StoryCard({ mountain, record, enabled, width, height }: CardProps) {
         <View style={{ flex: 1 }} />
 
         <View style={styles.storyPanel}>
-          <Text style={styles.storySummittedLabel}>SUMMITED</Text>
+          <View style={styles.storyStampBadge}>
+            <Text style={styles.storyStampBadgeText}>SUMMITED</Text>
+          </View>
           <Text style={styles.storyPeakName}>{mountain.name}</Text>
           <Text style={styles.storyElevationLine}>
-            {'◆'} {mountain.elevation.toLocaleString()} M {'·'} {mountain.elevationFt.toLocaleString()} FT {'◆'}
+            {'◆'} {formatElevation(mountain, unitMode, true)} {'◆'}
           </Text>
           {enabled.accolade && accolade && (
             <View style={styles.storyAccoladePill}>
@@ -497,6 +513,7 @@ export default function ShareCardScreen() {
   }, [mountainId, createdAt, getSummitByCreatedAt]);
 
   const [cardStyle, setCardStyle] = useState<CardStyle>('stamp');
+  const [unitMode, setUnitMode] = useState<UnitMode>('both');
 
   const [enabled, setEnabled] = useState<Record<FieldKey, boolean>>({
     date: true,
@@ -661,7 +678,7 @@ export default function ShareCardScreen() {
     : { width: CARD_WIDTH, height: CARD_HEIGHT };
 
   const renderCard = () => {
-    const props: CardProps = { mountain, record, enabled, ...cardDimensions };
+    const props: CardProps = { mountain, record, enabled, unitMode, ...cardDimensions };
     switch (cardStyle) {
       case 'stamp': return <StampCard {...props} />;
       case 'expedition': return <ExpeditionCard {...props} />;
@@ -715,6 +732,23 @@ export default function ShareCardScreen() {
 
         <View style={styles.toggleSection}>
           <Text style={styles.toggleSectionLabel}>Include on card</Text>
+          <View style={styles.unitsRow}>
+            <Text style={styles.unitsLabel}>Elevation</Text>
+            <View style={styles.unitsSegmented}>
+              {(['meters', 'feet', 'both'] as UnitMode[]).map(mode => (
+                <TouchableOpacity
+                  key={mode}
+                  style={[styles.unitsSegment, unitMode === mode && styles.unitsSegmentActive]}
+                  onPress={() => setUnitMode(mode)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={[styles.unitsSegmentText, unitMode === mode && styles.unitsSegmentTextActive]}>
+                    {mode === 'meters' ? 'm' : mode === 'feet' ? 'ft' : 'Both'}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
           <View style={styles.toggleChips}>
             {availableFields.map(f => (
               <View key={f.key} style={styles.toggleChipWrap}>
@@ -842,6 +876,39 @@ const styles = StyleSheet.create({
   toggleChipTextActive: {
     color: '#fff',
   },
+  unitsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  unitsLabel: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: Colors.textSecondary,
+  },
+  unitsSegmented: {
+    flexDirection: 'row',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    overflow: 'hidden',
+  },
+  unitsSegment: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    backgroundColor: Colors.white,
+  },
+  unitsSegmentActive: {
+    backgroundColor: Colors.primary,
+  },
+  unitsSegmentText: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.textSecondary,
+  },
+  unitsSegmentTextActive: {
+    color: '#fff',
+  },
   footer: {
     position: 'absolute' as const,
     bottom: 0,
@@ -903,12 +970,12 @@ const styles = StyleSheet.create({
     position: 'absolute' as const,
     top: 12,
     right: 12,
-    borderWidth: 2.5,
+    borderWidth: 1.5,
     borderColor: '#C0392B',
-    borderRadius: 4,
+    borderRadius: 3,
     paddingHorizontal: 8,
     paddingVertical: 4,
-    transform: [{ rotate: '7deg' }],
+    transform: [{ rotate: '-6deg' }],
   },
   stampBadgeText: {
     fontSize: 11,
@@ -1095,16 +1162,17 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   photoBadge: {
-    backgroundColor: '#C0392B',
-    borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: '#C0392B',
+    borderRadius: 3,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    transform: [{ rotate: '4deg' }],
+    transform: [{ rotate: '-6deg' }],
   },
   photoBadgeText: {
     fontSize: 11,
     fontWeight: '800' as const,
-    color: '#fff',
+    color: '#C0392B',
     letterSpacing: 1.4,
   },
   photoBottom: {
@@ -1200,11 +1268,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  storySummittedLabel: {
+  storyStampBadge: {
+    borderWidth: 1.5,
+    borderColor: '#C0392B',
+    borderRadius: 3,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    transform: [{ rotate: '-6deg' }],
+  },
+  storyStampBadgeText: {
     fontSize: 12,
-    fontWeight: '700' as const,
-    letterSpacing: 6,
-    color: '#fff',
+    fontWeight: '800' as const,
+    letterSpacing: 2,
+    color: '#C0392B',
   },
   storyPeakName: {
     fontSize: 44,
