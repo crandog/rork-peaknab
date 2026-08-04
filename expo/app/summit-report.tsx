@@ -9,6 +9,7 @@ import {
   Alert,
   Platform,
   Animated,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Image } from 'expo-image';
@@ -119,8 +120,14 @@ export default function SummitReportScreen() {
         <Text style={styles.heroSubtitle}>{summitRecord?.date ?? 'Document your achievement'}</Text>
       </View>
 
-      <ScrollView
+      <KeyboardAvoidingView
         style={styles.scrollView}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'android' ? 80 : 0}
+        enabled
+      >
+      <ScrollView
+        style={styles.flexOne}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
@@ -248,8 +255,9 @@ export default function SummitReportScreen() {
           </TouchableOpacity>
         </Animated.View>
 
-        <View style={{ height: 20 }} />
+        <View style={{ height: 60 }} />
       </ScrollView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -280,10 +288,14 @@ const styles = StyleSheet.create({
   scrollView: {
     flex: 1,
   },
+  flexOne: {
+    flex: 1,
+  },
   scrollContent: {
     padding: 16,
     paddingTop: 16,
     gap: 16,
+    paddingBottom: 40,
   },
   card: {
     backgroundColor: Colors.white,
