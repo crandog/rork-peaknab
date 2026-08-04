@@ -21,24 +21,36 @@ import { ArrowLeft, Mail, Lock, Eye, EyeOff, Cloud, Mountain, Chrome } from 'luc
 
 import Colors from '@/constants/colors';
 import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/contexts/ProfileContext';
 
 type AuthMode = 'signin' | 'signup';
 
 export default function AuthScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { signIn, signUp, isSigningIn, isSigningUp, signInWithApple, signInWithGoogle, isSigningInWithApple, isSigningInWithGoogle, isAuthenticated } = useAuth();
+  const { signIn, signUp, isSigningIn, isSigningUp, signInWithApple, signInWithGoogle, isSigningInWithApple, isSigningInWithGoogle, isAuthenticated, isDemoMode } = useAuth();
+  const { needsOnboarding, isLoading: profileLoading } = useProfile();
 
   useEffect(() => {
     if (isAuthenticated) {
-      console.log('[Auth Screen] Authenticated, dismissing modal');
-      if (router.canGoBack()) {
-        router.back();
+      // Wait for profile to load before deciding where to go
+      if (profileLoading) return;
+      if (needsOnboarding && !isDemoMode) {
+        console.log('[Auth Screen] Authenticated, needs onboarding');
+        if (router.canGoBack()) {
+          router.dismiss();
+        }
+        router.replace('/onboarding');
       } else {
-        router.replace('/');
+        console.log('[Auth Screen] Authenticated, dismissing modal');
+        if (router.canGoBack()) {
+          router.back();
+        } else {
+          router.replace('/');
+        }
       }
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, needsOnboarding, profileLoading, isDemoMode, router]);
 
   const [mode, setMode] = useState<AuthMode>('signin');
   const [email, setEmail] = useState<string>('');

@@ -6,6 +6,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SummitProvider } from "@/contexts/SummitContext";
 import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ProfileProvider } from "@/contexts/ProfileContext";
 import Colors from "@/constants/colors";
 
 void SplashScreen.preventAutoHideAsync();
@@ -65,6 +66,22 @@ function RootLayoutNav() {
         }}
       />
       <Stack.Screen
+        name="onboarding"
+        options={{
+          title: "Welcome",
+          presentation: "fullScreenModal",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="edit-profile"
+        options={{
+          title: "Edit Profile",
+          presentation: "modal",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="share-card"
         options={{
           presentation: "modal",
@@ -85,11 +102,13 @@ export default function RootLayout() {
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <AuthProvider>
-          <CustomMountainsProvider>
-            <SummitProvider>
-              <RootLayoutNav />
-            </SummitProvider>
-          </CustomMountainsProvider>
+          <ProfileProvider>
+            <CustomMountainsProvider>
+              <SummitProvider>
+                <RootLayoutNav />
+              </SummitProvider>
+            </CustomMountainsProvider>
+          </ProfileProvider>
         </AuthProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>

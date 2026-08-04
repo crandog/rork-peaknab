@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useRef, useEffect } from 'react';
+import React, { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -33,6 +33,9 @@ import {
   Shield,
   FileText,
   Trash2,
+  Eye,
+  EyeOff,
+  Pencil,
 } from 'lucide-react-native';
 import * as Print from 'expo-print';
 import * as Linking from 'expo-linking';
@@ -42,13 +45,38 @@ import MountainIcon from '@/components/MountainIcon';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import { useAuth } from '@/contexts/AuthContext';
+import { useProfile } from '@/contexts/ProfileContext';
+import { resolveAvatarUrl } from '@/lib/avatarUpload';
+import { PRESET_AVATARS } from '@/constants/profile';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
   const { records, summitCount, uniqueSummitCount, totalElevation, isSummited } = useSummits();
   const allMountains = useAllMountains();
-  const { isAuthenticated, user, signOut, syncStatus, pushToCloud, isSigningOut, deleteAccount, isDeletingAccount } = useAuth();
+  const { isAuthenticated, user, signOut, syncStatus, pushToCloud, isSigningOut, deleteAccount, isDeletingAccount, isDemoMode } = useAuth();
+  const { profile, isDiscoverable, needsOnboarding } = useProfile();
+  const [resolvedAvatar, setResolvedAvatar] = useState<string | null>(null);
+
+  // Resolve avatar URL for display (signed URL for storage paths)
+  useEffect(() => {
+    const avatarUrl = profile?.avatarUrl;
+    if (!avatarUrl) {
+      setResolvedAvatar(null);
+      return;
+    }
+    // Preset avatars are full URLs — use directly
+    if (PRESET_AVATARS.some((a) => a.url === avatarUrl) || avatarUrl.startsWith('http') || avatarUrl.startsWith('exp') || avatarUrl.startsWith('file')) {
+      setResolvedAvatar(avatarUrl);
+      return;
+    }
+    // Storage path — resolve signed URL
+    let active = true;
+    void resolveAvatarUrl(avatarUrl).then((url) => {
+      if (active) setResolvedAvatar(url);
+    });
+    return () => { active = false; };
+  }, [profile?.avatarUrl]);
 
   const progressAnim = useRef(new Animated.Value(0)).current;
 
@@ -320,6 +348,73 @@ export default function ProfileScreen() {
             </View>
           )}
         </View>
+
+        {/* Profile card — only for authenticated users */}
+        {isAuthenticated && (
+          <View style={styles.profileCard}>
+            <View style={styles.profileCardLeft}>
+              <View style={styles.profileAvatar}>
+                {resolvedAvatar ? (
+                  <Image
+                    source={{ uri: resolvedAvatar }}
+                    style={styles.profileAvatarImage}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <UserIcon color={Colors.white} size={22} />
+                )}
+              </View>
+              <View style={styles.profileInfo}>
+                {profile?.screenname ? (
+                  <>
+                    <Text style={styles.profileScreenname}>@{profile.screenname}</Text>
+                    <View style={styles.privacyBadge}>
+                      {isDiscoverable ? (
+                        <>
+                          <Eye color={Colors.success} size={11} />
+                          <Text style={styles.privacyBadgeText}>Discoverable</Text>
+                        </>
+                      ) : (
+                        <>
+                          <EyeOff color={Colors.textMuted} size={11} />
+                          <Text style={styles.privacyBadgeText}>Private</Text>
+                        </>
+                      )}
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <Text style={styles.profileScreenname}>Private account</Text>
+                    {needsOnboarding && !isDemoMode ? (
+                      <TouchableOpacity
+                        onPress={() => router.push('/onboarding' as any)}
+                        activeOpacity={0.7}
+                      >
+                        <Text style={styles.profileSetupLink}>Set up your profile →</Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <View style={styles.privacyBadge}>
+                        <EyeOff color={Colors.textMuted} size={11} />
+                        <Text style={styles.privacyBadgeText}>Private</Text>
+                      </View>
+                    )}
+                  </>
+                )}
+              </View>
+            </View>
+            {!isDemoMode && (
+              <TouchableOpacity
+                style={styles.profileEditButton}
+                onPress={() => router.push('/edit-profile' as any)}
+                activeOpacity={0.7}
+                testID="edit-profile-button"
+              >
+                <Pencil color={Colors.primary} size={16} />
+                <Text style={styles.profileEditText}>Edit</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        )}
 
         <View style={styles.completionCard}>
           <View style={styles.completionTop}>
@@ -648,6 +743,77 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 20,
     paddingBottom: 60,
+  },
+  profileCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  profileCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    flex: 1,
+  },
+  profileAvatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: Colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  profileAvatarImage: {
+    width: '100%',
+    height: '100%',
+  },
+  profileInfo: {
+    flex: 1,
+  },
+  profileScreenname: {
+    fontSize: 15,
+    fontWeight: '700' as const,
+    color: Colors.text,
+    marginBottom: 4,
+  },
+  privacyBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  privacyBadgeText: {
+    fontSize: 11,
+    fontWeight: '600' as const,
+    color: Colors.textMuted,
+  },
+  profileSetupLink: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.primary,
+    marginTop: 2,
+  },
+  profileEditButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: Colors.frost,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  profileEditText: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.primary,
   },
   headerRow: {
     flexDirection: 'row',

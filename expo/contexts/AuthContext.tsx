@@ -361,6 +361,17 @@ export const [AuthProvider, useAuth] = createContextHook(() => {
       console.log('[Auth] Auth user deleted via RPC');
 
       await AsyncStorage.multiRemove([SUMMIT_STORAGE_KEY, CUSTOM_MOUNTAINS_KEY]);
+      // Clean up profile row + avatar
+      try {
+        await supabase.from('profiles').delete().eq('user_id', currentUser.id);
+        console.log('[Auth] Deleted profile row (client-side fallback)');
+      } catch (e) {
+        console.log('[Auth] Error deleting profile (will rely on CASCADE):', e);
+      }
+      // Remove onboarding flag
+      try {
+        await AsyncStorage.removeItem('peaknab_onboarded_' + currentUser.id);
+      } catch {}
       // The auth user no longer exists server-side, so signOut() may throw —
       // wrap it so local cleanup always runs.
       try {

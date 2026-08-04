@@ -18,6 +18,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          age_range: string | null
+          avatar_url: string | null
+          created_at: string
+          gender: string | null
+          screenname: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age_range?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          gender?: string | null
+          screenname?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age_range?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          gender?: string | null
+          screenname?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       summit_tombstones: {
         Row: {
           created_at: string
@@ -71,6 +101,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_screenname_available: {
+        Args: { p_screenname: string }
+        Returns: boolean
+      }
       delete_user: { Args: never; Returns: undefined }
     }
     Enums: {
