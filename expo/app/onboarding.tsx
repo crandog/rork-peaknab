@@ -28,12 +28,12 @@ import Colors from '@/constants/colors';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
 import {
-  PRESET_AVATARS,
   AGE_RANGES,
   GENDER_OPTIONS,
   validateScreenname,
-  type PresetAvatar,
 } from '@/constants/profile';
+import { AVATAR_PRESETS } from '@/constants/avatarPresets';
+import { AvatarPreset } from '@/components/AvatarPreset';
 import { pickAndUploadAvatar } from '@/lib/avatarUpload';
 
 type AvatarMode = 'preset' | 'upload';
@@ -96,11 +96,11 @@ export default function OnboardingScreen() {
     }
   }, [user?.id]);
 
-  const handlePresetSelect = useCallback((avatar: PresetAvatar) => {
+  const handlePresetSelect = useCallback((presetId: string) => {
     if (Platform.OS !== 'web') {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    setSelectedPreset(avatar.id);
+    setSelectedPreset(presetId);
     setAvatarMode('preset');
     setUploadedAvatar(null);
   }, []);
@@ -117,15 +117,13 @@ export default function OnboardingScreen() {
     if (!canSubmit) return;
     setIsSaving(true);
 
-    const avatarUrl = avatarMode === 'upload'
-      ? uploadedAvatar
-      : selectedPreset
-        ? PRESET_AVATARS.find((a) => a.id === selectedPreset)?.url ?? null
-        : null;
+    const avatarPreset = avatarMode === 'preset' ? selectedPreset : null;
+    const avatarUrl = avatarMode === 'upload' ? uploadedAvatar : null;
 
     const { error } = await saveProfile({
       screenname: screenname,
       avatarUrl,
+      avatarPreset,
       ageRange,
       gender,
     });
@@ -161,11 +159,8 @@ export default function OnboardingScreen() {
     });
   }, [skipOnboarding, router]);
 
-  const currentAvatarUrl = avatarMode === 'upload'
-    ? uploadedAvatar
-    : selectedPreset
-      ? PRESET_AVATARS.find((a) => a.id === selectedPreset)?.url ?? null
-      : null;
+  const showPresetPreview = avatarMode === 'preset' && selectedPreset !== null;
+  const currentAvatarUrl = avatarMode === 'upload' ? uploadedAvatar : null;
 
   return (
     <View style={styles.container}>
@@ -218,6 +213,8 @@ export default function OnboardingScreen() {
                     contentFit="cover"
                     cachePolicy="memory-disk"
                   />
+                ) : showPresetPreview && selectedPreset ? (
+                  <AvatarPreset id={selectedPreset} size={64} />
                 ) : (
                   <UserIcon color={Colors.textMuted} size={28} />
                 )}
@@ -232,30 +229,21 @@ export default function OnboardingScreen() {
               </TouchableOpacity>
             </View>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.presetScroll}
-            >
-              {PRESET_AVATARS.map((avatar) => (
+            <View style={styles.presetGrid}>
+              {AVATAR_PRESETS.map((preset) => (
                 <TouchableOpacity
-                  key={avatar.id}
+                  key={preset.id}
                   style={[
                     styles.presetAvatar,
-                    selectedPreset === avatar.id && styles.presetAvatarSelected,
+                    selectedPreset === preset.id && styles.presetAvatarSelected,
                   ]}
-                  onPress={() => handlePresetSelect(avatar)}
+                  onPress={() => handlePresetSelect(preset.id)}
                   activeOpacity={0.7}
                 >
-                  <Image
-                    source={{ uri: avatar.url }}
-                    style={styles.presetAvatarImage}
-                    contentFit="contain"
-                    cachePolicy="memory-disk"
-                  />
+                  <AvatarPreset id={preset.id} size={56} />
                 </TouchableOpacity>
               ))}
-            </ScrollView>
+            </View>
 
             {/* Screenname section */}
             <View style={styles.screennameContainer}>
@@ -506,29 +494,23 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
     color: Colors.primary,
   },
-  presetScroll: {
-    gap: 8,
-    paddingRight: 4,
+  presetGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
     paddingBottom: 4,
   },
   presetAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: Colors.frost,
+    width: 56,
+    height: 56,
+    borderRadius: 16,
     borderWidth: 2,
     borderColor: Colors.border,
     overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   presetAvatarSelected: {
     borderColor: Colors.primary,
     borderWidth: 2.5,
-  },
-  presetAvatarImage: {
-    width: 40,
-    height: 40,
   },
   screennameContainer: {
     marginTop: 18,

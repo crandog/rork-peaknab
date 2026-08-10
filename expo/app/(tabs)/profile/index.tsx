@@ -47,7 +47,7 @@ import { useAllMountains } from '@/hooks/useAllMountains';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
 import { resolveAvatarUrl } from '@/lib/avatarUpload';
-import { PRESET_AVATARS } from '@/constants/profile';
+import { AvatarPreset } from '@/components/AvatarPreset';
 
 export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
@@ -65,8 +65,8 @@ export default function ProfileScreen() {
       setResolvedAvatar(null);
       return;
     }
-    // Preset avatars are full URLs — use directly
-    if (PRESET_AVATARS.some((a) => a.url === avatarUrl) || avatarUrl.startsWith('http') || avatarUrl.startsWith('exp') || avatarUrl.startsWith('file')) {
+    // Full URLs (http/exp/file) — use directly
+    if (avatarUrl.startsWith('http') || avatarUrl.startsWith('exp') || avatarUrl.startsWith('file')) {
       setResolvedAvatar(avatarUrl);
       return;
     }
@@ -362,6 +362,8 @@ export default function ProfileScreen() {
                     contentFit="cover"
                     cachePolicy="memory-disk"
                   />
+                ) : profile?.avatarPreset ? (
+                  <AvatarPreset id={profile.avatarPreset} size={48} />
                 ) : (
                   <UserIcon color={Colors.white} size={22} />
                 )}

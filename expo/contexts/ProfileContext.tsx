@@ -9,6 +9,7 @@ import { ONBOARDING_KEY_PREFIX, validateScreenname } from '@/constants/profile';
 export interface UserProfile {
   screenname: string | null;
   avatarUrl: string | null;
+  avatarPreset: string | null;
   ageRange: string | null;
   gender: string | null;
 }
@@ -53,9 +54,13 @@ export const [ProfileProvider, useProfile] = createContextHook(() => {
 
       if (data) {
         const row = data as ProfileRow;
+        const rawAvatarUrl = row.avatar_url;
+        // Encode preset selection in avatar_url with "preset:" prefix
+        const isPreset = rawAvatarUrl?.startsWith('preset:');
         const loaded: UserProfile = {
           screenname: row.screenname,
-          avatarUrl: row.avatar_url,
+          avatarUrl: isPreset ? null : rawAvatarUrl,
+          avatarPreset: isPreset ? rawAvatarUrl!.slice('preset:'.length) : null,
           ageRange: row.age_range,
           gender: row.gender,
         };
@@ -119,6 +124,7 @@ export const [ProfileProvider, useProfile] = createContextHook(() => {
   const saveProfile = useCallback(async (updates: {
     screenname?: string | null;
     avatarUrl?: string | null;
+    avatarPreset?: string | null;
     ageRange?: string | null;
     gender?: string | null;
   }): Promise<{ error: string | null }> => {
@@ -140,11 +146,30 @@ export const [ProfileProvider, useProfile] = createContextHook(() => {
       updates = { ...updates, screenname: trimmed };
     }
 
+    // Resolve avatar fields: preset and photo are mutually exclusive
+    const resolvedAvatarUrl =
+      updates.avatarPreset !== undefined
+        ? updates.avatarPreset
+          ? `preset:${updates.avatarPreset}`
+          : null
+        : updates.avatarUrl !== undefined
+          ? updates.avatarUrl
+          : profile?.avatarPreset
+            ? `preset:${profile.avatarPreset}`
+            : profile?.avatarUrl ?? null;
+    const resolvedAvatarPreset =
+      updates.avatarPreset !== undefined
+        ? updates.avatarPreset
+        : updates.avatarUrl !== undefined
+          ? null
+          : profile?.avatarPreset ?? null;
+
     // Demo mode — store locally only
     if (!supabaseConfigured || isDemoMode) {
       const newProfile: UserProfile = {
         screenname: updates.screenname !== undefined ? updates.screenname : profile?.screenname ?? null,
-        avatarUrl: updates.avatarUrl !== undefined ? updates.avatarUrl : profile?.avatarUrl ?? null,
+        avatarUrl: updates.avatarPreset !== undefined ? null : (updates.avatarUrl !== undefined ? updates.avatarUrl : profile?.avatarUrl ?? null),
+        avatarPreset: resolvedAvatarPreset,
         ageRange: updates.ageRange !== undefined ? updates.ageRange : profile?.ageRange ?? null,
         gender: updates.gender !== undefined ? updates.gender : profile?.gender ?? null,
       };
@@ -159,7 +184,7 @@ export const [ProfileProvider, useProfile] = createContextHook(() => {
         user_id: userId,
       };
       if (updates.screenname !== undefined) row.screenname = updates.screenname;
-      if (updates.avatarUrl !== undefined) row.avatar_url = updates.avatarUrl;
+      if (updates.avatarUrl !== undefined || updates.avatarPreset !== undefined) row.avatar_url = resolvedAvatarUrl;
       if (updates.ageRange !== undefined) row.age_range = updates.ageRange;
       if (updates.gender !== undefined) row.gender = updates.gender;
 
@@ -178,7 +203,8 @@ export const [ProfileProvider, useProfile] = createContextHook(() => {
       // Update local state
       const newProfile: UserProfile = {
         screenname: updates.screenname !== undefined ? updates.screenname : profile?.screenname ?? null,
-        avatarUrl: updates.avatarUrl !== undefined ? updates.avatarUrl : profile?.avatarUrl ?? null,
+        avatarUrl: updates.avatarPreset !== undefined ? null : (updates.avatarUrl !== undefined ? updates.avatarUrl : profile?.avatarUrl ?? null),
+        avatarPreset: resolvedAvatarPreset,
         ageRange: updates.ageRange !== undefined ? updates.ageRange : profile?.ageRange ?? null,
         gender: updates.gender !== undefined ? updates.gender : profile?.gender ?? null,
       };

@@ -28,12 +28,12 @@ import Colors from '@/constants/colors';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/contexts/ProfileContext';
 import {
-  PRESET_AVATARS,
   AGE_RANGES,
   GENDER_OPTIONS,
   validateScreenname,
-  type PresetAvatar,
 } from '@/constants/profile';
+import { AVATAR_PRESETS } from '@/constants/avatarPresets';
+import { AvatarPreset } from '@/components/AvatarPreset';
 import { pickAndUploadAvatar, resolveAvatarUrl } from '@/lib/avatarUpload';
 
 export default function EditProfileScreen() {
@@ -47,17 +47,13 @@ export default function EditProfileScreen() {
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(
-    PRESET_AVATARS.find((a) => a.url === profile?.avatarUrl)?.id ?? null
+    profile?.avatarPreset ?? null
   );
   const [uploadedAvatar, setUploadedAvatar] = useState<string | null>(
-    profile?.avatarUrl && !PRESET_AVATARS.some((a) => a.url === profile.avatarUrl)
-      ? profile.avatarUrl
-      : null
+    profile?.avatarUrl ?? null
   );
   const [avatarMode, setAvatarMode] = useState<'preset' | 'upload'>(
-    profile?.avatarUrl && !PRESET_AVATARS.some((a) => a.url === profile.avatarUrl)
-      ? 'upload'
-      : 'preset'
+    profile?.avatarUrl ? 'upload' : 'preset'
   );
   const [ageRange, setAgeRange] = useState<string | null>(profile?.ageRange ?? null);
   const [gender, setGender] = useState<string | null>(profile?.gender ?? null);
@@ -70,6 +66,11 @@ export default function EditProfileScreen() {
   useEffect(() => {
     const avatarToResolve = avatarMode === 'upload' ? uploadedAvatar : null;
     if (!avatarToResolve) {
+      setResolvedAvatar(null);
+      return;
+    }
+    // Preset IDs are stored with 'preset:' prefix — not a storage path
+    if (avatarToResolve.startsWith('preset:')) {
       setResolvedAvatar(null);
       return;
     }
@@ -121,11 +122,11 @@ export default function EditProfileScreen() {
     }
   }, [user?.id]);
 
-  const handlePresetSelect = useCallback((avatar: PresetAvatar) => {
+  const handlePresetSelect = useCallback((presetId: string) => {
     if (Platform.OS !== 'web') {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    setSelectedPreset(avatar.id);
+    setSelectedPreset(presetId);
     setAvatarMode('preset');
     setUploadedAvatar(null);
   }, []);
@@ -142,15 +143,13 @@ export default function EditProfileScreen() {
     if (!canSubmit) return;
     setIsSaving(true);
 
-    const avatarUrl = avatarMode === 'upload'
-      ? uploadedAvatar
-      : selectedPreset
-        ? PRESET_AVATARS.find((a) => a.id === selectedPreset)?.url ?? null
-        : null;
+    const avatarPreset = avatarMode === 'preset' ? selectedPreset : null;
+    const avatarUrl = avatarMode === 'upload' ? uploadedAvatar : null;
 
     const { error } = await saveProfile({
       screenname: screenname,
       avatarUrl,
+      avatarPreset,
       ageRange,
       gender,
     });
@@ -168,11 +167,10 @@ export default function EditProfileScreen() {
     router.back();
   }, [canSubmit, screenname, avatarMode, uploadedAvatar, selectedPreset, ageRange, gender, saveProfile, router]);
 
+  const showPresetPreview = avatarMode === 'preset' && selectedPreset !== null;
   const currentAvatarUrl = avatarMode === 'upload'
     ? resolvedAvatar ?? uploadedAvatar
-    : selectedPreset
-      ? PRESET_AVATARS.find((a) => a.id === selectedPreset)?.url ?? null
-      : null;
+    : null;
 
   return (
     <View style={styles.container}>
@@ -206,6 +204,8 @@ export default function EditProfileScreen() {
                     contentFit="cover"
                     cachePolicy="memory-disk"
                   />
+                ) : showPresetPreview && selectedPreset ? (
+                  <AvatarPreset id={selectedPreset} size={64} />
                 ) : (
                   <UserIcon color={Colors.textMuted} size={28} />
                 )}
@@ -220,30 +220,21 @@ export default function EditProfileScreen() {
               </TouchableOpacity>
             </View>
 
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.presetScroll}
-            >
-              {PRESET_AVATARS.map((avatar) => (
+            <View style={styles.presetGrid}>
+              {AVATAR_PRESETS.map((preset) => (
                 <TouchableOpacity
-                  key={avatar.id}
+                  key={preset.id}
                   style={[
                     styles.presetAvatar,
-                    selectedPreset === avatar.id && styles.presetAvatarSelected,
+                    selectedPreset === preset.id && styles.presetAvatarSelected,
                   ]}
-                  onPress={() => handlePresetSelect(avatar)}
+                  onPress={() => handlePresetSelect(preset.id)}
                   activeOpacity={0.7}
                 >
-                  <Image
-                    source={{ uri: avatar.url }}
-                    style={styles.presetAvatarImage}
-                    contentFit="contain"
-                    cachePolicy="memory-disk"
-                  />
+                  <AvatarPreset id={preset.id} size={56} />
                 </TouchableOpacity>
               ))}
-            </ScrollView>
+            </View>
           </View>
 
           {/* Screenname */}
@@ -432,29 +423,23 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
     color: Colors.primary,
   },
-  presetScroll: {
-    gap: 8,
-    paddingRight: 4,
+  presetGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
     paddingBottom: 4,
   },
   presetAvatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: Colors.frost,
+    width: 56,
+    height: 56,
+    borderRadius: 16,
     borderWidth: 2,
     borderColor: Colors.border,
     overflow: 'hidden',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   presetAvatarSelected: {
     borderColor: Colors.primary,
     borderWidth: 2.5,
-  },
-  presetAvatarImage: {
-    width: 40,
-    height: 40,
   },
   inputWrapper: {
     flexDirection: 'row',
