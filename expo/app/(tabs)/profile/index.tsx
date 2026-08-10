@@ -8,8 +8,8 @@ import {
   Share,
   Animated,
   Platform,
-  Image,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -315,7 +315,8 @@ export default function ProfileScreen() {
       <Image
         source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/h9lsc5acg9fa3uka6bwlz' }}
         style={styles.backgroundImage}
-        resizeMode="cover"
+        contentFit="cover"
+        cachePolicy="memory-disk"
       />
       <View style={styles.backgroundOverlay} />
       <ScrollView
@@ -358,7 +359,8 @@ export default function ProfileScreen() {
                   <Image
                     source={{ uri: resolvedAvatar }}
                     style={styles.profileAvatarImage}
-                    resizeMode="cover"
+                    contentFit="cover"
+                    cachePolicy="memory-disk"
                   />
                 ) : (
                   <UserIcon color={Colors.white} size={22} />

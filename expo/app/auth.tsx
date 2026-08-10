@@ -10,8 +10,8 @@ import {
   ScrollView,
   Animated,
   ActivityIndicator,
-  Image,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Stack } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -125,7 +125,8 @@ export default function AuthScreen() {
       <Image
         source={{ uri: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80' }}
         style={styles.bgImage}
-        resizeMode="cover"
+        contentFit="cover"
+        cachePolicy="memory-disk"
       />
       <View style={styles.bgOverlay} />
 

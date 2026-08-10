@@ -204,6 +204,7 @@ export default function EditProfileScreen() {
                     source={{ uri: currentAvatarUrl }}
                     style={styles.avatarPreviewImage}
                     contentFit="cover"
+                    cachePolicy="memory-disk"
                   />
                 ) : (
                   <UserIcon color={Colors.textMuted} size={28} />
@@ -238,6 +239,7 @@ export default function EditProfileScreen() {
                     source={{ uri: avatar.url }}
                     style={styles.presetAvatarImage}
                     contentFit="contain"
+                    cachePolicy="memory-disk"
                   />
                 </TouchableOpacity>
               ))}

@@ -25,7 +25,7 @@ import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
 import { useSummits, type SummitRecord } from '@/contexts/SummitContext';
 import { useFindMountain } from '@/hooks/useAllMountains';
-import { getMountainIconUrl } from '@/constants/mountainIcons';
+import { getMountainIconSource } from '@/constants/mountainIcons';
 import { getMountainImage } from '@/constants/mountainImages';
 import type { Mountain } from '@/constants/mountains';
 
@@ -182,7 +182,7 @@ interface CardProps {
 }
 
 function StampCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
-  const iconUrl = getMountainIconUrl(mountain.id);
+  const iconSource = getMountainIconSource(mountain.id);
   const accolade = getAccolade(mountain);
 
   const statFields: { label: string; value: string }[] = [];
@@ -208,7 +208,7 @@ function StampCard({ mountain, record, enabled, unitMode, width, height }: CardP
           style={StyleSheet.absoluteFillObject}
         />
         <Image
-          source={{ uri: iconUrl }}
+          source={iconSource}
           style={styles.stampIcon}
           contentFit="contain"
         />
@@ -248,7 +248,7 @@ function StampCard({ mountain, record, enabled, unitMode, width, height }: CardP
 }
 
 function ExpeditionCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
-  const iconUrl = getMountainIconUrl(mountain.id);
+  const iconSource = getMountainIconSource(mountain.id);
   const accolade = getAccolade(mountain);
 
   const summitedValue = enabled.summitTime && record?.summitTime
@@ -294,7 +294,7 @@ function ExpeditionCard({ mountain, record, enabled, unitMode, width, height }: 
         ))}
         <View style={styles.expeditionIconWrap}>
           <Image
-            source={{ uri: iconUrl }}
+            source={iconSource}
             style={styles.expeditionIcon}
             contentFit="contain"
           />
@@ -344,6 +344,7 @@ function PhotoCard({ mountain, record, enabled, unitMode, width, height }: CardP
         source={{ uri: photoSource }}
         style={StyleSheet.absoluteFillObject}
         contentFit="cover"
+        cachePolicy="memory-disk"
       />
       <LinearGradient
         colors={['rgba(8,16,26,0)', 'rgba(8,16,26,0)', 'rgba(8,16,26,0.72)']}
@@ -423,6 +424,7 @@ function StoryCard({ mountain, record, enabled, unitMode, width, height }: CardP
         source={{ uri: photoSource }}
         style={StyleSheet.absoluteFillObject}
         contentFit="cover"
+        cachePolicy="memory-disk"
       />
       <View style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(72,128,196,0.14)' }]} />
       <LinearGradient

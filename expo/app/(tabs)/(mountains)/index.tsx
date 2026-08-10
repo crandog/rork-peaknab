@@ -7,9 +7,9 @@ import {
   TextInput,
   TouchableOpacity,
   Platform,
-  Image,
   ScrollView,
 } from 'react-native';
+import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown, Mountain, Trophy } from 'lucide-react-native';
@@ -119,6 +119,7 @@ export default function MountainsScreen() {
     <View style={styles.container}>
       <Image
         source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/e154lkqvikg84q9a05bjl' }}
+        cachePolicy="memory-disk"
         style={styles.backgroundImage}
         resizeMode="cover"
       />
@@ -126,6 +127,7 @@ export default function MountainsScreen() {
 
       <Image
         source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ce56ixcq6dwvfeks1eq19' }}
+        cachePolicy="memory-disk"
         style={styles.bottomBackground}
         resizeMode="cover"
       />

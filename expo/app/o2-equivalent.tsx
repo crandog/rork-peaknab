@@ -4,10 +4,10 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
   Dimensions,
 } from 'react-native';
 import { Stack } from 'expo-router';
+import { Image } from 'expo-image';
 import { Wind } from 'lucide-react-native';
 import Colors from '@/constants/colors';
 import OxygenInfoButton from '@/components/OxygenInfoButton';
@@ -65,7 +65,8 @@ export default function O2EquivalentScreen() {
           <Image
             source={{ uri: 'https://r2-pub.rork.com/attachments/37ju8kn02uoq9cuh159tp' }}
             style={styles.heroImage}
-            resizeMode="cover"
+            contentFit="cover"
+            cachePolicy="memory-disk"
           />
           <View style={styles.heroOverlay} />
           <View style={styles.heroContent}>

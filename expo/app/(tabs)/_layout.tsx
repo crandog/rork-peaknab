@@ -1,7 +1,8 @@
 import { Tabs } from "expo-router";
 import { Mountain, Map, User } from "lucide-react-native";
 import React from "react";
-import { View, Image, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import Colors from "@/constants/colors";
 
 export default function TabLayout() {
@@ -16,7 +17,8 @@ export default function TabLayout() {
             <Image
               source={{ uri: 'https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ce56ixcq6dwvfeks1eq19' }}
               style={StyleSheet.absoluteFill}
-              resizeMode="cover"
+              contentFit="cover"
+              cachePolicy="memory-disk"
             />
             <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(220, 232, 245, 0.55)' }]} />
           </View>

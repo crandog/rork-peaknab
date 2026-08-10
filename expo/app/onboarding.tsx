@@ -174,6 +174,7 @@ export default function OnboardingScreen() {
         source={{ uri: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80' }}
         style={styles.bgImage}
         contentFit="cover"
+        cachePolicy="memory-disk"
       />
       <View style={styles.bgOverlay} />
 
@@ -215,6 +216,7 @@ export default function OnboardingScreen() {
                     source={{ uri: currentAvatarUrl }}
                     style={styles.avatarPreviewImage}
                     contentFit="cover"
+                    cachePolicy="memory-disk"
                   />
                 ) : (
                   <UserIcon color={Colors.textMuted} size={28} />
@@ -249,6 +251,7 @@ export default function OnboardingScreen() {
                     source={{ uri: avatar.url }}
                     style={styles.presetAvatarImage}
                     contentFit="contain"
+                    cachePolicy="memory-disk"
                   />
                 </TouchableOpacity>
               ))}

@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { MountainCategory } from '@/constants/mountains';
-import { getMountainIconUrl } from '@/constants/mountainIcons';
+import { getMountainIconSource } from '@/constants/mountainIcons';
 import Colors from '@/constants/colors';
 
 interface MountainIconProps {
@@ -24,7 +24,7 @@ const categoryEmojis: Record<string, string> = {
 };
 
 function MountainIconComponent({ mountainId, category, size = 24 }: MountainIconProps) {
-  const iconUrl = getMountainIconUrl(mountainId ?? 'default');
+  const iconSource = getMountainIconSource(mountainId ?? 'default');
   const [hasError, setHasError] = useState(false);
 
   if (hasError) {
@@ -52,14 +52,14 @@ function MountainIconComponent({ mountainId, category, size = 24 }: MountainIcon
       },
     ]}>
       <Image
-        source={{ uri: iconUrl }}
+        source={iconSource}
         style={{
           width: size,
           height: size,
         }}
         resizeMode="contain"
         onError={() => {
-          console.log('MountainIcon load error for:', mountainId, iconUrl);
+          console.log('MountainIcon load error for:', mountainId);
           setHasError(true);
         }}
       />

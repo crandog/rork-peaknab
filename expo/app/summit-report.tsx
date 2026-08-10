@@ -213,6 +213,7 @@ export default function SummitReportScreen() {
                 source={{ uri: photoUri }}
                 style={styles.photo}
                 contentFit="cover"
+                cachePolicy="memory-disk"
               />
               <TouchableOpacity
                 style={styles.removePhotoButton}

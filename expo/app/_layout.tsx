@@ -3,10 +3,12 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Image as ExpoImage } from "expo-image";
 import { SummitProvider } from "@/contexts/SummitContext";
 import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProfileProvider } from "@/contexts/ProfileContext";
+import { mountainImages, defaultMountainImage } from "@/constants/mountainImages";
 import Colors from "@/constants/colors";
 
 void SplashScreen.preventAutoHideAsync();
@@ -96,6 +98,22 @@ function RootLayoutNav() {
 export default function RootLayout() {
   useEffect(() => {
     void SplashScreen.hideAsync();
+  }, []);
+
+  // Prefetch all hero/detail images so they're cached on disk after first launch.
+  // Peak icons are bundled locally and need no prefetch.
+  useEffect(() => {
+    const urls = Object.values(mountainImages);
+    urls.push(defaultMountainImage);
+    // Also prefetch static UI background images
+    urls.push(
+      "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/h9lsc5acg9fa3uka6bwlz",
+      "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ce56ixcq6dwvfeks1eq19",
+      "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/e154lkqvikg84q9a05bjl",
+      "https://r2-pub.rork.com/attachments/37ju8kn02uoq9cuh159tp",
+      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
+    );
+    ExpoImage.prefetch(urls).catch(() => {});
   }, []);
 
   return (

@@ -9,7 +9,6 @@ import {
   Platform,
   FlatList,
   Share,
-  Image,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -315,6 +314,7 @@ export default function MountainDetailScreen() {
               source={{ uri: record.photoUri }}
               style={styles.reportPhoto}
               contentFit="cover"
+              cachePolicy="memory-disk"
             />
           </View>
         )}
@@ -354,10 +354,11 @@ export default function MountainDetailScreen() {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.heroImageContainer, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]}>
-        <Image
+        <ExpoImage
           source={{ uri: imageError ? fallbackImageUrl : heroImageUrl }}
           style={styles.heroImage}
-          resizeMode="cover"
+          contentFit="cover"
+          cachePolicy="memory-disk"
           onError={() => {
             console.log('Hero image failed to load for:', mountain?.id);
             setImageError(true);
@@ -820,10 +821,11 @@ export default function MountainDetailScreen() {
         </View>
 
         <View style={styles.bottomImageContainer}>
-          <Image
+          <ExpoImage
             source={{ uri: imageError ? fallbackImageUrl : heroImageUrl }}
             style={styles.bottomImage}
-            resizeMode="cover"
+            contentFit="cover"
+            cachePolicy="memory-disk"
           />
           <View style={styles.bottomImageOverlay} />
         </View>

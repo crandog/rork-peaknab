@@ -18,7 +18,7 @@ import { Image as ExpoImage } from 'expo-image';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainIcon from '@/components/MountainIcon';
-import { getMountainIconUrl } from '@/constants/mountainIcons';
+import { getMountainIconSource } from '@/constants/mountainIcons';
 import RNMapView, {
   Marker as RNMarker,
   Region,
@@ -166,7 +166,7 @@ function PeakIconMarker({
   stampScale: number;
 }) {
   const [tracking, setTracking] = useState(true);
-  const iconUrl = getMountainIconUrl(peak.id);
+  const iconSource = getMountainIconSource(peak.id);
   const showLabel = showName || isSelected;
 
   useEffect(() => {
@@ -188,7 +188,7 @@ function PeakIconMarker({
     >
       <View style={styles.peakIconContainer}>
         <ExpoImage
-          source={{ uri: iconUrl }}
+          source={iconSource}
           style={styles.peakIconImage}
           contentFit="contain"
           cachePolicy="memory-disk"
@@ -290,15 +290,7 @@ export default function MapScreen() {
     return () => clearTimeout(timer);
   }, [mapReady, fitToPeaks]);
 
-  useEffect(() => {
-    const urls = allMountains
-      .filter((m) => !(m.latitude === 0 && m.longitude === 0))
-      .map((m) => getMountainIconUrl(m.id))
-      .filter(Boolean);
-    if (urls.length > 0) {
-      ExpoImage.prefetch(urls).catch(() => {});
-    }
-  }, [allMountains]);
+  // Peak icons are now bundled locally — no prefetch needed.
 
   const handleClusterPress = useCallback((cluster: Cluster) => {
     if (!mapRef.current || cluster.count === 1) return;
