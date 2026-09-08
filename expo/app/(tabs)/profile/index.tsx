@@ -14,7 +14,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import {
-  TrendingUp,
   Flag,
   ChevronRight,
   Award,
@@ -453,15 +452,6 @@ export default function ProfileScreen() {
             </View>
             <Text style={styles.statNumber}>{summitCount}</Text>
             <Text style={styles.statLabel}>{summitCount !== uniqueSummitCount ? `Summits (${uniqueSummitCount} peaks)` : 'Summits'}</Text>
-          </View>
-          <View style={styles.statCard}>
-            <View style={[styles.statIcon, { backgroundColor: Colors.success + '15' }]}>
-              <TrendingUp color={Colors.success} size={20} />
-            </View>
-            <Text style={styles.statNumber}>
-              {totalElevation > 1000 ? `${(totalElevation / 1000).toFixed(1)}k` : totalElevation}
-            </Text>
-            <Text style={styles.statLabel}>Meters</Text>
           </View>
           <View style={styles.statCard}>
             <View style={[styles.statIcon, { backgroundColor: '#4A7FB5' + '15' }]}>
