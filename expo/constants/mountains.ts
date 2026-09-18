@@ -598,6 +598,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'The highest peak in Colorado and the Rocky Mountains. A popular non-technical hike with well-maintained trails.',
     firstAscent: '1874 - H.W.V. Stuckle',
+    baseName: 'North Mt. Elbert Trailhead',
+    baseElevation_m: 3060,
     iconEmoji: '🦌',
   },
   {
@@ -613,6 +615,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'The second highest peak in Colorado. Named for its massive bulk—it has the most area above 14,000 feet of any peak in the contiguous US.',
     firstAscent: '1873 - Henry Gannett',
+    baseName: 'Mount Massive Trailhead',
+    baseElevation_m: 3063,
     iconEmoji: '🏕️',
   },
   {
@@ -628,6 +632,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The third highest peak in Colorado, named after Harvard University by members of a survey party who were alumni.',
     firstAscent: '1869 - J.D. Whitney survey',
+    baseName: 'North Cottonwood Trailhead',
+    baseElevation_m: 3011,
     iconEmoji: '📚',
   },
   {
@@ -643,6 +649,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The fourth highest peak in Colorado. Sacred to the Navajo people as the eastern boundary of their homeland.',
     firstAscent: '1874 - Survey team',
+    baseName: 'Lake Como Road (2WD parking)',
+    baseElevation_m: 2440,
     iconEmoji: '🦅',
   },
   {
@@ -658,6 +666,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The fifth highest peak in Colorado. Its name means "silver" in Spanish, reflecting the mining heritage of the region.',
     firstAscent: '1873 - Survey team',
+    baseName: 'La Plata Trailhead',
+    baseElevation_m: 3063,
     iconEmoji: '🪙',
   },
   {
@@ -673,6 +683,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'The highest peak in the San Juan Mountains and sixth highest in Colorado. Known for its flat summit area.',
     firstAscent: '1874 - Survey team',
+    baseName: 'Nellie Creek Trailhead',
+    baseElevation_m: 3493,
     iconEmoji: '🏜️',
   },
   {
@@ -688,6 +700,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'One of Colorado\'s most challenging 14ers. The standard route involves Class 3 scrambling with significant exposure.',
     firstAscent: '1916 - Albert Ellingwood & Eleanor Davis',
+    baseName: 'South Colony Lakes Trailhead',
+    baseElevation_m: 3018,
     iconEmoji: '⛏️',
   },
   {
@@ -703,6 +717,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'Named after President Abraham Lincoln. Part of a popular loop that includes four 14ers in one day.',
     firstAscent: '1861 - Survey team',
+    baseName: 'Kite Lake',
+    baseElevation_m: 3658,
     iconEmoji: '🎩',
   },
   {
@@ -718,6 +734,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'The highest point on the Continental Divide in North America. One of the most popular 14ers due to proximity to Denver.',
     firstAscent: '1861 - Charles C. Parry',
+    baseName: 'Stevens Gulch Trailhead',
+    baseElevation_m: 3438,
     iconEmoji: '🧭',
   },
   {
@@ -733,6 +751,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'Often climbed together with neighboring Grays Peak via a short saddle traverse. Named after botanist John Torrey.',
     firstAscent: '1861 - Charles C. Parry',
+    baseName: 'Stevens Gulch Trailhead',
+    baseElevation_m: 3438,
     iconEmoji: '🌿',
   },
   {
@@ -748,6 +768,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'One of the most accessible and popular 14ers in Colorado. The East Ridge trail is a well-traveled Class 1 route.',
     firstAscent: '1861 - Survey team',
+    baseName: 'Quandary Trailhead',
+    baseElevation_m: 3307,
     iconEmoji: '🎿',
   },
   {
@@ -763,6 +785,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The northernmost 14er in Colorado and centerpiece of Rocky Mountain National Park. The Keyhole Route is a classic and demanding scramble.',
     firstAscent: '1868 - John Wesley Powell & team',
+    baseName: 'Longs Peak Trailhead',
+    baseElevation_m: 2865,
     iconEmoji: '🔑',
   },
   {
@@ -778,6 +802,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'America\'s Mountain—inspired the song "America the Beautiful." One of the most visited peaks in North America with a road and cog railway to the top.',
     firstAscent: '1820 - Edwin James',
+    baseName: 'Barr Trailhead (Manitou Springs)',
+    baseElevation_m: 2027,
     iconEmoji: '🇺🇸',
   },
   {
@@ -793,6 +819,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Widely considered the most difficult standard 14er route in Colorado. Features the famous "Knife Edge" traverse with extreme exposure.',
     firstAscent: '1909 - Percy Hagerman & Harold Clark',
+    baseName: 'Capitol Creek Trailhead',
+    baseElevation_m: 2871,
     iconEmoji: '🗡️',
   },
   {
@@ -808,6 +836,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Part of the iconic Maroon Bells. Known as one of the "Deadly Bells" due to its crumbly, unstable rock that has claimed many lives.',
     firstAscent: '1908 - Percy Hagerman',
+    baseName: 'Maroon Lake',
+    baseElevation_m: 2920,
     iconEmoji: '🔔',
   },
   {
@@ -1551,6 +1581,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Oregon\'s highest peak and most climbed glaciated peak in North America. The south side route is a popular introduction to mountaineering.',
     firstAscent: '1857 - Thomas Dryer & team',
+    baseName: 'Timberline Lodge',
+    baseElevation_m: 1817,
     iconEmoji: '🌲',
     routes: ['South Side / Hogsback', 'Cooper Spur', 'Sunshine Route'],
     camps: {
@@ -1858,6 +1890,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in the Lake Louise area of Banff National Park. A popular scramble with stunning views of the surrounding Canadian Rockies.',
     firstAscent: '1894 - Walter Wilcox & team',
+    baseName: 'Moraine Lake Trailhead',
+    baseElevation_m: 1884,
     iconEmoji: '🍁',
   },
   {
@@ -1873,6 +1907,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in the Canadian Rockies. Known as the "Monarch of the Canadian Rockies" and infamous for terrible weather and low success rates.',
     firstAscent: '1913 - Conrad Kain & team',
+    baseName: 'Berg Lake',
+    baseElevation_m: 1646,
     iconEmoji: '🦌',
   },
   {
@@ -1888,6 +1924,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in Canada and second highest in North America. Has the largest base circumference of any non-volcanic mountain on Earth.',
     firstAscent: '1925 - Albert MacCarthy & team',
+    baseName: 'King Trench Base Camp',
+    baseElevation_m: 2700,
     iconEmoji: '🇨🇦',
   },
   {
@@ -1970,6 +2008,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The most heavily glaciated volcano in the Cascades after Rainier. Holds the world record for most snowfall in a single season (1140 inches in 1998-99).',
     firstAscent: '1868 - Edmund Coleman & team',
+    baseName: 'Heliotrope Ridge Trailhead',
+    baseElevation_m: 1128,
     iconEmoji: '🌨️',
   },
   {
@@ -2000,6 +2040,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'Home to the highest paved road in North America. The summit offers panoramic views of the Continental Divide. A mountain goat haven.',
     firstAscent: '1863 - Survey team',
+    baseName: 'Summit Lake Trailhead',
+    baseElevation_m: 3911,
     iconEmoji: '🐐',
   },
   {
@@ -2015,6 +2057,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'One of the most popular 14ers due to its short approach and moderate difficulty. Named after painter Albert Bierstadt who captured the landscape.',
     firstAscent: '1863 - Survey team',
+    baseName: 'Guanella Pass',
+    baseElevation_m: 3557,
     iconEmoji: '🎨',
   },
   {
@@ -2030,6 +2074,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'One of Colorado\'s most photogenic peaks. Named after the volcano in Jules Verne\'s "Journey to the Center of the Earth."',
     firstAscent: '1874 - Survey team',
+    baseName: 'Yankee Boy Basin (upper trailhead)',
+    baseElevation_m: 3460,
     iconEmoji: '📖',
   },
   {
@@ -2165,6 +2211,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Very Difficult',
     description: 'Known as Begguya (Denali\'s Child) in Dena\'ina, this massive Alaskan peak rises near Denali with enormous vertical relief. Its steep faces and ridges, combined with subarctic weather, make it one of the most challenging climbs in North America.',
     firstAscent: '1954 - Fred Beckey, Heinrich Harrer & Henry Meybohm',
+    baseName: 'Kahiltna Glacier Base Camp',
+    baseElevation_m: 2200,
     iconEmoji: '🏔️',
   },
   {
@@ -2300,6 +2348,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Famous for its catastrophic 1980 eruption that blew off the entire north face, reducing its height by over 1,300 feet. The horseshoe-shaped crater and surrounding blast zone remain a dramatic testament to volcanic power. Now a National Volcanic Monument and popular climb with a permit system.',
     firstAscent: '1853 - Thomas J. Dryer',
+    baseName: 'Climbers Bivouac',
+    baseElevation_m: 1143,
     iconEmoji: '💨',
   },
   {
@@ -2429,6 +2479,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'A world-famous granite dome in Yosemite National Park. Its sheer northwest face and rounded summit are one of the most recognizable silhouettes in the world. The cable route is a legendary day hike, while the technical faces attract elite climbers.',
     firstAscent: '1875 - George G. Anderson',
+    baseName: 'Yosemite Valley (Happy Isles)',
+    baseElevation_m: 1230,
     iconEmoji: '⛰️',
     routes: ['Cable Route', 'Regular Northwest Face', 'Snake Dike'],
     camps: {
@@ -2640,6 +2692,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Difficult',
     description: 'Nicknamed the "Matterhorn of the Rockies" for its sharp, pyramidal summit. It sits on the British Columbia–Alberta border in a remote wilderness area, accessible only by hiking, horseback or helicopter. The North Ridge is a classic alpine rock and snow route.',
     firstAscent: '1901 - James Outram, Christian Bohren and Christian Hasler',
+    baseName: 'R.C. Hind Hut',
+    baseElevation_m: 2590,
     iconEmoji: '⛰️',
   },
   {
@@ -2655,6 +2709,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'A vertical granite monolith rising from Yosemite Valley and one of the most famous big-wall climbing destinations in the world. The nearly 1,000m sheer face hosts legendary routes such as The Nose. For non-climbers, the summit is reachable by hiking trails from Yosemite Valley.',
     firstAscent: '1958 - Warren Harding, George Whitmore and Wayne Merry (The Nose)',
+    baseName: 'Yosemite Valley (El Cap Meadow)',
+    baseElevation_m: 1219,
     iconEmoji: '🧗',
   },
   {
@@ -2867,6 +2923,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest point in the state of Hawaii and, when measured from its base on the ocean floor, the tallest mountain on Earth. Its summit is home to world-renowned astronomical observatories and sacred Native Hawaiian sites.',
     firstAscent: 'Ancient (Hawaiian ancestors)',
+    baseName: 'Visitor Information Station',
+    baseElevation_m: 2804,
     iconEmoji: '🇺🇸',
   },
 ];
