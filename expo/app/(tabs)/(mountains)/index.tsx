@@ -17,6 +17,7 @@ import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
 import { MountainCategory } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
+import { useUnits } from '@/contexts/UnitsContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
 import MountainCard from '@/components/MountainCard';
 
@@ -43,7 +44,7 @@ export default function MountainsScreen() {
   const [selectedCategory, setSelectedCategory] = useState<MountainCategory | 'all'>('all');
   const [sortBy, setSortBy] = useState<SortOption>('elevation_desc');
   const [showSort, setShowSort] = useState(false);
-  const [useFeet, setUseFeet] = useState(false);
+  const { useFeet, setUseFeet } = useUnits();
   const [summitedOnly, setSummitedOnly] = useState<boolean>(false);
 
   const filteredMountains = useMemo(() => {
@@ -256,7 +257,7 @@ export default function MountainsScreen() {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.unitToggleBtn}
-              onPress={() => setUseFeet(prev => !prev)}
+              onPress={() => setUseFeet(!useFeet)}
               activeOpacity={0.7}
               testID="unit-toggle-button"
             >

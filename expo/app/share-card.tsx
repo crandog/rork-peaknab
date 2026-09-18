@@ -26,7 +26,8 @@ import Colors from '@/constants/colors';
 import { useSummits, type SummitRecord } from '@/contexts/SummitContext';
 import { useFindMountain } from '@/hooks/useAllMountains';
 import { getMountainIconSource } from '@/constants/mountainIcons';
-import { getMountainImage } from '@/constants/mountainImages';
+import { getMountainImage, mountainImages } from '@/constants/mountainImages';
+import { useUnits } from '@/contexts/UnitsContext';
 import type { Mountain } from '@/constants/mountains';
 
 type CardStyle = 'stamp' | 'expedition' | 'photo' | 'story';
@@ -122,7 +123,7 @@ function formatElevation(mountain: Mountain, mode: UnitMode, uppercase = false):
   switch (mode) {
     case 'meters': return `${m} ${mSuffix}`;
     case 'feet': return `${ft} ${ftSuffix}`;
-    case 'both': return `${m} ${mSuffix} · ${ft} ${ftSuffix}`;
+    case 'both': return `${m} ${mSuffix} / ${ft} ${ftSuffix}`;
   }
 }
 
@@ -183,6 +184,9 @@ interface CardProps {
 
 function StampCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
   const iconSource = getMountainIconSource(mountain.id);
+  // Use the peak's real photo (same asset as the detail screen) when available;
+  // fall back to the bundled icon for peaks without an image.
+  const photoUri = mountainImages[mountain.id];
   const accolade = getAccolade(mountain);
 
   const statFields: { label: string; value: string }[] = [];
@@ -203,15 +207,26 @@ function StampCard({ mountain, record, enabled, unitMode, width, height }: CardP
   return (
     <View style={[styles.stampCard, { width, height }]}>
       <View style={styles.stampTopSection}>
-        <LinearGradient
-          colors={['#C9DCEE', '#EFF4FA']}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <Image
-          source={iconSource}
-          style={styles.stampIcon}
-          contentFit="contain"
-        />
+        {photoUri ? (
+          <Image
+            source={{ uri: photoUri }}
+            style={StyleSheet.absoluteFillObject}
+            contentFit="cover"
+            cachePolicy="memory-disk"
+          />
+        ) : (
+          <>
+            <LinearGradient
+              colors={['#C9DCEE', '#EFF4FA']}
+              style={StyleSheet.absoluteFillObject}
+            />
+            <Image
+              source={iconSource}
+              style={styles.stampIcon}
+              contentFit="contain"
+            />
+          </>
+        )}
         <View style={styles.stampBadge}>
           <Text style={styles.stampBadgeText}>SUMMITED</Text>
         </View>
@@ -506,6 +521,7 @@ export default function ShareCardScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { getSummitByCreatedAt } = useSummits();
+  const { useFeet, isLoaded: unitsLoaded } = useUnits();
   const cardRef = useRef<View>(null);
 
   const mountain = useFindMountain(mountainId);
@@ -516,6 +532,15 @@ export default function ShareCardScreen() {
 
   const [cardStyle, setCardStyle] = useState<CardStyle>('stamp');
   const [unitMode, setUnitMode] = useState<UnitMode>('both');
+
+  // Default the elevation units to the user's app-wide preference (FT/M toggle
+  // on the peaks list) until they actively pick a different mode here.
+  const unitTouchedRef = useRef(false);
+  useEffect(() => {
+    if (unitsLoaded && !unitTouchedRef.current) {
+      setUnitMode(useFeet ? 'feet' : 'meters');
+    }
+  }, [unitsLoaded, useFeet]);
 
   const [enabled, setEnabled] = useState<Record<FieldKey, boolean>>({
     date: true,
@@ -741,7 +766,10 @@ export default function ShareCardScreen() {
                 <TouchableOpacity
                   key={mode}
                   style={[styles.unitsSegment, unitMode === mode && styles.unitsSegmentActive]}
-                  onPress={() => setUnitMode(mode)}
+                  onPress={() => {
+                    unitTouchedRef.current = true;
+                    setUnitMode(mode);
+                  }}
                   activeOpacity={0.7}
                 >
                   <Text style={[styles.unitsSegmentText, unitMode === mode && styles.unitsSegmentTextActive]}>

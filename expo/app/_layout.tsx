@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Image as ExpoImage } from "expo-image";
 import { SummitProvider } from "@/contexts/SummitContext";
+import { UnitsProvider } from "@/contexts/UnitsContext";
 import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProfileProvider } from "@/contexts/ProfileContext";
@@ -123,7 +124,9 @@ export default function RootLayout() {
           <ProfileProvider>
             <CustomMountainsProvider>
               <SummitProvider>
-                <RootLayoutNav />
+                <UnitsProvider>
+                  <RootLayoutNav />
+                </UnitsProvider>
               </SummitProvider>
             </CustomMountainsProvider>
           </ProfileProvider>
