@@ -47,9 +47,9 @@ const HERO_HEIGHT = 320;
 
 type TabType = 'info' | 'summit';
 
-// Matches the summit-elevation presentation on the card: "X,XXXm / XX,XXXft"
+// Base/camp/gain rows always show both units at once, regardless of the app's unit toggle
 function formatElevation(meters: number): string {
-  return `${meters.toLocaleString()}m / ${Math.round(meters * 3.28084).toLocaleString()}ft`;
+  return `${meters.toLocaleString()} m / ${Math.round(meters * 3.28084).toLocaleString()} ft`;
 }
 
 export default function MountainDetailScreen() {
@@ -518,9 +518,13 @@ export default function MountainDetailScreen() {
                 <TrendingUp color={Colors.primary} size={18} />
               </View>
               <Text style={styles.baseGainText}>
-                <Text style={styles.baseGainLabel}>Base:</Text>{' '}
-                {mountain.baseName} {formatElevation(mountain.baseElevation_m)}
-                {'   •   '}
+                {campList.length === 0 && (
+                  <>
+                    <Text style={styles.baseGainLabel}>Base:</Text>{' '}
+                    {mountain.baseName} {formatElevation(mountain.baseElevation_m)}
+                    {'   •   '}
+                  </>
+                )}
                 <Text style={styles.baseGainLabel}>Gain:</Text>{' '}
                 {formatElevation(mountain.elevation - mountain.baseElevation_m)}
               </Text>
@@ -535,6 +539,15 @@ export default function MountainDetailScreen() {
                 <Text style={styles.campsRouteText}>{mountain.camps.route}</Text>
               </View>
               <View>
+                {mountain.baseElevation_m != null && (
+                  <View style={styles.campRow}>
+                    <View style={[styles.campDot, { backgroundColor: Colors.primary }]} />
+                    <Text style={[styles.campName, { flex: 1 }]}>{mountain.baseName}</Text>
+                    <Text style={styles.campElevation}>
+                      {formatElevation(mountain.baseElevation_m)}
+                    </Text>
+                  </View>
+                )}
                 {visibleCamps.map((camp, idx: number) => (
                   <View key={`${camp.name}-${idx}`} style={styles.campRow}>
                     <View style={styles.campDot} />
