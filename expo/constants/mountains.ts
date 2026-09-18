@@ -2,7 +2,13 @@ export type MountainCategory = '7summits' | '8000m' | '14ers' | 'alps' | 'andes'
 
 export interface Camp {
   name: string;
-  elevation: number;
+  elevation_m: number;
+}
+
+// Camps grouped by route: `route` names the standard route, `list` is ordered low → high.
+export interface CampRoute {
+  route: string;
+  list: Camp[];
 }
 
 export interface Mountain {
@@ -21,7 +27,9 @@ export interface Mountain {
   firstAscent: string;
   iconEmoji: string;
   routes?: string[];
-  camps?: Camp[];
+  baseName?: string; // e.g. "Base Camp", "Paradise Trailhead", "Gouter Hut"
+  baseElevation_m?: number; // start point of the standard route
+  camps?: CampRoute;
 }
 
 export const categoryLabels: Record<MountainCategory, string> = {
@@ -62,15 +70,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The highest mountain on Earth. Known as Sagarmatha in Nepal and Chomolungma in Tibet, Everest has been the ultimate mountaineering challenge since it was first summited in 1953.',
     firstAscent: '1953 - Edmund Hillary & Tenzing Norgay',
+    baseName: 'Base Camp',
+    baseElevation_m: 5364,
     iconEmoji: '🏔️',
     routes: ['South Col Route (Nepal)', 'North Ridge Route (Tibet)'],
-    camps: [
-      { name: 'Base Camp', elevation: 5364 },
-      { name: 'Camp I', elevation: 6060 },
-      { name: 'Camp II', elevation: 6400 },
-      { name: 'Camp III', elevation: 7200 },
-      { name: 'Camp IV / South Col', elevation: 7950 },
-    ],
+    camps: {
+      route: 'South Col Route',
+      list: [
+        { name: 'Camp 1', elevation_m: 6065 },
+        { name: 'Camp 2', elevation_m: 6400 },
+        { name: 'Camp 3', elevation_m: 7160 },
+        { name: 'Camp 4 (South Col)', elevation_m: 7925 },
+      ],
+    },
   },
   {
     id: 'aconcagua',
@@ -85,15 +97,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in both the Western and Southern Hemispheres. A non-technical climb via the Normal Route, but altitude and weather are serious challenges.',
     firstAscent: '1897 - Matthias Zurbriggen',
+    baseName: 'Plaza de Mulas',
+    baseElevation_m: 4300,
     iconEmoji: '🦅',
     routes: ['Normal Route (Northwest Ridge)', 'Polish Glacier Route', 'False Polish Route'],
-    camps: [
-      { name: 'Confluencia', elevation: 3390 },
-      { name: 'Plaza de Mulas', elevation: 4370 },
-      { name: 'Camp I / Canada', elevation: 4910 },
-      { name: 'Camp II / Nido de Cóndores', elevation: 5380 },
-      { name: 'Camp III / Colera', elevation: 5970 },
-    ],
+    camps: {
+      route: 'Normal Route',
+      list: [
+        { name: 'Camp Canada', elevation_m: 5050 },
+        { name: 'Nido de Condores', elevation_m: 5560 },
+        { name: 'Camp Colera', elevation_m: 6000 },
+      ],
+    },
   },
   {
     id: 'denali',
@@ -108,16 +123,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in North America. Known for extreme cold and weather, Denali has one of the largest base-to-summit rises of any mountain on Earth.',
     firstAscent: '1913 - Hudson Stuck & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 2200,
     iconEmoji: '🐻',
     routes: ['West Buttress', 'West Rib', 'Cassin Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 2195 },
-      { name: 'Camp I / 7,800ft', elevation: 2377 },
-      { name: 'Camp II / 9,500ft', elevation: 2896 },
-      { name: 'Camp III / 11,000ft', elevation: 3353 },
-      { name: 'Camp IV / 14,200ft', elevation: 4328 },
-      { name: 'High Camp / 17,200ft', elevation: 5243 },
-    ],
+    camps: {
+      route: 'West Buttress',
+      list: [
+        { name: 'Camp 1', elevation_m: 2400 },
+        { name: 'Camp 2 (11K Camp)', elevation_m: 3400 },
+        { name: 'Camp 3 (14K Camp)', elevation_m: 4330 },
+        { name: 'High Camp', elevation_m: 5240 },
+      ],
+    },
   },
   {
     id: 'kilimanjaro',
@@ -132,13 +150,20 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Africa\'s highest peak and the world\'s tallest freestanding mountain. A volcanic massif with three cones: Kibo, Mawenzi, and Shira.',
     firstAscent: '1889 - Hans Meyer & Ludwig Purtscheller',
+    baseName: 'Machame Gate',
+    baseElevation_m: 1800,
     iconEmoji: '🌋',
     routes: ['Marangu Route', 'Machame Route', 'Lemosho Route', 'Rongai Route'],
-    camps: [
-      { name: 'Mandara Hut', elevation: 2700 },
-      { name: 'Horombo Hut', elevation: 3720 },
-      { name: 'Kibo Hut', elevation: 4703 },
-    ],
+    camps: {
+      route: 'Machame Route',
+      list: [
+        { name: 'Machame Camp', elevation_m: 3010 },
+        { name: 'Shira Camp', elevation_m: 3840 },
+        { name: 'Barranco Camp', elevation_m: 3950 },
+        { name: 'Karanga Camp', elevation_m: 3995 },
+        { name: 'Barafu Camp', elevation_m: 4673 },
+      ],
+    },
   },
   {
     id: 'elbrus',
@@ -153,12 +178,17 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in Europe (when the Caucasus is considered part of Europe). A dormant volcano with twin summits covered in permanent ice.',
     firstAscent: '1874 - Florence Crauford Grove & team',
+    baseName: 'Azau',
+    baseElevation_m: 2350,
     iconEmoji: '❄️',
     routes: ['South Route (Barrels Hut)', 'North Route'],
-    camps: [
-      { name: 'Barrels Hut', elevation: 3890 },
-      { name: 'Pastukhov Rocks', elevation: 4670 },
-    ],
+    camps: {
+      route: 'South Route',
+      list: [
+        { name: 'Barrels Huts', elevation_m: 3720 },
+        { name: 'Priut 11 area', elevation_m: 4100 },
+      ],
+    },
   },
   {
     id: 'vinson',
@@ -173,13 +203,17 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in Antarctica. Remote and extremely cold, reaching Vinson requires flying to a base camp on the ice from Punta Arenas, Chile.',
     firstAscent: '1966 - Nicholas Clinch & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 2140,
     iconEmoji: '🧊',
     routes: ['Normal Route (Branscomb Glacier)'],
-    camps: [
-      { name: 'Base Camp', elevation: 2140 },
-      { name: 'Low Camp', elevation: 2770 },
-      { name: 'High Camp', elevation: 3730 },
-    ],
+    camps: {
+      route: 'Normal Route',
+      list: [
+        { name: 'Low Camp', elevation_m: 2800 },
+        { name: 'High Camp', elevation_m: 3780 },
+      ],
+    },
   },
   {
     id: 'carstensz',
@@ -196,10 +230,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1962 - Heinrich Harrer & team',
     iconEmoji: '🪨',
     routes: ['Standard Route (North Face)'],
-    camps: [
-      { name: 'Base Camp', elevation: 4260 },
-      { name: 'High Camp area', elevation: 4500 },
-    ],
+    camps: {
+      route: 'Standard Route (North Face)',
+      list: [
+        { name: 'Base Camp', elevation_m: 4260 },
+        { name: 'High Camp area', elevation_m: 4500 },
+      ],
+    },
   },
   {
     id: 'k2',
@@ -214,15 +251,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The second highest and arguably the most dangerous mountain in the world. Known as the "Savage Mountain" for its extreme difficulty and high fatality rate.',
     firstAscent: '1954 - Achille Compagnoni & Lino Lacedelli',
+    baseName: 'Base Camp',
+    baseElevation_m: 5150,
     iconEmoji: '⚡',
     routes: ['Abruzzi Spur', 'Cesen Route', 'Magic Line'],
-    camps: [
-      { name: 'Base Camp', elevation: 5150 },
-      { name: 'Camp I', elevation: 6050 },
-      { name: 'Camp II', elevation: 6700 },
-      { name: 'Camp III', elevation: 7200 },
-      { name: 'Camp IV', elevation: 7950 },
-    ],
+    camps: {
+      route: 'Abruzzi Spur',
+      list: [
+        { name: 'Camp 1', elevation_m: 6050 },
+        { name: 'Camp 2', elevation_m: 6700 },
+        { name: 'Camp 3', elevation_m: 7300 },
+        { name: 'Camp 4', elevation_m: 7800 },
+      ],
+    },
   },
   {
     id: 'kangchenjunga',
@@ -237,15 +278,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The third highest mountain in the world. Sacred to the people of Sikkim, climbers traditionally stop just below the summit out of respect.',
     firstAscent: '1955 - Joe Brown & George Band',
+    baseName: 'Base Camp',
+    baseElevation_m: 5475,
     iconEmoji: '🙏',
     routes: ['Southwest Face', 'North Face'],
-    camps: [
-      { name: 'Base Camp', elevation: 5140 },
-      { name: 'Camp I', elevation: 5900 },
-      { name: 'Camp II', elevation: 6500 },
-      { name: 'Camp III', elevation: 7200 },
-      { name: 'Camp IV', elevation: 7900 },
-    ],
+    camps: {
+      route: 'Southwest Face',
+      list: [
+        { name: 'Camp 1', elevation_m: 6200 },
+        { name: 'Camp 2', elevation_m: 6600 },
+        { name: 'Camp 3', elevation_m: 6900 },
+        { name: 'Camp 4', elevation_m: 7550 },
+      ],
+    },
   },
   {
     id: 'lhotse',
@@ -260,15 +305,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The fourth highest mountain in the world, connected to Everest via the South Col. Its south face is one of the steepest walls in mountaineering.',
     firstAscent: '1956 - Ernst Reiss & Fritz Luchsinger',
+    baseName: 'Base Camp',
+    baseElevation_m: 5364,
     iconEmoji: '🔺',
     routes: ['West Face / Lhotse Couloir'],
-    camps: [
-      { name: 'Base Camp', elevation: 5364 },
-      { name: 'Camp I', elevation: 6060 },
-      { name: 'Camp II', elevation: 6400 },
-      { name: 'Camp III', elevation: 7200 },
-      { name: 'Camp IV / South Col', elevation: 7950 },
-    ],
+    camps: {
+      route: 'Standard Route',
+      list: [
+        { name: 'Camp 1', elevation_m: 6065 },
+        { name: 'Camp 2', elevation_m: 6400 },
+        { name: 'Camp 3', elevation_m: 7160 },
+        { name: 'Camp 4', elevation_m: 7800 },
+      ],
+    },
   },
   {
     id: 'makalu',
@@ -283,14 +332,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The fifth highest mountain in the world. An isolated peak with a distinctive four-sided pyramid shape, known for its steep pitches and exposed ridges.',
     firstAscent: '1955 - Jean Couzy & Lionel Terray',
+    baseName: 'Base Camp',
+    baseElevation_m: 4870,
     iconEmoji: '💎',
     routes: ['Northwest Ridge', 'West Face'],
-    camps: [
-      { name: 'Base Camp', elevation: 4870 },
-      { name: 'Camp I', elevation: 5700 },
-      { name: 'Camp II', elevation: 6400 },
-      { name: 'Camp III', elevation: 7400 },
-    ],
+    camps: {
+      route: 'Northwest Ridge',
+      list: [
+        { name: 'Advanced Base Camp', elevation_m: 5700 },
+        { name: 'Camp 1', elevation_m: 6400 },
+        { name: 'Camp 2', elevation_m: 6800 },
+        { name: 'Camp 3', elevation_m: 7400 },
+      ],
+    },
   },
   {
     id: 'cho-oyu',
@@ -305,14 +359,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The sixth highest mountain in the world. Considered the easiest 8000m peak, it is often used as preparation for Everest.',
     firstAscent: '1954 - Herbert Tichy, Joseph Jöchler & Pasang Dawa Lama',
+    baseName: 'Base Camp',
+    baseElevation_m: 4900,
     iconEmoji: '🌬️',
     routes: ['Normal Route (Northwest Face)'],
-    camps: [
-      { name: 'Base Camp', elevation: 5650 },
-      { name: 'Camp I', elevation: 6400 },
-      { name: 'Camp II', elevation: 7100 },
-      { name: 'Camp III', elevation: 7500 },
-    ],
+    camps: {
+      route: 'Northwest Ridge',
+      list: [
+        { name: 'Advanced Base Camp', elevation_m: 5700 },
+        { name: 'Camp 1', elevation_m: 6400 },
+        { name: 'Camp 2', elevation_m: 7000 },
+        { name: 'Camp 3', elevation_m: 7450 },
+      ],
+    },
   },
   {
     id: 'dhaulagiri',
@@ -327,14 +386,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The seventh highest mountain in the world. Its name means "White Mountain" and it held the record as the world\'s highest known peak for 30 years.',
     firstAscent: '1960 - Kurt Diemberger & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 4750,
     iconEmoji: '🏳️',
     routes: ['Northeast Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 4700 },
-      { name: 'Camp I', elevation: 5900 },
-      { name: 'Camp II', elevation: 6400 },
-      { name: 'Camp III', elevation: 7400 },
-    ],
+    camps: {
+      route: 'Northeast Ridge',
+      list: [
+        { name: 'Camp 1', elevation_m: 5900 },
+        { name: 'Camp 2', elevation_m: 6400 },
+        { name: 'Camp 3', elevation_m: 7200 },
+      ],
+    },
   },
   {
     id: 'manaslu',
@@ -349,15 +412,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The eighth highest mountain in the world. Known as the "Mountain of the Spirit," it has become increasingly popular as an alternative to Everest.',
     firstAscent: '1956 - Toshio Imanishi & Gyalzen Norbu',
+    baseName: 'Base Camp',
+    baseElevation_m: 4800,
     iconEmoji: '👻',
     routes: ['Northeast Face'],
-    camps: [
-      { name: 'Base Camp', elevation: 4800 },
-      { name: 'Camp I', elevation: 5700 },
-      { name: 'Camp II', elevation: 6300 },
-      { name: 'Camp III', elevation: 6800 },
-      { name: 'Camp IV', elevation: 7400 },
-    ],
+    camps: {
+      route: 'Northeast Face',
+      list: [
+        { name: 'Camp 1', elevation_m: 5700 },
+        { name: 'Camp 2', elevation_m: 6400 },
+        { name: 'Camp 3', elevation_m: 6800 },
+        { name: 'Camp 4', elevation_m: 7400 },
+      ],
+    },
   },
   {
     id: 'nanga-parbat',
@@ -372,15 +439,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The ninth highest mountain in the world. Known as the "Killer Mountain" for its extremely high fatality rate among climbers. Features the largest mountain face on Earth.',
     firstAscent: '1953 - Hermann Buhl (solo)',
+    baseName: 'Base Camp',
+    baseElevation_m: 4200,
     iconEmoji: '💀',
     routes: ['Kinshofer Route', 'Diamir Face', 'Mazeno Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 4100 },
-      { name: 'Camp I', elevation: 4900 },
-      { name: 'Camp II', elevation: 6000 },
-      { name: 'Camp III', elevation: 6600 },
-      { name: 'Camp IV', elevation: 7200 },
-    ],
+    camps: {
+      route: 'Kinshofer Route (Diamir Face)',
+      list: [
+        { name: 'Camp 1', elevation_m: 4900 },
+        { name: 'Camp 2', elevation_m: 6000 },
+        { name: 'Camp 3', elevation_m: 6700 },
+        { name: 'Camp 4', elevation_m: 7100 },
+      ],
+    },
   },
   {
     id: 'annapurna',
@@ -395,15 +466,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The tenth highest mountain with the highest fatality-to-summit ratio of any 8000m peak. The first 8000m peak ever climbed.',
     firstAscent: '1950 - Maurice Herzog & Louis Lachenal',
+    baseName: 'Base Camp',
+    baseElevation_m: 4190,
     iconEmoji: '🔥',
     routes: ['North Face', 'South Face'],
-    camps: [
-      { name: 'Base Camp', elevation: 4130 },
-      { name: 'Camp I', elevation: 5000 },
-      { name: 'Camp II', elevation: 5600 },
-      { name: 'Camp III', elevation: 6300 },
-      { name: 'Camp IV', elevation: 7100 },
-    ],
+    camps: {
+      route: 'North Face',
+      list: [
+        { name: 'Camp 1', elevation_m: 5000 },
+        { name: 'Camp 2', elevation_m: 5500 },
+        { name: 'Camp 3', elevation_m: 6500 },
+        { name: 'Camp 4', elevation_m: 7000 },
+      ],
+    },
   },
   {
     id: 'gasherbrum1',
@@ -418,14 +493,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'Also known as Hidden Peak, the 11th highest mountain in the world. Its name means "Beautiful Mountain" in Balti language.',
     firstAscent: '1958 - Pete Schoening & Andy Kauffman',
+    baseName: 'Base Camp',
+    baseElevation_m: 5100,
     iconEmoji: '🌟',
     routes: ['Japanese Couloir'],
-    camps: [
-      { name: 'Base Camp', elevation: 5100 },
-      { name: 'Camp I', elevation: 6000 },
-      { name: 'Camp II', elevation: 6600 },
-      { name: 'Camp III', elevation: 7100 },
-    ],
+    camps: {
+      route: 'Japanese Couloir',
+      list: [
+        { name: 'Camp 1', elevation_m: 5900 },
+        { name: 'Camp 2', elevation_m: 6400 },
+        { name: 'Camp 3', elevation_m: 7000 },
+      ],
+    },
   },
   {
     id: 'broad-peak',
@@ -440,14 +519,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The 12th highest mountain, named for its broad summit. The first 8000m peak climbed without supplemental oxygen or high-altitude porters.',
     firstAscent: '1957 - Fritz Wintersteller & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 4900,
     iconEmoji: '📐',
     routes: ['West Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 5000 },
-      { name: 'Camp I', elevation: 6000 },
-      { name: 'Camp II', elevation: 6600 },
-      { name: 'Camp III', elevation: 7200 },
-    ],
+    camps: {
+      route: 'West Ridge',
+      list: [
+        { name: 'Camp 1', elevation_m: 5800 },
+        { name: 'Camp 2', elevation_m: 6200 },
+        { name: 'Camp 3', elevation_m: 7000 },
+      ],
+    },
   },
   {
     id: 'gasherbrum2',
@@ -462,14 +545,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The 13th highest mountain and one of the more accessible 8000m peaks in the Karakoram. A popular stepping stone for higher Karakoram objectives.',
     firstAscent: '1956 - Fritz Moravec & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 5100,
     iconEmoji: '🗻',
     routes: ['Southwest Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 5100 },
-      { name: 'Camp I', elevation: 6100 },
-      { name: 'Camp II', elevation: 6600 },
-      { name: 'Camp III', elevation: 7000 },
-    ],
+    camps: {
+      route: 'Southwest Ridge',
+      list: [
+        { name: 'Camp 1', elevation_m: 5900 },
+        { name: 'Camp 2', elevation_m: 6500 },
+        { name: 'Camp 3', elevation_m: 6900 },
+      ],
+    },
   },
   {
     id: 'shishapangma',
@@ -484,14 +571,19 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The 14th highest mountain and the lowest of the 8000m peaks. The last 8000m peak to be climbed, as it lies entirely within Tibet.',
     firstAscent: '1964 - Xu Jing & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 5000,
     iconEmoji: '🐉',
     routes: ['Northwest Face'],
-    camps: [
-      { name: 'Base Camp', elevation: 5000 },
-      { name: 'Camp I', elevation: 5800 },
-      { name: 'Camp II', elevation: 6400 },
-      { name: 'Camp III', elevation: 7200 },
-    ],
+    camps: {
+      route: 'Northwest Face',
+      list: [
+        { name: 'Advanced Base Camp', elevation_m: 5600 },
+        { name: 'Camp 1', elevation_m: 6300 },
+        { name: 'Camp 2', elevation_m: 6900 },
+        { name: 'Camp 3', elevation_m: 7400 },
+      ],
+    },
   },
   {
     id: 'mt-elbert',
@@ -731,14 +823,17 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in the Alps and Western Europe. The birthplace of mountaineering, first climbed in 1786. Over 20,000 people attempt it annually.',
     firstAscent: '1786 - Jacques Balmat & Michel Paccard',
+    baseName: "Nid d'Aigle",
+    baseElevation_m: 2372,
     iconEmoji: '👑',
     routes: ['Goûter Route', 'Trois Monts Route', 'Cosmiques Route'],
-    camps: [
-      { name: 'Tête Rousse Hut', elevation: 3167 },
-      { name: 'Goûter Hut', elevation: 3817 },
-      { name: 'Cosmiques Hut', elevation: 3613 },
-      { name: 'Grands Mulets Hut', elevation: 3051 },
-    ],
+    camps: {
+      route: 'Gouter Route',
+      list: [
+        { name: 'Tete Rousse Hut', elevation_m: 3167 },
+        { name: 'Gouter Hut', elevation_m: 3835 },
+      ],
+    },
   },
   {
     id: 'matterhorn',
@@ -753,13 +848,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Perhaps the most iconic mountain in the world. Its distinctive pyramidal shape makes it one of the most photographed mountains. The Hörnli Ridge is the standard route.',
     firstAscent: '1865 - Edward Whymper & team',
+    baseName: 'Hornli Hut',
+    baseElevation_m: 3260,
     iconEmoji: '🍫',
     routes: ['Hörnli Ridge', 'Lion Ridge (Italian)', 'Zmutt Ridge'],
-    camps: [
-      { name: 'Hörnli Hut', elevation: 3260 },
-      { name: 'Solvay Hut', elevation: 4003 },
-      { name: 'Carrel Hut', elevation: 3830 },
-    ],
+    camps: {
+      route: 'Hornli Ridge',
+      list: [
+        { name: 'Hörnli Hut', elevation_m: 3260 },
+        { name: 'Solvay Hut', elevation_m: 4003 },
+        { name: 'Carrel Hut', elevation_m: 3830 },
+      ],
+    },
   },
   {
     id: 'eiger',
@@ -776,10 +876,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1858 - Charles Barrington & guides',
     iconEmoji: '🧗',
     routes: ['Mittellegi Ridge', '1938 Route (North Face)'],
-    camps: [
-      { name: 'Mittellegi Hut', elevation: 3355 },
-      { name: 'Eigergletscher', elevation: 2320 },
-    ],
+    camps: {
+      route: 'Mittellegi Ridge',
+      list: [
+        { name: 'Mittellegi Hut', elevation_m: 3355 },
+        { name: 'Eigergletscher', elevation_m: 2320 },
+      ],
+    },
   },
   {
     id: 'jungfrau',
@@ -962,11 +1065,14 @@ export const mountains: Mountain[] = [
     iconEmoji: '🌵',
     tags: ['volcanic'],
     routes: ['Normal Route (Chilean side)', 'Argentine Route'],
-    camps: [
-      { name: 'Refugio Atacama', elevation: 5200 },
-      { name: 'Refugio Tejos', elevation: 5825 },
-      { name: 'Refugio César', elevation: 6400 },
-    ],
+    camps: {
+      route: 'Normal Route (Chilean side)',
+      list: [
+        { name: 'Refugio Atacama', elevation_m: 5200 },
+        { name: 'Refugio Tejos', elevation_m: 5825 },
+        { name: 'Refugio César', elevation_m: 6400 },
+      ],
+    },
   },
   {
     id: 'huascaran',
@@ -983,11 +1089,14 @@ export const mountains: Mountain[] = [
     firstAscent: '1932 - German-Austrian expedition',
     iconEmoji: '🦙',
     routes: ['Normal Route (Garganta)', 'Shield Route'],
-    camps: [
-      { name: 'Base Camp / Musho', elevation: 4450 },
-      { name: 'Camp I / Moraine', elevation: 4950 },
-      { name: 'Camp II / Garganta', elevation: 5900 },
-    ],
+    camps: {
+      route: 'Normal Route (Garganta)',
+      list: [
+        { name: 'Base Camp / Musho', elevation_m: 4450 },
+        { name: 'Camp I / Moraine', elevation_m: 4950 },
+        { name: 'Camp II / Garganta', elevation_m: 5900 },
+      ],
+    },
   },
   {
     id: 'chimborazo',
@@ -1002,12 +1111,17 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'While not the highest by elevation, its summit is the farthest point from Earth\'s center due to the equatorial bulge. A massive stratovolcano.',
     firstAscent: '1880 - Edward Whymper & team',
+    baseName: 'Carrel Hut',
+    baseElevation_m: 4850,
     iconEmoji: '🌍',
     routes: ['Normal Route', 'Whymper Route'],
-    camps: [
-      { name: 'Carrel Refuge', elevation: 4850 },
-      { name: 'Whymper Refuge', elevation: 5000 },
-    ],
+    camps: {
+      route: 'Normal Route',
+      list: [
+        { name: 'Carrel Refuge', elevation_m: 4850 },
+        { name: 'Whymper Refuge', elevation_m: 5000 },
+      ],
+    },
   },
   {
     id: 'cotopaxi',
@@ -1022,11 +1136,16 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'One of the highest active volcanoes in the world. Its symmetrical cone is covered with glaciers, creating a stunning visual. Popular mountaineering destination.',
     firstAscent: '1872 - Wilhelm Reiss & Ángel Escobar',
+    baseName: 'Jose Rivas Refuge',
+    baseElevation_m: 4864,
     iconEmoji: '🌊',
     routes: ['Normal Route'],
-    camps: [
-      { name: 'José Ribas Refuge', elevation: 4864 },
-    ],
+    camps: {
+      route: 'Normal Route',
+      list: [
+        { name: 'José Ribas Refuge', elevation_m: 4864 },
+      ],
+    },
   },
   {
     id: 'illimani',
@@ -1043,11 +1162,14 @@ export const mountains: Mountain[] = [
     firstAscent: '1898 - Martin Conway & team',
     iconEmoji: '🏙️',
     routes: ['Normal Route (South Face)', 'Southwest Ridge'],
-    camps: [
-      { name: 'Base Camp / Puente Roto', elevation: 4450 },
-      { name: 'Nido de Cóndores', elevation: 5450 },
-      { name: 'High Camp', elevation: 5600 },
-    ],
+    camps: {
+      route: 'Normal Route (South Face)',
+      list: [
+        { name: 'Base Camp / Puente Roto', elevation_m: 4450 },
+        { name: 'Nido de Cóndores', elevation_m: 5450 },
+        { name: 'High Camp', elevation_m: 5600 },
+      ],
+    },
   },
   {
     id: 'huayna-potosi',
@@ -1064,11 +1186,14 @@ export const mountains: Mountain[] = [
     firstAscent: '1919 - German Alpine Club expedition',
     iconEmoji: '🧗',
     routes: ['Normal Route', 'French Route'],
-    camps: [
-      { name: 'Base Camp / Refugio', elevation: 4750 },
-      { name: 'Campo Alto / High Camp', elevation: 5300 },
-      { name: 'Campo Argentino', elevation: 5500 },
-    ],
+    camps: {
+      route: 'Normal Route',
+      list: [
+        { name: 'Base Camp / Refugio', elevation_m: 4750 },
+        { name: 'Campo Alto / High Camp', elevation_m: 5300 },
+        { name: 'Campo Argentino', elevation_m: 5500 },
+      ],
+    },
   },
   {
     id: 'alpamayo',
@@ -1083,13 +1208,17 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Once voted the "Most Beautiful Mountain in the World." Its near-perfect ice pyramid shape and steep fluted ice faces make it an iconic climb.',
     firstAscent: '1957 - German expedition',
+    baseName: 'Base Camp',
+    baseElevation_m: 4300,
     iconEmoji: '💠',
     routes: ['Ferrari Route', 'French Direct'],
-    camps: [
-      { name: 'Base Camp', elevation: 4300 },
-      { name: 'Moraine Camp', elevation: 4900 },
-      { name: 'High Camp / Col', elevation: 5500 },
-    ],
+    camps: {
+      route: 'French Direct',
+      list: [
+        { name: 'Moraine Camp', elevation_m: 4900 },
+        { name: 'Col Camp', elevation_m: 5400 },
+      ],
+    },
   },
   {
     id: 'fitz-roy',
@@ -1106,9 +1235,12 @@ export const mountains: Mountain[] = [
     firstAscent: '1952 - Lionel Terray & Guido Magnone',
     iconEmoji: '🌪️',
     routes: ['Franco-Argentine Route', 'Supercanaleta'],
-    camps: [
-      { name: 'Paso Superior area', elevation: 2200 },
-    ],
+    camps: {
+      route: 'Franco-Argentine Route',
+      list: [
+        { name: 'Paso Superior area', elevation_m: 2200 },
+      ],
+    },
   },
   {
     id: 'cerro-torre',
@@ -1125,9 +1257,12 @@ export const mountains: Mountain[] = [
     firstAscent: '1974 - Casimiro Ferrari & team',
     iconEmoji: '🪡',
     routes: ['Compressor Route', 'Ragni Route'],
-    camps: [
-      { name: 'Nipo Nino area', elevation: 1500 },
-    ],
+    camps: {
+      route: 'Compressor Route',
+      list: [
+        { name: 'Nipo Nino area', elevation_m: 1500 },
+      ],
+    },
   },
   {
     id: 'sajama',
@@ -1144,10 +1279,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1939 - Wilfrid Kühm & Josef Prem',
     iconEmoji: '♨️',
     routes: ['Standard Route (Southwest Ridge)', 'Normal Route (West Ridge)'],
-    camps: [
-      { name: 'Base Camp', elevation: 4800 },
-      { name: 'High Camp', elevation: 5700 },
-    ],
+    camps: {
+      route: 'Standard Route (Southwest Ridge)',
+      list: [
+        { name: 'Base Camp', elevation_m: 4800 },
+        { name: 'High Camp', elevation_m: 5700 },
+      ],
+    },
   },
   {
     id: 'volcan-lanin',
@@ -1179,10 +1317,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1934 - Adam Karpiński & team',
     iconEmoji: '🏜️',
     routes: ['Normal Route (Southwest Ridge)', 'North Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 5080 },
-      { name: 'High Camp', elevation: 5600 },
-    ],
+    camps: {
+      route: 'Normal Route (Southwest Ridge)',
+      list: [
+        { name: 'Base Camp', elevation_m: 5080 },
+        { name: 'High Camp', elevation_m: 5600 },
+      ],
+    },
   },
   {
     id: 'ama-dablam',
@@ -1197,14 +1338,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Known as the "Matterhorn of the Himalaya" for its striking shape. One of the most beautiful and popular climbing peaks in Nepal.',
     firstAscent: '1961 - Mike Gill, Barry Bishop & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 4570,
     iconEmoji: '💍',
     routes: ['Southwest Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 4570 },
-      { name: 'Camp I', elevation: 5340 },
-      { name: 'Camp II', elevation: 5910 },
-      { name: 'Camp III', elevation: 6350 },
-    ],
+    camps: {
+      route: 'Southwest Ridge',
+      list: [
+        { name: 'Camp 1', elevation_m: 5700 },
+        { name: 'Camp 2', elevation_m: 5900 },
+        { name: 'Camp 3', elevation_m: 6300 },
+      ],
+    },
   },
   {
     id: 'island-peak',
@@ -1219,12 +1364,16 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'One of the most popular trekking peaks in Nepal. Named for its island-like appearance when viewed from Dingboche. Often combined with Everest Base Camp trek.',
     firstAscent: '1956 - Tenzing Norgay & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 5087,
     iconEmoji: '🏝️',
     routes: ['Normal Route (South Ridge)', 'North Ridge'],
-    camps: [
-      { name: 'Base Camp / Pareshaya Gyab', elevation: 5080 },
-      { name: 'High Camp', elevation: 5600 },
-    ],
+    camps: {
+      route: 'Standard Route',
+      list: [
+        { name: 'High Camp', elevation_m: 5600 },
+      ],
+    },
   },
   {
     id: 'mera-peak',
@@ -1239,12 +1388,16 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest trekking peak in Nepal. Offers stunning panoramic views of five 8000m peaks from its summit.',
     firstAscent: '1953 - Jimmy Roberts & Sen Tenzing',
+    baseName: 'Khare',
+    baseElevation_m: 4900,
     iconEmoji: '👁️',
     routes: ['Standard Route (North Face)'],
-    camps: [
-      { name: 'Mera La', elevation: 5415 },
-      { name: 'High Camp', elevation: 5800 },
-    ],
+    camps: {
+      route: 'Standard Route',
+      list: [
+        { name: 'High Camp', elevation_m: 5800 },
+      ],
+    },
   },
   {
     id: 'pumori',
@@ -1261,11 +1414,14 @@ export const mountains: Mountain[] = [
     firstAscent: '1962 - Gerhard Lenser',
     iconEmoji: '👧',
     routes: ['Normal Route (Southeast Ridge)', 'Southwest Face'],
-    camps: [
-      { name: 'Base Camp', elevation: 5300 },
-      { name: 'Camp I', elevation: 5650 },
-      { name: 'Camp II', elevation: 6100 },
-    ],
+    camps: {
+      route: 'Normal Route (Southeast Ridge)',
+      list: [
+        { name: 'Base Camp', elevation_m: 5300 },
+        { name: 'Camp I', elevation_m: 5650 },
+        { name: 'Camp II', elevation_m: 6100 },
+      ],
+    },
   },
   {
     id: 'baruntse',
@@ -1282,10 +1438,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1954 - Colin Todd & team',
     iconEmoji: '🏕️',
     routes: ['South Ridge', 'East Ridge'],
-    camps: [
-      { name: 'Base Camp', elevation: 5300 },
-      { name: 'Camp I', elevation: 6000 },
-    ],
+    camps: {
+      route: 'South Ridge',
+      list: [
+        { name: 'Base Camp', elevation_m: 5300 },
+        { name: 'Camp I', elevation_m: 6000 },
+      ],
+    },
   },
   {
     id: 'lobuche-east',
@@ -1302,10 +1461,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1984 - Various teams',
     iconEmoji: '⛺',
     routes: ['Normal Route (South Ridge)'],
-    camps: [
-      { name: 'Base Camp', elevation: 4950 },
-      { name: 'High Camp', elevation: 5400 },
-    ],
+    camps: {
+      route: 'Normal Route (South Ridge)',
+      list: [
+        { name: 'Base Camp', elevation_m: 4950 },
+        { name: 'High Camp', elevation_m: 5400 },
+      ],
+    },
   },
   {
     id: 'annapurna-south',
@@ -1365,13 +1527,16 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The most heavily glaciated peak in the contiguous US. A massive active stratovolcano and training ground for bigger Himalayan expeditions.',
     firstAscent: '1870 - Hazard Stevens & Philemon Van Trump',
+    baseName: 'Paradise Trailhead',
+    baseElevation_m: 1650,
     iconEmoji: '🌧️',
     routes: ['Disappointment Cleaver', 'Emmons Glacier', 'Kautz Glacier'],
-    camps: [
-      { name: 'Camp Muir', elevation: 3060 },
-      { name: 'Camp Schurman', elevation: 2900 },
-      { name: 'Ingraham Flats', elevation: 3300 },
-    ],
+    camps: {
+      route: 'Disappointment Cleaver',
+      list: [
+        { name: 'Camp Muir', elevation_m: 3072 },
+      ],
+    },
   },
   {
     id: 'mt-hood',
@@ -1388,10 +1553,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1857 - Thomas Dryer & team',
     iconEmoji: '🌲',
     routes: ['South Side / Hogsback', 'Cooper Spur', 'Sunshine Route'],
-    camps: [
-      { name: 'Timberline Lodge', elevation: 1800 },
-      { name: 'Illumination Saddle', elevation: 2830 },
-    ],
+    camps: {
+      route: 'South Side / Hogsback',
+      list: [
+        { name: 'Timberline Lodge', elevation_m: 1800 },
+        { name: 'Illumination Saddle', elevation_m: 2830 },
+      ],
+    },
   },
   {
     id: 'mt-shasta',
@@ -1406,13 +1574,17 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'A massive stratovolcano in Northern California. Known for its spiritual significance and beautiful symmetrical cone visible for over 100 miles.',
     firstAscent: '1854 - Elias Pearce',
+    baseName: 'Bunny Flat Trailhead',
+    baseElevation_m: 2100,
     iconEmoji: '✨',
     routes: ['Avalanche Gulch', 'Hotlum Glacier', 'Casaval Ridge'],
-    camps: [
-      { name: 'Horse Camp', elevation: 2100 },
-      { name: 'Lake Helen', elevation: 3170 },
-      { name: 'Hidden Valley', elevation: 2800 },
-    ],
+    camps: {
+      route: 'Avalanche Gulch',
+      list: [
+        { name: 'Horse Camp', elevation_m: 2400 },
+        { name: 'Helen Lake', elevation_m: 3140 },
+      ],
+    },
   },
   {
     id: 'mt-whitney',
@@ -1427,13 +1599,16 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in the contiguous United States. The Whitney Trail is one of the most popular hikes in America with a highly competitive permit system.',
     firstAscent: '1873 - Charles Begole & team',
+    baseName: 'Whitney Portal',
+    baseElevation_m: 2550,
     iconEmoji: '🌅',
     routes: ['Whitney Trail', 'Mountaineer\'s Route', 'East Face'],
-    camps: [
-      { name: 'Outpost Camp', elevation: 3140 },
-      { name: 'Trail Camp', elevation: 3660 },
-      { name: 'Upper Boy Scout Lake', elevation: 3450 },
-    ],
+    camps: {
+      route: 'Mount Whitney Trail',
+      list: [
+        { name: 'Trail Camp', elevation_m: 3660 },
+      ],
+    },
   },
   {
     id: 'mt-fuji',
@@ -1448,13 +1623,18 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'Japan\'s highest peak and most iconic symbol. A UNESCO World Heritage Site climbed by over 300,000 people annually during the summer season.',
     firstAscent: '663 AD - En no Ozunu (traditional)',
+    baseName: '5th Station',
+    baseElevation_m: 2305,
     iconEmoji: '🗾',
     routes: ['Yoshida Trail', 'Subashiri Trail', 'Gotemba Trail', 'Fujinomiya Trail'],
-    camps: [
-      { name: '5th Station', elevation: 2305 },
-      { name: '8th Station Huts', elevation: 3100 },
-      { name: 'Summit Huts', elevation: 3700 },
-    ],
+    camps: {
+      route: 'Yoshida Trail',
+      list: [
+        { name: '5th Station', elevation_m: 2305 },
+        { name: '8th Station Huts', elevation_m: 3100 },
+        { name: 'Summit Huts', elevation_m: 3700 },
+      ],
+    },
   },
   {
     id: 'aoraki',
@@ -1514,6 +1694,13 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in North Africa and the Arab world. A popular trekking destination accessible from Marrakech, offering Sahara views from the summit.',
     firstAscent: '1923 - Marquis de Segonzac & team',
+    baseName: 'Toubkal Refuge',
+    baseElevation_m: 3207,
+    camps: {
+      route: 'Normal Route',
+      list: [
+      ],
+    },
     iconEmoji: '🐪',
   },
   {
@@ -1589,6 +1776,13 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in Mexico and third highest in North America. A glaciated stratovolcano offering a non-technical but demanding climb.',
     firstAscent: '1848 - F. Maynard & William Reynolds',
+    baseName: 'Piedra Grande Hut',
+    baseElevation_m: 4260,
+    camps: {
+      route: 'Jamapa Glacier',
+      list: [
+      ],
+    },
     iconEmoji: '🇲🇽',
   },
   {
@@ -1709,6 +1903,13 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in Iran and the Middle East. A massive stratovolcano with sulfurous fumaroles near its summit. A holy mountain in Persian mythology.',
     firstAscent: '1837 - W.T. Thomson',
+    baseName: 'Bargah Sevom Camp',
+    baseElevation_m: 4220,
+    camps: {
+      route: 'South Route',
+      list: [
+      ],
+    },
     iconEmoji: '🔥',
   },
   {
@@ -2114,6 +2315,14 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate-Difficult',
     description: 'The highest peak in the Teton Range, rising dramatically from the Snake River Plain in Wyoming. An iconic American peak with the classic Owen-Spalding and Exum Ridge routes. Its striking cathedral-like spire makes it one of the most photographed mountains in North America.',
     firstAscent: '1898 - William Owen, Franklin Spalding, John Shive & Frank Petersen',
+    baseName: 'Lupine Meadows Trailhead',
+    baseElevation_m: 2065,
+    camps: {
+      route: 'Owen-Spalding',
+      list: [
+        { name: 'Lower Saddle', elevation_m: 3540 },
+      ],
+    },
     iconEmoji: '⛰️',
   },
   {
@@ -2176,10 +2385,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1857 - Christian Almer, Christian Kaufmann, Ulrich Kaufmann and Sigismund Porges',
     iconEmoji: '🏔️',
     routes: ['South-east Ridge', 'Eigerjoch route'],
-    camps: [
-      { name: 'Mönchsjoch Hut', elevation: 3657 },
-      { name: 'High Camp', elevation: 3850 },
-    ],
+    camps: {
+      route: 'South-east Ridge',
+      list: [
+        { name: 'Mönchsjoch Hut', elevation_m: 3657 },
+        { name: 'High Camp', elevation_m: 3850 },
+      ],
+    },
   },
   {
     id: 'kosciuszko',
@@ -2196,10 +2408,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1840 - Paweł Edmund Strzelecki',
     iconEmoji: '🇦🇺',
     routes: ['Kosciuszko Walk', 'Main Range Track'],
-    camps: [
-      { name: 'Rawson Pass', elevation: 2050 },
-      { name: 'Seaman’s Hut', elevation: 2030 },
-    ],
+    camps: {
+      route: 'Kosciuszko Walk',
+      list: [
+        { name: 'Rawson Pass', elevation_m: 2050 },
+        { name: 'Seaman’s Hut', elevation_m: 2030 },
+      ],
+    },
   },
   {
     id: 'half-dome',
@@ -2216,10 +2431,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1875 - George G. Anderson',
     iconEmoji: '⛰️',
     routes: ['Cable Route', 'Regular Northwest Face', 'Snake Dike'],
-    camps: [
-      { name: 'Little Yosemite Valley', elevation: 1830 },
-      { name: 'Half Dome Backpackers Camp', elevation: 1980 },
-    ],
+    camps: {
+      route: 'Cable Route',
+      list: [
+        { name: 'Little Yosemite Valley', elevation_m: 1830 },
+        { name: 'Half Dome Backpackers Camp', elevation_m: 1980 },
+      ],
+    },
   },
   {
     id: 'table-mountain',
@@ -2236,9 +2454,12 @@ export const mountains: Mountain[] = [
     firstAscent: '1503 - Antonio de Saldanha (first recorded)',
     iconEmoji: '⛰️',
     routes: ['Platteklip Gorge', 'India Venster', 'Cable Car'],
-    camps: [
-      { name: 'Table Mountain Café', elevation: 1067 },
-    ],
+    camps: {
+      route: 'Platteklip Gorge',
+      list: [
+        { name: 'Table Mountain Café', elevation_m: 1067 },
+      ],
+    },
   },
   {
     id: 'shkhara',
@@ -2255,10 +2476,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1888 - U. Almer, J. Cockin & C. Roth',
     iconEmoji: '🏔️',
     routes: ['Northeast Ridge', 'North Face'],
-    camps: [
-      { name: 'Bezengi Base Camp', elevation: 4100 },
-      { name: 'High Camp', elevation: 4800 },
-    ],
+    camps: {
+      route: 'Northeast Ridge',
+      list: [
+        { name: 'Bezengi Base Camp', elevation_m: 4100 },
+        { name: 'High Camp', elevation_m: 4800 },
+      ],
+    },
   },
   {
     id: 'mount-rinjani',
@@ -2275,10 +2499,13 @@ export const mountains: Mountain[] = [
     firstAscent: '1853 - J. H. G. van der Steur Jr.',
     iconEmoji: '🌋',
     routes: ['Sembalun Route', 'Senaru Route'],
-    camps: [
-      { name: 'Plawangan Sembalun Crater Rim', elevation: 2639 },
-      { name: 'Segara Anak Camp', elevation: 2000 },
-    ],
+    camps: {
+      route: 'Sembalun Route',
+      list: [
+        { name: 'Plawangan Sembalun Crater Rim', elevation_m: 2639 },
+        { name: 'Segara Anak Camp', elevation_m: 2000 },
+      ],
+    },
   },
   {
     id: 'mount-agung',

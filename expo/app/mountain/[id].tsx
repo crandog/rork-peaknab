@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -31,6 +31,7 @@ import {
   Camera,
   GitBranch,
   Home,
+  Pencil,
 } from 'lucide-react-native';
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
@@ -46,14 +47,21 @@ const HERO_HEIGHT = 320;
 
 type TabType = 'info' | 'summit';
 
+// Matches the summit-elevation presentation on the card: "X,XXXm / XX,XXXft"
+function formatElevation(meters: number): string {
+  return `${meters.toLocaleString()}m / ${Math.round(meters * 3.28084).toLocaleString()}ft`;
+}
+
 export default function MountainDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { isSummited, getSummitsForMountain, getSummitCount, addSummit, removeSummit, removeSingleSummit } = useSummits();
+  const { isSummited, getSummitsForMountain, getSummitCount, addSummit, updateSummit, removeSummit, removeSingleSummit } = useSummits();
   const { isCustom, removeCustomMountain } = useCustomMountains();
   const [activeTab, setActiveTab] = useState<TabType>('info');
   const [showDateInput, setShowDateInput] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<SummitRecord | null>(null);
+  const [showAllCamps, setShowAllCamps] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
   const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
@@ -68,6 +76,12 @@ export default function MountainDetailScreen() {
   const summitRecords = useMemo(() => (id ? getSummitsForMountain(id) : []), [id, getSummitsForMountain]);
   const summited = id ? isSummited(id) : false;
   const summitCountVal = id ? getSummitCount(id) : 0;
+
+  // Reset transient editor/camp state when navigating between peaks
+  useEffect(() => {
+    setShowAllCamps(false);
+    setEditingRecord(null);
+  }, [id]);
 
   const heroImageUrl = useMemo(() => {
     if (!mountain) return '';
@@ -126,6 +140,26 @@ export default function MountainDetailScreen() {
   const handleConfirmSummit = useCallback(() => {
     if (!id || !mountain) return;
 
+    // No future summit dates allowed
+    const picked = new Date(selectedYear, selectedMonth, selectedDay);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (picked > today) {
+      Alert.alert('Invalid Date', 'Summit date cannot be in the future.');
+      return;
+    }
+
+    // Editing an existing log: update in place, never create a duplicate
+    if (editingRecord) {
+      updateSummit(id, { date: formattedDate }, editingRecord.createdAt);
+      if (Platform.OS !== 'web') {
+        void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      }
+      setShowDateInput(false);
+      setEditingRecord(null);
+      return;
+    }
+
     const createdAt = new Date().toISOString();
 
     addSummit({
@@ -147,7 +181,7 @@ export default function MountainDetailScreen() {
       pathname: '/summit-report' as any,
       params: { mountainId: id, mountainName: mountain.name, createdAt },
     });
-  }, [id, mountain, formattedDate, addSummit, router]);
+  }, [id, mountain, formattedDate, selectedMonth, selectedDay, selectedYear, editingRecord, addSummit, updateSummit, router]);
 
   const handleShareSummit = useCallback(async () => {
     if (!mountain) return;
@@ -236,6 +270,47 @@ export default function MountainDetailScreen() {
     );
   }, [id, removeSummit, removeCustomMountain, router]);
 
+  const openEditSummit = useCallback((record: SummitRecord) => {
+    if (Platform.OS !== 'web') {
+      void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+    // Pre-fill the existing date pickers from the stored "Month D, YYYY" date
+    const parsed = /^([A-Za-z]+)\s+(\d{1,2}),\s*(\d{4})$/.exec(record.date);
+    if (parsed) {
+      const monthIdx = MONTHS.indexOf(parsed[1]);
+      if (monthIdx >= 0) {
+        setSelectedMonth(monthIdx);
+        setSelectedDay(parseInt(parsed[2], 10));
+        setSelectedYear(parseInt(parsed[3], 10));
+      }
+    }
+    setEditingRecord(record);
+    setShowDateInput(true);
+  }, [MONTHS]);
+
+  const handleDeleteEditedSummit = useCallback(() => {
+    if (!id || !editingRecord) return;
+    Alert.alert(
+      'Delete Summit',
+      `Delete the summit log from ${editingRecord.date}? The peak will revert to un-summited.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            removeSingleSummit(id, editingRecord.createdAt);
+            setEditingRecord(null);
+            setShowDateInput(false);
+            if (Platform.OS !== 'web') {
+              void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+            }
+          },
+        },
+      ]
+    );
+  }, [id, editingRecord, removeSingleSummit]);
+
   const handleAnotherSummit = useCallback(() => {
     if (Platform.OS !== 'web') {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -254,6 +329,9 @@ export default function MountainDetailScreen() {
   const categoryColor = Colors.categoryColors[mountain.category] ?? Colors.accent;
   const o2Percentage = Math.max(0, Math.round((1 - (mountain.elevation / 44300)) * 100 * (1 - mountain.elevation * 0.0000165)));
   const effectiveO2 = Math.round(20.9 * o2Percentage / 100 * 10) / 10;
+
+  const campList = mountain.camps?.list ?? [];
+  const visibleCamps = showAllCamps ? campList : campList.slice(0, 6);
 
   const imageOpacity = scrollY.interpolate({
     inputRange: [0, HERO_HEIGHT / 2],
@@ -338,6 +416,14 @@ export default function MountainDetailScreen() {
         )}
 
         <View style={styles.reportCardActions}>
+          <TouchableOpacity
+            style={styles.reportActionButton}
+            onPress={() => openEditSummit(record)}
+            activeOpacity={0.7}
+          >
+            <Pencil color={Colors.primary} size={14} />
+            <Text style={styles.reportActionText}>Edit date</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={styles.reportActionButton}
             onPress={() => handleRemoveSingleSummit(record)}
@@ -426,6 +512,52 @@ export default function MountainDetailScreen() {
             </View>
           </View>
 
+          {mountain.baseElevation_m != null && (
+            <View style={styles.baseGainCard}>
+              <View style={styles.baseGainIcon}>
+                <TrendingUp color={Colors.primary} size={18} />
+              </View>
+              <Text style={styles.baseGainText}>
+                <Text style={styles.baseGainLabel}>Base:</Text>{' '}
+                {mountain.baseName} {formatElevation(mountain.baseElevation_m)}
+                {'   •   '}
+                <Text style={styles.baseGainLabel}>Gain:</Text>{' '}
+                {formatElevation(mountain.elevation - mountain.baseElevation_m)}
+              </Text>
+            </View>
+          )}
+
+          {mountain.camps && campList.length > 0 && (
+            <View style={styles.campsCard}>
+              <View style={styles.sectionHeader}>
+                <Home color={Colors.primary} size={16} />
+                <Text style={styles.sectionHeaderText}>Camps</Text>
+                <Text style={styles.campsRouteText}>{mountain.camps.route}</Text>
+              </View>
+              <View>
+                {visibleCamps.map((camp, idx: number) => (
+                  <View key={`${camp.name}-${idx}`} style={styles.campRow}>
+                    <View style={styles.campDot} />
+                    <Text style={[styles.campName, { flex: 1 }]}>{camp.name}</Text>
+                    <Text style={styles.campElevation}>{formatElevation(camp.elevation_m)}</Text>
+                  </View>
+                ))}
+              </View>
+              {campList.length > 6 && (
+                <TouchableOpacity
+                  style={styles.campsToggle}
+                  onPress={() => setShowAllCamps(!showAllCamps)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.campsToggleText}>
+                    {showAllCamps ? 'Hide camps' : `Show all ${campList.length} camps`}
+                  </Text>
+                  <ChevronDown color={Colors.primary} size={14} />
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+
           {summited && (
             <View style={styles.summitedBanner}>
               <View style={styles.summitedBannerInner}>
@@ -508,26 +640,6 @@ export default function MountainDetailScreen() {
                   </View>
                 </View>
               )}
-
-              {mountain.camps && mountain.camps.length > 0 && (
-                <View style={styles.campsSection}>
-                  <View style={styles.sectionHeader}>
-                    <Home color={Colors.primary} size={16} />
-                    <Text style={styles.sectionHeaderText}>Camps</Text>
-                  </View>
-                  <View style={styles.campsList}>
-                    {mountain.camps.map((camp, idx: number) => (
-                      <View key={idx} style={styles.campRow}>
-                        <View style={styles.campDot} />
-                        <View style={styles.campInfo}>
-                          <Text style={styles.campName}>{camp.name}</Text>
-                          <Text style={styles.campElevation}>{camp.elevation.toLocaleString()}m / {Math.round(camp.elevation * 3.28084).toLocaleString()}ft</Text>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              )}
             </View>
           ) : (
             <View style={styles.summitContent}>
@@ -548,7 +660,7 @@ export default function MountainDetailScreen() {
 
                   {showDateInput && (
                     <View style={styles.dateInputCard}>
-                      <Text style={styles.dateTitle}>Select Summit Date</Text>
+                      <Text style={styles.dateTitle}>{editingRecord ? 'Edit Summit Date' : 'Select Summit Date'}</Text>
 
                       <View style={styles.datePickerRow}>
                         <View style={styles.datePickerCol}>
@@ -650,12 +762,19 @@ export default function MountainDetailScreen() {
                       )}
 
                       <TouchableOpacity style={styles.confirmDateButton} onPress={handleConfirmSummit}>
-                        <Text style={styles.confirmDateText}>Continue</Text>
+                        <Text style={styles.confirmDateText}>{editingRecord ? 'Save Changes' : 'Continue'}</Text>
                       </TouchableOpacity>
 
-                      <TouchableOpacity style={styles.cancelDateButton} onPress={() => { setShowDateInput(false); closePickers(); }}>
+                      <TouchableOpacity style={styles.cancelDateButton} onPress={() => { setShowDateInput(false); setEditingRecord(null); closePickers(); }}>
                         <Text style={styles.cancelDateText}>Cancel</Text>
                       </TouchableOpacity>
+
+                      {editingRecord && (
+                        <TouchableOpacity style={styles.deleteSummitButton} onPress={handleDeleteEditedSummit} activeOpacity={0.7}>
+                          <Trash2 color={Colors.danger} size={14} />
+                          <Text style={styles.deleteSummitText}>Delete Summit</Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   )}
 
@@ -1125,7 +1244,7 @@ const styles = StyleSheet.create({
   },
   reportCardActions: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingHorizontal: 14,
     paddingVertical: 10,
   },
@@ -1140,6 +1259,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500' as const,
     color: Colors.danger,
+  },
+  reportActionText: {
+    fontSize: 12,
+    fontWeight: '500' as const,
+    color: Colors.primary,
   },
   anotherSummitButton: {
     flexDirection: 'row',
@@ -1201,6 +1325,23 @@ const styles = StyleSheet.create({
   confirmDateText: { color: Colors.white, fontSize: 15, fontWeight: '700' as const },
   cancelDateButton: { paddingVertical: 12, alignItems: 'center', marginTop: 4 },
   cancelDateText: { color: Colors.textSecondary, fontSize: 14, fontWeight: '500' as const },
+  deleteSummitButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    width: '100%',
+    paddingVertical: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.danger + '40',
+    marginTop: 8,
+  },
+  deleteSummitText: {
+    color: Colors.danger,
+    fontSize: 14,
+    fontWeight: '600' as const,
+  },
   deleteInlineButton: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-end', paddingVertical: 8, paddingHorizontal: 12, marginBottom: 8 },
   deleteInlineText: { color: Colors.danger, fontSize: 12, fontWeight: '500' as const },
   bottomImageContainer: {
@@ -1225,13 +1366,62 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 16,
   },
-  campsSection: {
+  baseGainCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    backgroundColor: Colors.white,
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    marginBottom: 12,
+  },
+  baseGainIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: Colors.frost,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  baseGainText: {
+    flex: 1,
+    fontSize: 13,
+    color: Colors.text,
+    lineHeight: 20,
+  },
+  baseGainLabel: {
+    fontWeight: '700' as const,
+    color: Colors.textSecondary,
+  },
+  campsCard: {
+    marginHorizontal: 20,
+    marginBottom: 16,
     backgroundColor: Colors.white,
     borderRadius: 16,
     borderWidth: 1,
     borderColor: Colors.border,
     padding: 16,
-    marginBottom: 16,
+  },
+  campsRouteText: {
+    fontSize: 12,
+    color: Colors.textMuted,
+    fontWeight: '500' as const,
+    flexShrink: 1,
+  },
+  campsToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    paddingTop: 12,
+  },
+  campsToggleText: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: Colors.primary,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -1264,9 +1454,6 @@ const styles = StyleSheet.create({
     fontWeight: '600' as const,
     color: Colors.text,
   },
-  campsList: {
-    gap: 0,
-  },
   campRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1280,12 +1467,6 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: Colors.primary,
-  },
-  campInfo: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
   campName: {
     fontSize: 14,
