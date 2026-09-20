@@ -904,6 +904,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'Famous for its treacherous North Face, known as the "Mordwand" (Murder Wall). The North Face is considered one of the great north faces of the Alps.',
     firstAscent: '1858 - Charles Barrington & guides',
+    baseName: 'Eigergletscher Station',
+    baseElevation_m: 2320,
     iconEmoji: '🧗',
     routes: ['Mittellegi Ridge', '1938 Route (North Face)'],
     camps: {
@@ -927,6 +929,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Part of the famous Eiger-Mönch-Jungfrau trio. Its name means "Young Woman" and it has been a UNESCO World Heritage Site since 2001.',
     firstAscent: '1811 - Johann Rudolf & Hieronymus Meyer',
+    baseName: 'Mönchsjoch Hut',
+    baseElevation_m: 3657,
     iconEmoji: '👸',
   },
   {
@@ -942,6 +946,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest mountain entirely within Italy. Located in Gran Paradiso National Park, Italy\'s oldest national park.',
     firstAscent: '1860 - John Jeremy Cowell & team',
+    baseName: 'Rifugio Vittorio Emanuele II',
+    baseElevation_m: 2732,
     iconEmoji: '🦊',
   },
   {
@@ -957,6 +963,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The second highest peak in the Alps. Dufourspitze is the highest of Monte Rosa\'s many summits and the highest point in Switzerland.',
     firstAscent: '1855 - Charles Hudson & team',
+    baseName: 'Monte Rosa Hut',
+    baseElevation_m: 2883,
     iconEmoji: '🌹',
   },
   {
@@ -972,6 +980,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'One of the most beautiful peaks in the Alps with its elegant pyramidal shape. Considered one of the finest mountaineering challenges in Switzerland.',
     firstAscent: '1861 - John Tyndall & team',
+    baseName: 'Weisshorn Hut',
+    baseElevation_m: 2932,
     iconEmoji: '🤍',
   },
   {
@@ -987,6 +997,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest mountain entirely within Switzerland and the third highest in the Alps. Part of the Mischabel group.',
     firstAscent: '1858 - J. Llewelyn Davies & team',
+    baseName: 'Dom Hut',
+    baseElevation_m: 2940,
     iconEmoji: '⛪',
   },
   {
@@ -1002,6 +1014,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest mountain in Austria. Known for the famous Grossglockner High Alpine Road and the Pasterze glacier at its base.',
     firstAscent: '1800 - Martin Reicher & team',
+    baseName: 'Erzherzog-Johann-Hütte',
+    baseElevation_m: 3454,
     iconEmoji: '🇦🇹',
   },
   {
@@ -1017,6 +1031,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in Germany. Accessible by cable car, but the climbing routes offer classic alpine experiences. Features a glacier ski area.',
     firstAscent: '1820 - Josef Naus & team',
+    baseName: 'Hammersbach (Höllental Route)',
+    baseElevation_m: 758,
     iconEmoji: '🚡',
   },
   {
@@ -1032,6 +1048,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'A striking isolated peak in the Pennine Alps. Its South Ridge is one of the classic alpine routes, requiring solid mixed climbing skills.',
     firstAscent: '1862 - Thomas Stuart Kennedy & team',
+    baseName: 'Cabane de la Dent Blanche',
+    baseElevation_m: 3507,
     iconEmoji: '🦷',
   },
   {
@@ -1047,6 +1065,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'A technically challenging peak in the Mont Blanc massif. The Whymper Couloir is the standard route, a steep snow/ice climb.',
     firstAscent: '1865 - Edward Whymper & guides',
+    baseName: 'Couvercle Hut',
+    baseElevation_m: 2687,
     iconEmoji: '💚',
   },
   {
@@ -1062,6 +1082,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'Famous for its North Face, one of the three great north faces of the Alps. The Walker Spur is one of the most coveted routes in alpinism.',
     firstAscent: '1868 - Edward Whymper & team',
+    baseName: 'Boccalatte Hut',
+    baseElevation_m: 2803,
     iconEmoji: '🧱',
   },
   {
@@ -1077,6 +1099,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in Slovenia and symbol of the nation (featured on its flag and coat of arms). A national pilgrimage for Slovenians.',
     firstAscent: '1778 - Lovrenc Willomitzer & team',
+    baseName: 'Aljažev Dom (Vrata Valley)',
+    baseElevation_m: 1015,
     iconEmoji: '🇸🇮',
   },
   {
@@ -1092,6 +1116,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest volcano in the world and second highest peak in the Andes. Located in the Atacama Desert, one of the driest places on Earth.',
     firstAscent: '1937 - Jan Alfred Szczepański & Justyn Wojsznis',
+    baseName: 'Refugio Atacama',
+    baseElevation_m: 5260,
     iconEmoji: '🌵',
     tags: ['volcanic'],
     routes: ['Normal Route (Chilean side)', 'Argentine Route'],
@@ -1117,6 +1143,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in Peru and the tropics. Located in Huascarán National Park, a UNESCO World Heritage Site.',
     firstAscent: '1932 - German-Austrian expedition',
+    baseName: 'Base Camp (above Musho)',
+    baseElevation_m: 4200,
     iconEmoji: '🦙',
     routes: ['Normal Route (Garganta)', 'Shield Route'],
     camps: {
@@ -1190,6 +1218,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The guardian mountain of La Paz, Bolivia. Its four peaks are visible from the city and it holds spiritual significance for the Aymara people.',
     firstAscent: '1898 - Martin Conway & team',
+    baseName: 'Puente Roto Base Camp',
+    baseElevation_m: 4400,
     iconEmoji: '🏙️',
     routes: ['Normal Route (South Face)', 'Southwest Ridge'],
     camps: {
@@ -1214,6 +1244,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Known as the "easiest 6000m peak in the world." Popular for its accessibility from La Paz and spectacular glaciated routes.',
     firstAscent: '1919 - German Alpine Club expedition',
+    baseName: 'Zongo Pass Refugio',
+    baseElevation_m: 4700,
     iconEmoji: '🧗',
     routes: ['Normal Route', 'French Route'],
     camps: {
@@ -1263,6 +1295,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'One of the most technically challenging mountains in the world. Its sheer granite walls and extreme weather make it a test piece for elite alpinists. The Patagonia brand logo.',
     firstAscent: '1952 - Lionel Terray & Guido Magnone',
+    baseName: 'Rio Blanco Base Camp',
+    baseElevation_m: 1150,
     iconEmoji: '🌪️',
     routes: ['Franco-Argentine Route', 'Supercanaleta'],
     camps: {
@@ -1285,6 +1319,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'A needle of granite and ice in Patagonia, considered one of the most difficult climbs on Earth. Infamous for constant gale-force winds and ice mushrooms.',
     firstAscent: '1974 - Casimiro Ferrari & team',
+    baseName: 'Niponino Camp',
+    baseElevation_m: 1300,
     iconEmoji: '🪡',
     routes: ['Compressor Route', 'Ragni Route'],
     camps: {
@@ -1307,6 +1343,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in Bolivia and a symmetrical stratovolcano. Located in Sajama National Park with hot springs at its base.',
     firstAscent: '1939 - Wilfrid Kühm & Josef Prem',
+    baseName: 'Base Camp',
+    baseElevation_m: 4800,
     iconEmoji: '♨️',
     routes: ['Standard Route (Southwest Ridge)', 'Normal Route (West Ridge)'],
     camps: {
@@ -1330,6 +1368,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'A perfectly cone-shaped stratovolcano on the Argentina-Chile border. The glaciated summit and volcanic landscape make it a rewarding climb.',
     firstAscent: '1897 - Survey team',
+    baseName: 'Mamuil Malal Trailhead',
+    baseElevation_m: 1200,
     iconEmoji: '🏔️',
   },
   {
@@ -1860,6 +1900,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Often climbed as part of the Mont Blanc three-summit traverse. The Aiguille du Midi cable car provides access to this glaciated peak.',
     firstAscent: '1855 - H.D. Speer & team',
+    baseName: 'Cosmiques Hut',
+    baseElevation_m: 3613,
     iconEmoji: '🚠',
   },
   {
@@ -1875,6 +1917,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Known as "Menschenfresser" (Man-eater) due to avalanches and cornices on its exposed ridge. A beautiful but dangerous traverse in the Monte Rosa area.',
     firstAscent: '1861 - Various teams',
+    baseName: 'Quintino Sella Hut',
+    baseElevation_m: 3585,
     iconEmoji: '☠️',
   },
   {
@@ -1993,6 +2037,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'A famous granite needle in the Mont Blanc massif. Home to the highest cable car in the Alps and the starting point for the classic Vallée Blanche descent.',
     firstAscent: '1818 - Various teams',
+    baseName: 'Col du Midi',
+    baseElevation_m: 3532,
     iconEmoji: '🗼',
   },
   {
@@ -2091,6 +2137,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The higher of the twin Iliniza peaks. A technically demanding glacier climb requiring ice axes and crampons, with crevasse dangers and unpredictable weather near the equator.',
     firstAscent: '1880 - Jean-Antoine Carrel & Edward Whymper',
+    baseName: 'Refugio Nuevos Horizontes',
+    baseElevation_m: 4750,
     iconEmoji: '🧊',
   },
   {
@@ -2106,6 +2154,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The third highest peak in Ecuador and the highest point in the world directly on the equator. A glaciated stratovolcano with crevasse-riddled slopes and unpredictable weather.',
     firstAscent: '1880 - Edward Whymper & Jean-Antoine Carrel',
+    baseName: 'Ruales-Oleas-Berge Refuge',
+    baseElevation_m: 4630,
     iconEmoji: '🌐',
   },
   {
@@ -2136,6 +2186,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The lower of the twin Iliniza peaks. A popular acclimatization climb before attempting higher Ecuadorian volcanoes like Cotopaxi or Chimborazo. The route is non-glaciated but involves scrambling on loose rock.',
     firstAscent: '1912 - Nicolás Martínez',
+    baseName: 'Refugio Nuevos Horizontes',
+    baseElevation_m: 4750,
     iconEmoji: '🌫️',
   },
   {
@@ -2196,6 +2248,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Difficult',
     description: 'A magnificent granite peak straddling the Swiss-Italian border with one of the finest north faces in the Alps. The Cassin Route on the northeast face is a classic of alpine rock climbing, first climbed by Riccardo Cassin in 1937.',
     firstAscent: '1867 - W.A.B. Coolidge, F.F. Tuckett, with Christian Almer & François Devouassoud',
+    baseName: 'Sasc Fura Hut',
+    baseElevation_m: 1904,
     iconEmoji: '🧗',
   },
   {
@@ -2388,6 +2442,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate-Difficult',
     description: 'One of the most iconic rock formations in the Alps — three dramatic vertical pillars rising side by side from a high alpine plateau. The north faces are sheer 500m walls that became legendary testing grounds for Dolomite climbers. A UNESCO World Heritage Site and symbol of the Dolomites.',
     firstAscent: '1869 - Paul Grohmann (Cima Grande)',
+    baseName: 'Rifugio Auronzo',
+    baseElevation_m: 2320,
     iconEmoji: '🪨',
   },
   {
@@ -2418,6 +2474,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate-Difficult',
     description: 'A striking glaciated peak in the Cordillera Blanca near the scenic Llanganuco Valley. Less crowded than nearby Pisco, Yanapaccha offers moderately steep snow slopes with some crevasse negotiation — an ideal acclimatization climb for experienced mountaineers. The name means "black waterfall" in Quechua, though its west face gleams white with glacial ice.',
     firstAscent: '1954 - Ortenburger, Michael, Matthews, Irvin, Creswell & Ayres',
+    baseName: 'Base Camp',
+    baseElevation_m: 4650,
     iconEmoji: '🏔️',
   },
   {
@@ -2433,6 +2491,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The Mönch is a prominent peak in the Bernese Alps, forming the famous Eiger-Mönch-Jungfrau trio above the Swiss village of Grindelwald. Its steep, glaciated upper slopes require solid crampon and ice axe skills, while the summit offers one of the most iconic panoramas in the Alps.',
     firstAscent: '1857 - Christian Almer, Christian Kaufmann, Ulrich Kaufmann and Sigismund Porges',
+    baseName: 'Mönchsjoch Hut',
+    baseElevation_m: 3657,
     iconEmoji: '🏔️',
     routes: ['South-east Ridge', 'Eigerjoch route'],
     camps: {
@@ -2617,6 +2677,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'One of Chile\'s most active volcanoes, capped with glaciers and often hosting a glowing lava lake in its summit crater. The iconic cone rises above the resort town of Pucón and the surrounding lakes. The standard route is a non-technical glacier climb with crampons and ice axe.',
     firstAscent: '1883 - European climbers and Araucanía guides',
+    baseName: 'Ski Center Trailhead',
+    baseElevation_m: 1400,
     iconEmoji: '🌋',
   },
   {
@@ -2726,6 +2788,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Difficult',
     description: 'The highest mountain in the Dolomites and known as the "Queen of the Dolomites". Its broad limestone massif contains the largest glacier in the range. The south face is a historic climbing wall, while the normal route traverses glaciers and rocky ridges.',
     firstAscent: '1864 - Paul Grohmann, Angelo Dimai and Fulgenzio Dimai',
+    baseName: 'Fedaia Pass',
+    baseElevation_m: 2057,
     iconEmoji: '⛰️',
   },
   {
@@ -2741,6 +2805,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The highest peak of the Eastern Alps and the only four-thousander east of the Bernese Oberland. The sharp summit rises above the Morteratsch and Tschierva glaciers. The famous Biancograt ridge is one of the most beautiful alpine ridges in the world.',
     firstAscent: '1850 - Johann Coaz with Jon and Lorenz Ragut Tscharner',
+    baseName: 'Marco e Rosa Hut',
+    baseElevation_m: 3597,
     iconEmoji: '⛰️',
   },
   {
@@ -2756,6 +2822,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The fourth-highest volcano in Ecuador and one of the most glaciated peaks in the country. Antisana is a massive stratovolcano whose icy flanks rise from the paramo of the eastern Andes, offering a serious and remote alpine challenge.',
     firstAscent: '1880 - Jean de Crépi',
+    baseName: 'Base Camp',
+    baseElevation_m: 4700,
     iconEmoji: '🇪🇨',
   },
   {
@@ -2771,6 +2839,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'An extinct volcano once considered the highest mountain in Ecuador. Its ring of nine dramatic summits surrounding a collapsed caldera forms one of the most spectacular mountain fortresses in the Andes.',
     firstAscent: '1963 - Italian expedition',
+    baseName: 'Collanes Camp',
+    baseElevation_m: 3900,
     iconEmoji: '🇪🇨',
   },
   {
@@ -2786,6 +2856,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'A striking pyramid-shaped peak in the Cordillera Blanca, famous for its near-perfect summit silhouette. Its steep faces and sharp ridges make it one of the most beautiful and difficult climbs in the Peruvian Andes.',
     firstAscent: '1932 - Austrian-German expedition',
+    baseName: 'Base Camp (Parón Valley)',
+    baseElevation_m: 4200,
     iconEmoji: '🇵🇪',
   },
   {
