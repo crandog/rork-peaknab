@@ -228,6 +228,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in Oceania. A limestone spire requiring technical rock climbing, located in the remote highlands of Papua.',
     firstAscent: '1962 - Heinrich Harrer & team',
+    baseName: 'Yellow Valley Base Camp',
+    baseElevation_m: 4250,
     iconEmoji: '🪨',
     routes: ['Standard Route (North Face)'],
     camps: {
@@ -1482,6 +1484,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Known as "Everest\'s Daughter" and visible from Everest Base Camp. Its southeast face provides a stunning backdrop to the Khumbu region.',
     firstAscent: '1962 - Gerhard Lenser',
+    baseName: 'Base Camp',
+    baseElevation_m: 5300,
     iconEmoji: '👧',
     routes: ['Normal Route (Southeast Ridge)', 'Southwest Face'],
     camps: {
@@ -1506,6 +1510,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'A striking peak between the Barun and Imja valleys. A demanding expedition peak that offers true high-altitude mountaineering experience.',
     firstAscent: '1954 - Colin Todd & team',
+    baseName: 'Base Camp',
+    baseElevation_m: 5300,
     iconEmoji: '🏕️',
     routes: ['South Ridge', 'East Ridge'],
     camps: {
@@ -1529,6 +1535,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'A popular trekking peak near Everest Base Camp. The summit offers incredible views of the Khumbu icefall and surrounding giants.',
     firstAscent: '1984 - Various teams',
+    baseName: 'Base Camp',
+    baseElevation_m: 4950,
     iconEmoji: '⛺',
     routes: ['Normal Route (South Ridge)'],
     camps: {
@@ -1552,6 +1560,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Part of the Annapurna massif. Its dramatic south face dominates the view from the popular Annapurna Base Camp trek.',
     firstAscent: '1964 - Japanese expedition',
+    baseName: 'Annapurna Sanctuary Base Camp',
+    baseElevation_m: 4130,
     iconEmoji: '🌄',
   },
   {
@@ -1582,6 +1592,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Overlooking Tilicho Lake, one of the highest lakes in the world. Part of the Annapurna massif with challenging routes on all faces.',
     firstAscent: '1978 - French expedition',
+    baseName: 'Tilicho Base Camp',
+    baseElevation_m: 4150,
     iconEmoji: '🏞️',
   },
   {
@@ -1721,6 +1733,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest peak in New Zealand. Where Sir Edmund Hillary honed his skills before Everest. Known for extreme weather and avalanche danger.',
     firstAscent: '1894 - Tom Fyfe, George Graham & Jack Clarke',
+    baseName: 'Plateau Hut',
+    baseElevation_m: 2200,
     iconEmoji: '🥝',
   },
   {
@@ -1736,6 +1750,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Africa\'s second highest mountain. Batian is the highest of its jagged summits, requiring technical climbing. A UNESCO World Heritage Site.',
     firstAscent: '1899 - Halford Mackinder & team',
+    baseName: 'Shipton\'s Camp',
+    baseElevation_m: 4200,
     iconEmoji: '🦁',
   },
   {
@@ -1751,6 +1767,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The third highest peak in Africa, located in the "Mountains of the Moon." Known for its otherworldly vegetation and frequent cloud cover.',
     firstAscent: '1906 - Luigi di Savoia & team',
+    baseName: 'Elena Hut',
+    baseElevation_m: 4540,
     iconEmoji: '🌙',
   },
   {
@@ -1788,6 +1806,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Home of the Greek gods in mythology. The highest peak in Greece with Mytikas requiring an exposed scramble. A UNESCO Biosphere Reserve.',
     firstAscent: '1913 - Christos Kakkalos & team',
+    baseName: 'Prionia Trailhead',
+    baseElevation_m: 1100,
     iconEmoji: '⚡',
   },
   {
@@ -1803,6 +1823,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'The highest peak in the British Isles. The tourist path is a popular hillwalk, while the North Face offers world-class winter climbing.',
     firstAscent: '1771 - James Robertson',
+    baseName: 'Glen Nevis Visitor Centre',
+    baseElevation_m: 20,
     iconEmoji: '🏴',
   },
   {
@@ -1818,6 +1840,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The legendary resting place of Noah\'s Ark. Turkey\'s highest peak, a snow-capped dormant volcano with enormous prominence visible for hundreds of miles.',
     firstAscent: '1829 - Friedrich Parrot',
+    baseName: 'Base Camp',
+    baseElevation_m: 3200,
     iconEmoji: '🕊️',
   },
   {
@@ -1833,6 +1857,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in Southeast Asia (Borneo). A UNESCO World Heritage Site known for incredible biodiversity and the famous Via Ferrata.',
     firstAscent: '1851 - Hugh Low & team',
+    baseName: 'Timpohon Gate',
+    baseElevation_m: 1866,
     iconEmoji: '🌺',
   },
   {
@@ -1870,6 +1896,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Known as the "Sleeping Woman" from its silhouette. Mexico\'s third highest peak, offering a popular training climb near Mexico City.',
     firstAscent: '1889 - James de Salis',
+    baseName: 'La Joya Trailhead',
+    baseElevation_m: 3960,
     iconEmoji: '😴',
   },
   {
@@ -1885,6 +1913,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'Known as the "Matterhorn of the South" for its pyramidal shape. A challenging technical climb in Mount Aspiring National Park.',
     firstAscent: '1909 - Jack Clarke & team',
+    baseName: 'Colin Todd Hut',
+    baseElevation_m: 1800,
     iconEmoji: '🐑',
   },
   {
@@ -2007,6 +2037,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'The highest peak in the Balkans and Bulgaria. A popular hiking destination in Rila National Park with chairlift access.',
     firstAscent: 'Unknown (ancient)',
+    baseName: 'Yastrebets Station',
+    baseElevation_m: 2369,
     iconEmoji: '🌿',
   },
   {
@@ -2022,6 +2054,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest peak in the Carpathian Mountains and Slovakia. Climbing requires a licensed mountain guide due to its protected status.',
     firstAscent: '1834 - Ján Still & team',
+    baseName: 'Sliezsky Dom',
+    baseElevation_m: 1670,
     iconEmoji: '🐺',
   },
   {
@@ -2071,6 +2105,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'Spain\'s highest peak and the highest point in the Atlantic islands. A UNESCO World Heritage Site and active stratovolcano.',
     firstAscent: '1582 - Sir Edmund Scory',
+    baseName: 'Montaña Blanca Trailhead',
+    baseElevation_m: 2350,
     iconEmoji: '🏖️',
   },
   {
@@ -2171,6 +2207,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'One of the easiest 7000m peaks in the world and a popular first high-altitude expedition. Located in the Trans-Alay Range of the Pamirs, it offers a non-technical but demanding climb with extreme altitude and weather.',
     firstAscent: '1928 - Karl Wien, Eugene Allwein & Erwin Schneider',
+    baseName: 'Achik-Tash Base Camp',
+    baseElevation_m: 3600,
     iconEmoji: '⭐',
   },
   {
@@ -2203,6 +2241,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'One of the most coveted prizes in alpinism. The Shark\'s Fin route on Meru\'s central peak is a 1,500m granite wall at extreme altitude, combining big-wall rock climbing, ice, and mixed terrain. Famously climbed by Conrad Anker, Jimmy Chin, and Renan Ozturk in 2011.',
     firstAscent: '2011 - Conrad Anker, Jimmy Chin & Renan Ozturk (Shark\'s Fin)',
+    baseName: 'Tapovan',
+    baseElevation_m: 4460,
     iconEmoji: '🦈',
   },
   {
@@ -2218,6 +2258,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Very Difficult',
     description: 'A stunning pyramidal peak near Tapovan in the Garhwal Himalaya, considered one of the most beautiful mountains in the world. Its name means "Shiva\'s Lingam" and its near-perfect geometry has attracted elite alpinists since its first ascent.',
     firstAscent: '1974 - Indian-Tibetan Border Police expedition',
+    baseName: 'Tapovan',
+    baseElevation_m: 4460,
     iconEmoji: '🔱',
   },
   {
@@ -2327,6 +2369,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Very Difficult',
     description: 'Nuptse means "West Peak" in Tibetan and forms the massive south wall of the Everest amphitheater. Its imposing 2-mile-long ridge and sheer south face make it one of the most dramatic sights in the Khumbu. Despite being overshadowed by Everest and Lhotse, it is a formidable climb in its own right.',
     firstAscent: '1961 - Dennis Davis & Tashi Sherpa (British expedition)',
+    baseName: 'Everest Base Camp',
+    baseElevation_m: 5364,
     iconEmoji: '🏔️',
   },
   {
@@ -2342,6 +2386,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Very Difficult',
     description: 'One of the most visually stunning mountains in the world, rising over 5,800m directly from the Hunza Valley floor — one of the greatest elevation gains from base to summit on Earth. Its name means "shining wall" in the local Burushaski language.',
     firstAscent: '1958 - Mike Banks & Tom Patey (British-Pakistani expedition)',
+    baseName: 'Tagaphari Base Camp',
+    baseElevation_m: 3500,
     iconEmoji: '✨',
   },
   {
@@ -2357,6 +2403,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The "Lord of the Spirits" is a perfect marble pyramid and the northernmost 7000m peak in the world. Famous for glowing pink and red at sunset due to its marble rock composition. One of the most beautiful and coveted peaks in Central Asia.',
     firstAscent: '1931 - Mikhail Pogrebetsky & team',
+    baseName: 'North Inylchek Base Camp',
+    baseElevation_m: 4000,
     iconEmoji: '💎',
   },
   {
@@ -2372,6 +2420,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Very Difficult',
     description: 'The highest peak in the Tian Shan and one of the most dangerous 7000m peaks due to its remote location, extreme cold, and violent storms. Its long summit ridge and massive glaciated flanks have claimed many lives. Often climbed together with nearby Khan Tengri.',
     firstAscent: '1956 - Vitaly Abalakov & team (Soviet expedition)',
+    baseName: 'South Inylchek Base Camp',
+    baseElevation_m: 4000,
     iconEmoji: '🌬️',
   },
   {
@@ -2387,6 +2437,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Mexico\'s second highest peak and one of the most active volcanoes in North America. Its name means "Smoking Mountain" in Nahuatl. The snow-capped stratovolcano towers over Mexico City and Puebla, and is steeped in Aztec mythology alongside neighboring Iztaccíhuatl.',
     firstAscent: '1519 - Diego de Ordaz (Spanish conquistador)',
+    baseName: 'Paso de Cortés',
+    baseElevation_m: 3650,
     iconEmoji: '🌋',
   },
   {
@@ -2459,6 +2511,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The fifth highest mountain in Africa and the second highest in Tanzania after Kilimanjaro. A massive stratovolcano with a dramatic horseshoe-shaped crater formed by a catastrophic collapse. Often used as an acclimatization climb before Kilimanjaro, but a stunning peak in its own right with views of its famous neighbor.',
     firstAscent: '1904 - Fritz Jaeger',
+    baseName: 'Momella Gate',
+    baseElevation_m: 1500,
     iconEmoji: '🌋',
   },
   {
@@ -2516,6 +2570,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'The highest peak in mainland Australia and a member of the Bass version of the Seven Summits. A non-technical walk-up in Kosciuszko National Park, popular with hikers and those completing the Seven Summits challenge.',
     firstAscent: '1840 - Paweł Edmund Strzelecki',
+    baseName: 'Charlotte Pass',
+    baseElevation_m: 1840,
     iconEmoji: '🇦🇺',
     routes: ['Kosciuszko Walk', 'Main Range Track'],
     camps: {
@@ -2564,6 +2620,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Easy',
     description: 'A flat-topped mountain overlooking Cape Town and one of the most iconic landmarks in Africa. The summit is accessible via hiking trails and the Table Mountain Aerial Cableway, offering dramatic views of the city and the Atlantic.',
     firstAscent: '1503 - Antonio de Saldanha (first recorded)',
+    baseName: 'Platteklip Gorge Trailhead',
+    baseElevation_m: 365,
     iconEmoji: '⛰️',
     routes: ['Platteklip Gorge', 'India Venster', 'Cable Car'],
     camps: {
@@ -2586,6 +2644,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The highest peak in Georgia and the eastern anchor of the legendary Bezengi Wall. A dramatic, heavily glaciated summit with one of the most formidable north faces in the Caucasus, renowned for technical difficulty and severe weather.',
     firstAscent: '1888 - U. Almer, J. Cockin & C. Roth',
+    baseName: 'Ushguli',
+    baseElevation_m: 2100,
     iconEmoji: '🏔️',
     routes: ['Northeast Ridge', 'North Face'],
     camps: {
@@ -2609,6 +2669,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Difficult',
     description: 'An active volcano on the island of Lombok and the second highest peak in Indonesia. Its vast caldera holds the turquoise Segara Anak lake and the active Barujari cone. A sacred and strenuous trek, renowned for sunrise views over Lombok, Bali and the Gili Islands.',
     firstAscent: '1853 - J. H. G. van der Steur Jr.',
+    baseName: 'Sembalun Gate',
+    baseElevation_m: 1150,
     iconEmoji: '🌋',
     routes: ['Sembalun Route', 'Senaru Route'],
     camps: {
@@ -2632,6 +2694,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Difficult',
     description: 'The highest and holiest mountain in Bali, revered in Balinese Hinduism. A massive stratovolcano whose 1963 eruption reshaped the island. The summit pilgrimage is steep, exposed and spiritually significant, with sunrise views over Lombok and the Gili Islands.',
     firstAscent: '1840 - Hendrik van der Hart and a Balinese guide',
+    baseName: 'Pura Pasar Agung',
+    baseElevation_m: 1500,
     iconEmoji: '🌋',
   },
   {
@@ -2662,6 +2726,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Europe\'s most famous volcano, best known for its AD 79 eruption that buried Pompeii and Herculaneum. Still active today, its broad cone rises above the Bay of Naples. The summit trail is straightforward, with views into the crater and across the Neapolitan landscape.',
     firstAscent: 'Ancient times',
+    baseName: 'Summit Car Park',
+    baseElevation_m: 1000,
     iconEmoji: '🌋',
   },
   {
@@ -2694,6 +2760,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Difficult',
     description: 'A dormant stratovolcano on New Zealand\'s North Island, famous for its remarkably symmetrical cone that mirrors Mount Fuji. Sacred to the Māori and the heart of Egmont National Park. The climb is steep and often icy, requiring alpine skills near the summit.',
     firstAscent: '1839 - James Heberley and Ernst Dieffenbach',
+    baseName: 'North Egmont Visitor Centre',
+    baseElevation_m: 950,
     iconEmoji: '🌋',
   },
   {
@@ -2709,6 +2777,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Difficult',
     description: 'The youngest and most active vent of the Tongariro complex, instantly recognizable as Mount Doom in The Lord of the Rings films. A steep, scree-covered cone with loose volcanic rock and active fumaroles. The final scramble to the crater rim is ashen and thrilling.',
     firstAscent: '1839 - John Bidwill',
+    baseName: 'Mangatepopo Car Park',
+    baseElevation_m: 1120,
     iconEmoji: '🌋',
   },
   {
@@ -2724,6 +2794,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'The southernmost active volcano on Earth, located on Ross Island. Famous for its persistent lava lake, ice fumaroles and extreme polar environment. Primarily a scientific and expeditionary summit, requiring polar logistics, mountaineering skills and severe-weather experience.',
     firstAscent: '1908 - Edgeworth David, Douglas Mawson and party',
+    baseName: 'Lower Erebus Hut',
+    baseElevation_m: 3400,
     iconEmoji: '❄️',
   },
   {
@@ -2873,6 +2945,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest mountain in Wales and England, and one of the most visited peaks in the UK. Its rocky summit offers sweeping views over the lakes and ridges of Eryri National Park.',
     firstAscent: 'Ancient (first recorded 1639)',
+    baseName: 'Pen-y-Pass',
+    baseElevation_m: 359,
     iconEmoji: '🏴󠁧󠁢󠁷󠁬󠁳󠁿',
   },
   {
@@ -2888,6 +2962,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest mountain in England. Its rugged summit and surrounding crags are a rite of passage for British hill walkers, with dramatic views across the Lake District fells.',
     firstAscent: '1802 - Samuel Taylor Coleridge (poet)',
+    baseName: 'Wasdale Head',
+    baseElevation_m: 80,
     iconEmoji: '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
   },
   {
@@ -2904,6 +2980,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Hard',
     description: 'The highest volcano in Oceania and Papua New Guinea. This ancient shield volcano rises from tropical rainforest and is one of the Volcanic Seven Summits.',
     firstAscent: '1935 - Mick Leahy & Mick Dwyer',
+    baseName: 'Base Camp',
+    baseElevation_m: 3400,
     iconEmoji: '🇵🇬',
   },
   {
@@ -2935,6 +3013,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest mountain in Ireland. Its sharp summit and dramatic ridges rise above the lakes of Kerry, offering rugged hiking and scrambling in changeable Atlantic weather.',
     firstAscent: '1865 - Corcoran, Devine, O\'Shea',
+    baseName: 'Cronin\'s Yard',
+    baseElevation_m: 100,
     iconEmoji: '🇮🇪',
   },
   {
@@ -2950,6 +3030,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'The highest mountain in Norway and Northern Europe. Its broad glacier-covered summit is a classic Norwegian alpine objective, accessible by a popular glacier crossing from the Jotunheimen valleys.',
     firstAscent: '1850 - Stein Sulheim, S. Flaatten, L. Arnesen',
+    baseName: 'Spiterstulen',
+    baseElevation_m: 1100,
     iconEmoji: '🇳🇴',
   },
   {
@@ -2965,6 +3047,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'A sacred pyramidal peak revered in Hinduism, Buddhism, Jainism and Bon. Climbing is prohibited out of respect for its spiritual significance, making it one of the world\'s most famous unclimbed mountains.',
     firstAscent: 'Unclimbed (sacred, closed to climbing)',
+    baseName: 'Darchen',
+    baseElevation_m: 4575,
     iconEmoji: '🇨🇳',
   },
   {
@@ -2980,6 +3064,8 @@ export const mountains: Mountain[] = [
     difficulty: 'Moderate',
     description: 'Europe\'s highest and most active volcano, dominating the eastern coast of Sicily. Its frequent eruptions and smoking summit have made it a symbol of nature\'s power since ancient Greek mythology.',
     firstAscent: 'Ancient (classical era)',
+    baseName: 'Rifugio Sapienza',
+    baseElevation_m: 1910,
     iconEmoji: '🇮🇹',
   },
   {
