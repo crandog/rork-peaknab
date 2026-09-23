@@ -1123,7 +1123,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Normal Route (Chilean side)',
       list: [
-        { name: 'Refugio Atacama', elevation_m: 5200 },
         { name: 'Refugio Tejos', elevation_m: 5825 },
         { name: 'Refugio César', elevation_m: 6400 },
       ],
@@ -1631,7 +1630,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'South Side / Hogsback',
       list: [
-        { name: 'Timberline Lodge', elevation_m: 1800 },
         { name: 'Illumination Saddle', elevation_m: 2830 },
       ],
     },
