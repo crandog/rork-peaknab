@@ -906,8 +906,6 @@ export const mountains: Mountain[] = [
     difficulty: 'Extreme',
     description: 'Famous for its treacherous North Face, known as the "Mordwand" (Murder Wall). The North Face is considered one of the great north faces of the Alps.',
     firstAscent: '1858 - Charles Barrington & guides',
-    baseName: 'Eigergletscher Station',
-    baseElevation_m: 2320,
     iconEmoji: '🧗',
     routes: ['Mittellegi Ridge', '1938 Route (North Face)'],
     camps: {
