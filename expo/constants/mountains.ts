@@ -887,7 +887,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Hornli Ridge',
       list: [
-        { name: 'Hörnli Hut', elevation_m: 3260 },
         { name: 'Solvay Hut', elevation_m: 4003 },
         { name: 'Carrel Hut', elevation_m: 3830 },
       ],
@@ -1176,7 +1175,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Normal Route',
       list: [
-        { name: 'Carrel Refuge', elevation_m: 4850 },
         { name: 'Whymper Refuge', elevation_m: 5000 },
       ],
     },
@@ -1201,7 +1199,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Normal Route',
       list: [
-        { name: 'José Ribas Refuge', elevation_m: 4864 },
       ],
     },
   },
@@ -1350,7 +1347,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Standard Route (Southwest Ridge)',
       list: [
-        { name: 'Base Camp', elevation_m: 4800 },
         { name: 'High Camp', elevation_m: 5700 },
       ],
     },
@@ -1489,7 +1485,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Normal Route (Southeast Ridge)',
       list: [
-        { name: 'Base Camp', elevation_m: 5300 },
         { name: 'Camp I', elevation_m: 5650 },
         { name: 'Camp II', elevation_m: 6100 },
       ],
@@ -1515,7 +1510,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'South Ridge',
       list: [
-        { name: 'Base Camp', elevation_m: 5300 },
         { name: 'Camp I', elevation_m: 6000 },
       ],
     },
@@ -1540,7 +1534,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Normal Route (South Ridge)',
       list: [
-        { name: 'Base Camp', elevation_m: 4950 },
         { name: 'High Camp', elevation_m: 5400 },
       ],
     },
@@ -1712,7 +1705,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'Yoshida Trail',
       list: [
-        { name: '5th Station', elevation_m: 2305 },
         { name: '8th Station Huts', elevation_m: 3100 },
         { name: 'Summit Huts', elevation_m: 3700 },
       ],
@@ -2550,7 +2542,6 @@ export const mountains: Mountain[] = [
     camps: {
       route: 'South-east Ridge',
       list: [
-        { name: 'Mönchsjoch Hut', elevation_m: 3657 },
         { name: 'High Camp', elevation_m: 3850 },
       ],
     },
