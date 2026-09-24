@@ -165,7 +165,7 @@ function SnowOverlay({ width, height }: { width: number; height: number }) {
   }, [width, height]);
 
   return (
-    <Svg width={width} height={height} style={StyleSheet.absoluteFillObject}>
+    <Svg width={width} height={height} style={StyleSheet.absoluteFill}>
       {flakes.map((f, i) => (
         <Circle key={i} cx={f.cx} cy={f.cy} r={f.r} fill="white" opacity={f.opacity} />
       ))}
@@ -210,7 +210,7 @@ function StampCard({ mountain, record, enabled, unitMode, width, height }: CardP
         {photoUri ? (
           <Image
             source={{ uri: photoUri }}
-            style={StyleSheet.absoluteFillObject}
+            style={StyleSheet.absoluteFill}
             contentFit="cover"
             cachePolicy="memory-disk"
           />
@@ -218,7 +218,7 @@ function StampCard({ mountain, record, enabled, unitMode, width, height }: CardP
           <>
             <LinearGradient
               colors={['#C9DCEE', '#EFF4FA']}
-              style={StyleSheet.absoluteFillObject}
+              style={StyleSheet.absoluteFill}
             />
             <Image
               source={iconSource}
@@ -357,14 +357,14 @@ function PhotoCard({ mountain, record, enabled, unitMode, width, height }: CardP
     <View style={[styles.photoCard, { width, height }]}>
       <Image
         source={{ uri: photoSource }}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         contentFit="cover"
         cachePolicy="memory-disk"
       />
       <LinearGradient
         colors={['rgba(8,16,26,0)', 'rgba(8,16,26,0)', 'rgba(8,16,26,0.72)']}
         locations={[0, 0.66, 1]}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
       />
       <View style={styles.photoTopBar}>
         <Wordmark color="#fff" size={15} />
@@ -437,15 +437,15 @@ function StoryCard({ mountain, record, enabled, unitMode, width, height }: CardP
     <View style={[styles.storyCard, { width, height }]}>
       <Image
         source={{ uri: photoSource }}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         contentFit="cover"
         cachePolicy="memory-disk"
       />
-      <View style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(72,128,196,0.14)' }]} />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(72,128,196,0.14)' }]} />
       <LinearGradient
         colors={['rgba(9,26,54,0.62)', 'rgba(13,34,68,0.24)', 'rgba(7,20,46,0.68)']}
         locations={[0, 0.35, 1]}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
       />
       <SnowOverlay width={width} height={height} />
 

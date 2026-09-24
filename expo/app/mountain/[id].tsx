@@ -1367,7 +1367,11 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   bottomImageOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(11, 29, 48, 0.35)',
   },
   errorText: { color: Colors.text, fontSize: 16, textAlign: 'center', marginTop: 100 },

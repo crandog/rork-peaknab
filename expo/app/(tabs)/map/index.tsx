@@ -355,7 +355,7 @@ export default function MapScreen() {
             mapType="none"
             showsCompass={false}
             showsScale={false}
-            showsPointsOfInterest={false}
+            showsPointsOfInterests={false}
             showsBuildings={false}
             showsTraffic={false}
             showsIndoors={false}
@@ -447,14 +447,14 @@ export default function MapScreen() {
               end={{ x: 1, y: 0 }}
               colors={[VIGNETTE_SEPIA, VIGNETTE_TRANSPARENT, VIGNETTE_TRANSPARENT, VIGNETTE_SEPIA]}
               locations={[0, 0.22, 0.78, 1]}
-              style={StyleSheet.absoluteFillObject}
+              style={StyleSheet.absoluteFill}
             />
             <LinearGradient
               start={{ x: 0, y: 0 }}
               end={{ x: 0, y: 1 }}
               colors={[VIGNETTE_SEPIA, VIGNETTE_TRANSPARENT, VIGNETTE_TRANSPARENT, VIGNETTE_SEPIA]}
               locations={[0, 0.22, 0.78, 1]}
-              style={StyleSheet.absoluteFillObject}
+              style={StyleSheet.absoluteFill}
             />
           </View>
         </View>
@@ -504,21 +504,41 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   map: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   frostOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: VOYAGER_OVERLAY,
   },
   parchmentTextureWrap: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     opacity: 0.14,
   },
   parchmentTextureImage: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   vignetteContainer: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   compassWrap: {
     position: 'absolute',
