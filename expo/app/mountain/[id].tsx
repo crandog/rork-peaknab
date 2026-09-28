@@ -341,6 +341,73 @@ export default function MountainDetailScreen() {
   const campList = mountain.camps?.list ?? [];
   const visibleCamps = showAllCamps ? campList : campList.slice(0, 6);
 
+  // Gain + Camps cards. Rendered below the stats row for non-summitted
+  // mountains; rendered at the top of the Info tab when the mountain has
+  // been summited. insideInfoTab drops the outer horizontal margins since
+  // the Info tab content already provides its own padding.
+  const renderGainAndCamps = (insideInfoTab: boolean) => (
+    <>
+      {mountain.baseElevation_m != null && (
+        <View style={[styles.baseGainCard, insideInfoTab && { marginHorizontal: 0 }]}>
+          <View style={styles.baseGainIcon}>
+            <TrendingUp color={Colors.primary} size={18} />
+          </View>
+          <Text style={styles.baseGainText}>
+            {campList.length === 0 && (
+              <>
+                <Text style={styles.baseGainLabel}>Base:</Text>{' '}
+                {mountain.baseName} {formatElevation(mountain.baseElevation_m)}
+                {'   •   '}
+              </>
+            )}
+            <Text style={styles.baseGainLabel}>Gain:</Text>{' '}
+            {formatElevation(mountain.elevation - mountain.baseElevation_m)}
+          </Text>
+        </View>
+      )}
+
+      {mountain.camps && campList.length > 0 && (
+        <View style={[styles.campsCard, insideInfoTab && { marginHorizontal: 0 }]}>
+          <View style={styles.sectionHeader}>
+            <Home color={Colors.primary} size={16} />
+            <Text style={styles.sectionHeaderText}>Camps</Text>
+            <Text style={styles.campsRouteText}>{mountain.camps.route}</Text>
+          </View>
+          <View>
+            {mountain.baseElevation_m != null && (
+              <View style={styles.campRow}>
+                <View style={[styles.campDot, { backgroundColor: Colors.primary }]} />
+                <Text style={[styles.campName, { flex: 1 }]}>{mountain.baseName}</Text>
+                <Text style={styles.campElevation}>
+                  {formatElevation(mountain.baseElevation_m)}
+                </Text>
+              </View>
+            )}
+            {visibleCamps.map((camp, idx: number) => (
+              <View key={`${camp.name}-${idx}`} style={styles.campRow}>
+                <View style={styles.campDot} />
+                <Text style={[styles.campName, { flex: 1 }]}>{camp.name}</Text>
+                <Text style={styles.campElevation}>{formatElevation(camp.elevation_m)}</Text>
+              </View>
+            ))}
+          </View>
+          {campList.length > 6 && (
+            <TouchableOpacity
+              style={styles.campsToggle}
+              onPress={() => setShowAllCamps(!showAllCamps)}
+              activeOpacity={0.7}
+            >
+              <Text style={styles.campsToggleText}>
+                {showAllCamps ? 'Hide camps' : `Show all ${campList.length} camps`}
+              </Text>
+              <ChevronDown color={Colors.primary} size={14} />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+    </>
+  );
+
   const imageOpacity = scrollY.interpolate({
     inputRange: [0, HERO_HEIGHT / 2],
     outputRange: [1, 0.3],
@@ -520,64 +587,7 @@ export default function MountainDetailScreen() {
             </View>
           </View>
 
-          {mountain.baseElevation_m != null && (
-            <View style={styles.baseGainCard}>
-              <View style={styles.baseGainIcon}>
-                <TrendingUp color={Colors.primary} size={18} />
-              </View>
-              <Text style={styles.baseGainText}>
-                {campList.length === 0 && (
-                  <>
-                    <Text style={styles.baseGainLabel}>Base:</Text>{' '}
-                    {mountain.baseName} {formatElevation(mountain.baseElevation_m)}
-                    {'   •   '}
-                  </>
-                )}
-                <Text style={styles.baseGainLabel}>Gain:</Text>{' '}
-                {formatElevation(mountain.elevation - mountain.baseElevation_m)}
-              </Text>
-            </View>
-          )}
-
-          {mountain.camps && campList.length > 0 && (
-            <View style={styles.campsCard}>
-              <View style={styles.sectionHeader}>
-                <Home color={Colors.primary} size={16} />
-                <Text style={styles.sectionHeaderText}>Camps</Text>
-                <Text style={styles.campsRouteText}>{mountain.camps.route}</Text>
-              </View>
-              <View>
-                {mountain.baseElevation_m != null && (
-                  <View style={styles.campRow}>
-                    <View style={[styles.campDot, { backgroundColor: Colors.primary }]} />
-                    <Text style={[styles.campName, { flex: 1 }]}>{mountain.baseName}</Text>
-                    <Text style={styles.campElevation}>
-                      {formatElevation(mountain.baseElevation_m)}
-                    </Text>
-                  </View>
-                )}
-                {visibleCamps.map((camp, idx: number) => (
-                  <View key={`${camp.name}-${idx}`} style={styles.campRow}>
-                    <View style={styles.campDot} />
-                    <Text style={[styles.campName, { flex: 1 }]}>{camp.name}</Text>
-                    <Text style={styles.campElevation}>{formatElevation(camp.elevation_m)}</Text>
-                  </View>
-                ))}
-              </View>
-              {campList.length > 6 && (
-                <TouchableOpacity
-                  style={styles.campsToggle}
-                  onPress={() => setShowAllCamps(!showAllCamps)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.campsToggleText}>
-                    {showAllCamps ? 'Hide camps' : `Show all ${campList.length} camps`}
-                  </Text>
-                  <ChevronDown color={Colors.primary} size={14} />
-                </TouchableOpacity>
-              )}
-            </View>
-          )}
+          {!summited && renderGainAndCamps(false)}
 
           {summited && (
             <View style={styles.summitedBanner}>
@@ -610,6 +620,7 @@ export default function MountainDetailScreen() {
 
           {activeTab === 'info' ? (
             <View style={styles.infoContent}>
+              {summited && renderGainAndCamps(true)}
               <Text style={styles.description}>{mountain.description}</Text>
 
               <View style={styles.infoGrid}>
