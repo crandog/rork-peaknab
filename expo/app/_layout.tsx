@@ -9,6 +9,7 @@ import { UnitsProvider } from "@/contexts/UnitsContext";
 import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProfileProvider } from "@/contexts/ProfileContext";
+import { ShareSettingsProvider } from "@/contexts/ShareSettingsContext";
 import { mountainImages, defaultMountainImage } from "@/constants/mountainImages";
 import Colors from "@/constants/colors";
 
@@ -124,9 +125,11 @@ export default function RootLayout() {
           <ProfileProvider>
             <CustomMountainsProvider>
               <SummitProvider>
-                <UnitsProvider>
-                  <RootLayoutNav />
-                </UnitsProvider>
+                <ShareSettingsProvider>
+                  <UnitsProvider>
+                    <RootLayoutNav />
+                  </UnitsProvider>
+                </ShareSettingsProvider>
               </SummitProvider>
             </CustomMountainsProvider>
           </ProfileProvider>
