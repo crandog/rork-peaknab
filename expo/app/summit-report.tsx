@@ -9,7 +9,10 @@ import {
   Alert,
   Platform,
   Animated,
+  Keyboard,
   KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  findNodeHandle,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Image } from 'expo-image';
@@ -49,6 +52,21 @@ export default function SummitReportScreen() {
   const mountain = useFindMountain(mountainId);
   const availableRoutes = useMemo(() => mountain?.routes ?? [], [mountain]);
   const saveScale = useRef(new Animated.Value(1)).current;
+  const scrollRef = useRef<ScrollView>(null);
+  const notesRef = useRef<TextInput>(null);
+  const routeRef = useRef<TextInput>(null);
+  const summitTimeRef = useRef<TextInput>(null);
+  const timeToSummitRef = useRef<TextInput>(null);
+  const roundTripRef = useRef<TextInput>(null);
+  const conditionsRef = useRef<TextInput>(null);
+
+  // Scrolls the focused field above the keyboard so it (and the content
+  // directly above it) stays visible while typing.
+  const scrollToInput = useCallback((inputRef: React.RefObject<TextInput | null>) => {
+    const node = inputRef.current ? findNodeHandle(inputRef.current) : null;
+    if (node == null) return;
+    scrollRef.current?.scrollResponderScrollNativeHandleToKeyboard(node, 130, true);
+  }, []);
 
   const handleSavePress = useCallback(() => {
     Animated.sequence([
@@ -71,6 +89,9 @@ export default function SummitReportScreen() {
   }, []);
 
   const handleSave = useCallback(() => {
+    // Dismiss the keyboard before the share Alert so it never carries over
+    // onto the Share Summit screen and cover the card badges.
+    Keyboard.dismiss();
     if (!mountainId) return;
 
     updateSummit(mountainId, {
@@ -127,19 +148,25 @@ export default function SummitReportScreen() {
         enabled
       >
       <ScrollView
+        ref={scrollRef}
         style={styles.flexOne}
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
+        keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
         showsVerticalScrollIndicator={false}
       >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={{ gap: 16 }}>
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Notes:</Text>
           <TextInput
+            ref={notesRef}
             style={styles.reportInput}
             placeholder="Amazing climb, perfect weather!"
             placeholderTextColor={Colors.textMuted}
             value={report}
             onChangeText={setReport}
+            onFocus={() => scrollToInput(notesRef)}
             multiline
             textAlignVertical="top"
           />
@@ -173,35 +200,43 @@ export default function SummitReportScreen() {
           )}
           <Text style={styles.fieldLabel}>Route</Text>
           <TextInput
+            ref={routeRef}
             style={styles.conditionsInput}
             placeholder="Machame Route"
             placeholderTextColor={Colors.textMuted}
             value={route}
             onChangeText={setRoute}
+            onFocus={() => scrollToInput(routeRef)}
           />
           <Text style={styles.fieldLabel}>Summit time</Text>
           <TextInput
+            ref={summitTimeRef}
             style={styles.conditionsInput}
             placeholder="6:20 AM"
             placeholderTextColor={Colors.textMuted}
             value={summitTime}
             onChangeText={setSummitTime}
+            onFocus={() => scrollToInput(summitTimeRef)}
           />
           <Text style={styles.fieldLabel}>Time to summit</Text>
           <TextInput
+            ref={timeToSummitRef}
             style={styles.conditionsInput}
             placeholder="8h from high camp"
             placeholderTextColor={Colors.textMuted}
             value={timeToSummit}
             onChangeText={setTimeToSummit}
+            onFocus={() => scrollToInput(timeToSummitRef)}
           />
           <Text style={styles.fieldLabel}>Summit day length</Text>
           <TextInput
+            ref={roundTripRef}
             style={styles.conditionsInput}
             placeholder="12h"
             placeholderTextColor={Colors.textMuted}
             value={roundTrip}
             onChangeText={setRoundTrip}
+            onFocus={() => scrollToInput(roundTripRef)}
           />
         </View>
 
@@ -237,11 +272,13 @@ export default function SummitReportScreen() {
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Conditions:</Text>
           <TextInput
+            ref={conditionsRef}
             style={styles.conditionsInput}
             placeholder="Clear skies, -20°C, Light wind."
             placeholderTextColor={Colors.textMuted}
             value={conditions}
             onChangeText={setConditions}
+            onFocus={() => scrollToInput(conditionsRef)}
           />
         </View>
 
@@ -257,6 +294,8 @@ export default function SummitReportScreen() {
         </Animated.View>
 
         <View style={{ height: 60 }} />
+          </View>
+        </TouchableWithoutFeedback>
       </ScrollView>
       </KeyboardAvoidingView>
     </View>

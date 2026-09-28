@@ -10,6 +10,9 @@ import {
   Alert,
   Share as RNShare,
   Linking,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Image } from 'expo-image';
@@ -523,6 +526,7 @@ export default function ShareCardScreen() {
   const { getSummitByCreatedAt } = useSummits();
   const { useFeet, isLoaded: unitsLoaded } = useUnits();
   const cardRef = useRef<View>(null);
+  const scrollRef = useRef<ScrollView>(null);
 
   const mountain = useFindMountain(mountainId);
   const record = useMemo(() => {
@@ -569,6 +573,12 @@ export default function ShareCardScreen() {
       });
     }
   }, [record, mountain]);
+
+  useEffect(() => {
+    // A keyboard left open on the Summit Report screen would otherwise stay up
+    // over this modal and cover the card's bottom badges.
+    Keyboard.dismiss();
+  }, []);
 
   const availableFields = useMemo(() => {
     const fields: { key: FieldKey; label: string }[] = [];
@@ -728,14 +738,27 @@ export default function ShareCardScreen() {
         <View style={{ width: 22 }} />
       </View>
 
+      {/* The custom header above is laid out inline (no native nav header),
+          so this KAV sits directly below it and needs no vertical offset. */}
+      <KeyboardAvoidingView
+        style={styles.flexOne}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={0}
+        enabled
+      >
       <ScrollView
+        ref={scrollRef}
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 80 },
+          { paddingBottom: insets.bottom + 140 },
         ]}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode={Platform.OS === 'ios' ? 'interactive' : 'on-drag'}
         showsVerticalScrollIndicator={false}
       >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View>
         <View style={styles.previewContainer}>
           <View ref={cardRef} collapsable={false}>
             {renderCard()}
@@ -796,7 +819,10 @@ export default function ShareCardScreen() {
             ))}
           </View>
         </View>
+          </View>
+        </TouchableWithoutFeedback>
       </ScrollView>
+      </KeyboardAvoidingView>
 
       <View style={[styles.footer, { paddingBottom: insets.bottom + 12 }]}>
         <TouchableOpacity style={styles.shareButton} onPress={handleShare} activeOpacity={0.85}>
@@ -812,6 +838,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.snow,
+  },
+  flexOne: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',

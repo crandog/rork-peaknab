@@ -10,7 +10,7 @@ import {
   FlatList,
   Share,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image as ExpoImage } from 'expo-image';
 import {
@@ -182,6 +182,14 @@ export default function MountainDetailScreen() {
       params: { mountainId: id, mountainName: mountain.name, createdAt },
     });
   }, [id, mountain, formattedDate, selectedMonth, selectedDay, selectedYear, editingRecord, addSummit, updateSummit, router]);
+
+  // Hide the floating header actions while another screen (e.g. the Share
+  // Summit modal) is presented on top, so they don't overlap its corner.
+  const [headerActionsVisible, setHeaderActionsVisible] = useState(true);
+  useFocusEffect(useCallback(() => {
+    setHeaderActionsVisible(true);
+    return () => setHeaderActionsVisible(false);
+  }, []));
 
   const handleShareSummit = useCallback(async () => {
     if (!mountain) return;
@@ -463,7 +471,7 @@ export default function MountainDetailScreen() {
           <ArrowLeft color="#fff" size={22} />
         </TouchableOpacity>
         <View style={{ flex: 1 }} />
-        {summited && (
+        {summited && headerActionsVisible && (
           <TouchableOpacity
             style={styles.shareButton}
             onPress={handleShareSummit}
