@@ -32,16 +32,7 @@ import { getMountainIconSource } from '@/constants/mountainIcons';
 import { getMountainImage, mountainImages } from '@/constants/mountainImages';
 import { useUnits } from '@/contexts/UnitsContext';
 import type { Mountain } from '@/constants/mountains';
-import { useAuth } from '@/contexts/AuthContext';
-import { useProfile } from '@/contexts/ProfileContext';
 import { useShareSettings } from '@/contexts/ShareSettingsContext';
-import { supabaseConfigured } from '@/lib/supabase';
-import {
-  APP_STORE_LINK,
-  buildShareUrl,
-  generateShareSlug,
-  upsertSummitShare,
-} from '@/lib/shareLinks';
 
 type CardStyle = 'stamp' | 'expedition' | 'photo' | 'story';
 type FieldKey = 'date' | 'summitTime' | 'route' | 'timeToSummit' | 'roundTrip' | 'conditions' | 'accolade' | 'o2';
@@ -55,7 +46,6 @@ const STORY_WIDTH = CARD_HEIGHT * 9 / 16;
 
 const APP_LINK = 'https://apps.apple.com/app/id6790620432';
 const SHARE_CAPTION = `Climbed with PeakNab — ${APP_LINK}`;
-const SHARE_CAPTION_WITH_SUMMIT = (shareUrl: string) => `${shareUrl}\n${SHARE_CAPTION}`;
 
 // Facebook/Meta App ID for Instagram Stories deep-link sharing.
 // Create one at https://developers.facebook.com/apps/ (select "Consumer" type,
@@ -534,10 +524,8 @@ export default function ShareCardScreen() {
   }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { getSummitByCreatedAt, updateSummit } = useSummits();
+  const { getSummitByCreatedAt } = useSummits();
   const { useFeet, isLoaded: unitsLoaded } = useUnits();
-  const { user } = useAuth();
-  const { profile, isDiscoverable } = useProfile();
   const { storyTipDismissed, dismissStoryTip } = useShareSettings();
   const cardRef = useRef<View>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -611,42 +599,6 @@ export default function ShareCardScreen() {
     setEnabled(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  /**
-   * Get (or lazily create) the tappable summit link for this record. The slug
-   * is stable: generated once, stored on the local record, and mirrored to the
-   * public `summit_shares` table so the /s/<slug> page can resolve it. Falls
-   * back to the App Store link when signed out / demo mode.
-   */
-  const ensureShareLink = useCallback(async (): Promise<string> => {
-    if (!record || !user || !supabaseConfigured) return APP_LINK;
-
-    const slug = record.shareSlug ?? generateShareSlug();
-    if (!record.shareSlug) {
-      updateSummit(record.mountainId, { shareSlug: slug }, record.createdAt);
-    }
-
-    const result = await upsertSummitShare({
-      share_slug: slug,
-      user_id: user.id,
-      mountain_id: record.mountainId,
-      summit_created_at: record.createdAt,
-      summit_date: record.date,
-      mountain_name: mountain?.name ?? record.mountainId,
-      mountain_country: mountain?.country ?? '',
-      mountain_range: mountain?.range ?? '',
-      elevation_m: mountain?.elevation ?? 0,
-      elevation_ft: mountain?.elevationFt ?? 0,
-      show_climber: isDiscoverable,
-      climber_screenname: isDiscoverable ? (profile?.screenname ?? null) : null,
-    });
-
-    if (result.ok && result.slug !== record.shareSlug) {
-      updateSummit(record.mountainId, { shareSlug: result.slug }, record.createdAt);
-    }
-
-    return result.ok ? buildShareUrl(result.slug) : APP_LINK;
-  }, [record, user, mountain, isDiscoverable, profile?.screenname, updateSummit]);
-
   const handleShare = useCallback(async () => {
     if (Platform.OS !== 'web') {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -655,10 +607,6 @@ export default function ShareCardScreen() {
     if (!cardRef.current) return;
 
     try {
-      // Tappable summit link — created (or reused) on first share.
-      const shareUrl = await ensureShareLink();
-      const caption = SHARE_CAPTION_WITH_SUMMIT(shareUrl);
-
       if (Platform.OS === 'web') {
         const uri = await captureRef(cardRef, {
           format: 'png',
@@ -704,14 +652,14 @@ export default function ShareCardScreen() {
             `instagram-stories://share?source_application=${FACEBOOK_APP_ID}`,
           );
 
-          await Clipboard.setStringAsync(shareUrl);
+          await Clipboard.setStringAsync(APP_LINK);
           if (!storyTipDismissed) {
             Alert.alert(
               'Add to your story',
               'In Instagram:\n\n' +
               '1. Select your summit card from the share sheet\n' +
               '2. Tap the sticker icon, add a Link sticker, and paste:\n\n' +
-              shareUrl,
+              APP_LINK,
               [
                 { text: 'OK', style: 'default' as const },
                 {
@@ -737,7 +685,7 @@ export default function ShareCardScreen() {
         // Mail, X, etc.
         await RNShare.share({
           url: uri,
-          message: caption,
+          message: SHARE_CAPTION,
           title: 'Share your summit',
         });
       } else {
@@ -748,17 +696,17 @@ export default function ShareCardScreen() {
         });
       }
 
-      await Clipboard.setStringAsync(caption);
+      await Clipboard.setStringAsync(SHARE_CAPTION);
       Alert.alert(
         'Link copied',
         Platform.OS === 'ios'
-          ? 'Your summit link was included in your share and copied to your clipboard.'
-          : 'Caption with your summit link copied — paste it with your post.',
+          ? 'The App Store link was included in your share and copied to your clipboard.'
+          : 'Caption with App Store link copied — paste it with your post.',
       );
     } catch (e) {
       console.log('Share cancelled or failed', e);
     }
-  }, [cardStyle, ensureShareLink, storyTipDismissed, dismissStoryTip]);
+  }, [cardStyle, storyTipDismissed, dismissStoryTip]);
 
   const [linkCopied, setLinkCopied] = useState<boolean>(false);
 
@@ -767,14 +715,13 @@ export default function ShareCardScreen() {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
     try {
-      const shareUrl = await ensureShareLink();
-      await Clipboard.setStringAsync(shareUrl);
+      await Clipboard.setStringAsync(APP_LINK);
       setLinkCopied(true);
       setTimeout(() => setLinkCopied(false), 2000);
     } catch (e) {
       console.log('[Share] Copy link failed:', e);
     }
-  }, [ensureShareLink]);
+  }, []);
 
   if (!mountain) {
     return (

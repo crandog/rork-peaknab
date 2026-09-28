@@ -48,57 +48,6 @@ export type Database = {
         }
         Relationships: []
       }
-      summit_shares: {
-        Row: {
-          climber_screenname: string | null
-          created_at: string
-          elevation_ft: number
-          elevation_m: number
-          mountain_country: string
-          mountain_id: string
-          mountain_name: string
-          mountain_range: string
-          share_slug: string
-          show_climber: boolean
-          summit_created_at: string
-          summit_date: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          climber_screenname?: string | null
-          created_at?: string
-          elevation_ft?: number
-          elevation_m?: number
-          mountain_country?: string
-          mountain_id: string
-          mountain_name: string
-          mountain_range?: string
-          share_slug: string
-          show_climber?: boolean
-          summit_created_at: string
-          summit_date?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          climber_screenname?: string | null
-          created_at?: string
-          elevation_ft?: number
-          elevation_m?: number
-          mountain_country?: string
-          mountain_id?: string
-          mountain_name?: string
-          mountain_range?: string
-          share_slug?: string
-          show_climber?: boolean
-          summit_created_at?: string
-          summit_date?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       summit_tombstones: {
         Row: {
           created_at: string

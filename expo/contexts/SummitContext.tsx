@@ -17,8 +17,6 @@ export interface SummitRecord {
   timeToSummit?: string;
   summitTime?: string;
   roundTrip?: string;
-  /** Stable public slug for the /s/<slug> share link. Generated on first share. */
-  shareSlug?: string;
 }
 
 const STORAGE_KEY = 'summit_records';
