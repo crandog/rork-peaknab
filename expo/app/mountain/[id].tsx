@@ -341,10 +341,10 @@ export default function MountainDetailScreen() {
   const campList = mountain.camps?.list ?? [];
   const visibleCamps = showAllCamps ? campList : campList.slice(0, 6);
 
-  // Gain + Camps cards. Rendered below the stats row for non-summitted
-  // mountains; rendered at the top of the Info tab when the mountain has
-  // been summited. insideInfoTab drops the outer horizontal margins since
-  // the Info tab content already provides its own padding.
+  // Gain + Camps cards. Rendered directly below the Common Routes section
+  // on the Info tab (for both summited and non-summitted mountains); never
+  // shown on the Summit Report tab. insideInfoTab drops the outer horizontal
+  // margins since the Info tab content already provides its own padding.
   const renderGainAndCamps = (insideInfoTab: boolean) => (
     <>
       {mountain.baseElevation_m != null && (
@@ -587,8 +587,6 @@ export default function MountainDetailScreen() {
             </View>
           </View>
 
-          {!summited && renderGainAndCamps(false)}
-
           {summited && (
             <View style={styles.summitedBanner}>
               <View style={styles.summitedBannerInner}>
@@ -620,7 +618,6 @@ export default function MountainDetailScreen() {
 
           {activeTab === 'info' ? (
             <View style={styles.infoContent}>
-              {summited && renderGainAndCamps(true)}
               <Text style={styles.description}>{mountain.description}</Text>
 
               <View style={styles.infoGrid}>
@@ -672,6 +669,8 @@ export default function MountainDetailScreen() {
                   </View>
                 </View>
               )}
+
+              {renderGainAndCamps(summited)}
             </View>
           ) : (
             <View style={styles.summitContent}>
