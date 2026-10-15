@@ -10,7 +10,6 @@ import { CustomMountainsProvider } from "@/contexts/CustomMountainsContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ProfileProvider } from "@/contexts/ProfileContext";
 import { ShareSettingsProvider } from "@/contexts/ShareSettingsContext";
-import { mountainImages, defaultMountainImage } from "@/constants/mountainImages";
 import Colors from "@/constants/colors";
 
 void SplashScreen.preventAutoHideAsync();
@@ -102,19 +101,19 @@ export default function RootLayout() {
     void SplashScreen.hideAsync();
   }, []);
 
-  // Prefetch all hero/detail images so they're cached on disk after first launch.
+  // Mountain photos are no longer bulk-prefetched at startup: the detail
+  // page shows a bundled lightweight photo instantly and upgrades to the
+  // full-resolution remote copy (disk-cached by expo-image) on demand.
   // Peak icons are bundled locally and need no prefetch.
   useEffect(() => {
-    const urls = Object.values(mountainImages);
-    urls.push(defaultMountainImage);
-    // Also prefetch static UI background images
-    urls.push(
+    // Prefetch static UI background images only (auth/onboarding screens).
+    const urls = [
       "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/h9lsc5acg9fa3uka6bwlz",
       "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/ce56ixcq6dwvfeks1eq19",
       "https://pub-e001eb4506b145aa938b5d3badbff6a5.r2.dev/attachments/e154lkqvikg84q9a05bjl",
       "https://r2-pub.rork.com/attachments/37ju8kn02uoq9cuh159tp",
       "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
-    );
+    ];
     ExpoImage.prefetch(urls).catch(() => {});
   }, []);
 

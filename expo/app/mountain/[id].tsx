@@ -36,7 +36,7 @@ import {
 import * as Haptics from 'expo-haptics';
 import Colors from '@/constants/colors';
 import { categoryLabels } from '@/constants/mountains';
-import { getMountainImage } from '@/constants/mountainImages';
+import { MountainPhoto } from '@/components/MountainPhoto';
 import { useSummits, SummitRecord } from '@/contexts/SummitContext';
 import { useCustomMountains } from '@/contexts/CustomMountainsContext';
 import { useFindMountain } from '@/hooks/useAllMountains';
@@ -68,7 +68,6 @@ export default function MountainDetailScreen() {
   const [showMonthPicker, setShowMonthPicker] = useState(false);
   const [showDayPicker, setShowDayPicker] = useState(false);
   const [showYearPicker, setShowYearPicker] = useState(false);
-  const [imageError, setImageError] = useState(false);
   const tabAnim = useRef(new Animated.Value(0)).current;
   const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -82,13 +81,6 @@ export default function MountainDetailScreen() {
     setShowAllCamps(false);
     setEditingRecord(null);
   }, [id]);
-
-  const heroImageUrl = useMemo(() => {
-    if (!mountain) return '';
-    return getMountainImage(mountain.id);
-  }, [mountain]);
-
-  const fallbackImageUrl = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=960&q=80';
 
   const tabLabel = useMemo(() => {
     if (summited) return 'Summit Report';
@@ -515,16 +507,7 @@ export default function MountainDetailScreen() {
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.heroImageContainer, { opacity: imageOpacity, transform: [{ scale: imageScale }] }]}>
-        <ExpoImage
-          source={{ uri: imageError ? fallbackImageUrl : heroImageUrl }}
-          style={styles.heroImage}
-          contentFit="cover"
-          cachePolicy="memory-disk"
-          onError={() => {
-            console.log('Hero image failed to load for:', mountain?.id);
-            setImageError(true);
-          }}
-        />
+        <MountainPhoto mountainId={mountain?.id} style={styles.heroImage} />
       </Animated.View>
       <View style={styles.heroGradientTop} />
       <View style={styles.heroGradientBottom} />
@@ -971,12 +954,7 @@ export default function MountainDetailScreen() {
         </View>
 
         <View style={styles.bottomImageContainer}>
-          <ExpoImage
-            source={{ uri: imageError ? fallbackImageUrl : heroImageUrl }}
-            style={styles.bottomImage}
-            contentFit="cover"
-            cachePolicy="memory-disk"
-          />
+          <MountainPhoto mountainId={mountain?.id} style={styles.bottomImage} />
           <View style={styles.bottomImageOverlay} />
         </View>
       </Animated.ScrollView>
