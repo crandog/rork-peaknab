@@ -1,25 +1,22 @@
 import React, { useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
-import { AVATAR_PRESETS, presetSvg } from '@/constants/avatarPresets';
+import { presetSvg } from '@/constants/avatarPresets';
 
 interface AvatarPresetProps {
   id: string;
-  size: number;
+  size?: number;
 }
 
-/**
- * Renders a preset avatar icon as a self-contained SVG tile.
- * Each SVG includes its own gradient background + white glyph,
- * so it fills whatever square size you give it.
- */
-function AvatarPresetBase({ id, size }: AvatarPresetProps) {
-  const preset = AVATAR_PRESETS.find((p) => p.id === id);
-  const xml = useMemo(
-    () => (preset ? presetSvg(preset.glyph) : ''),
-    [preset],
+/** Full-bleed preset avatar. Fills its parent; the parent's borderRadius + overflow:'hidden' shapes it. */
+function AvatarPresetBase({ id }: AvatarPresetProps) {
+  const xml = useMemo(() => presetSvg(id), [id]);
+  if (!xml) return null;
+  return (
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <SvgXml xml={xml} width="100%" height="100%" preserveAspectRatio="xMidYMid slice" />
+    </View>
   );
-  if (!preset) return null;
-  return <SvgXml xml={xml} width={size} height={size} />;
 }
 
 export const AvatarPreset = React.memo(AvatarPresetBase);

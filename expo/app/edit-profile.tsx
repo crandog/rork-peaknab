@@ -32,7 +32,7 @@ import {
   GENDER_OPTIONS,
   validateScreenname,
 } from '@/constants/profile';
-import { AVATAR_PRESETS } from '@/constants/avatarPresets';
+import { AVATAR_PRESETS, resolvePresetId } from '@/constants/avatarPresets';
 import { AvatarPreset } from '@/components/AvatarPreset';
 import { pickAndUploadAvatar, resolveAvatarUrl } from '@/lib/avatarUpload';
 
@@ -47,7 +47,7 @@ export default function EditProfileScreen() {
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
   const [selectedPreset, setSelectedPreset] = useState<string | null>(
-    profile?.avatarPreset ?? null
+    resolvePresetId(profile?.avatarPreset) ?? null
   );
   const [uploadedAvatar, setUploadedAvatar] = useState<string | null>(
     profile?.avatarUrl ?? null
@@ -430,8 +430,8 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   presetAvatar: {
-    width: 56,
-    height: 56,
+    width: '22%',
+    aspectRatio: 1,
     borderRadius: 16,
     borderWidth: 2,
     borderColor: Colors.border,

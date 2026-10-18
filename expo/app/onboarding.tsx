@@ -501,8 +501,8 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
   },
   presetAvatar: {
-    width: 56,
-    height: 56,
+    width: '22%',
+    aspectRatio: 1,
     borderRadius: 16,
     borderWidth: 2,
     borderColor: Colors.border,
