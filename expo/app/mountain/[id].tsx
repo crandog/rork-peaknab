@@ -8,7 +8,6 @@ import {
   Animated,
   Platform,
   FlatList,
-  Share,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -183,27 +182,18 @@ export default function MountainDetailScreen() {
     return () => setHeaderActionsVisible(false);
   }, []));
 
-  const handleShareSummit = useCallback(async () => {
-    if (!mountain) return;
+  const handleShareSummit = useCallback(() => {
+    if (!mountain || summitRecords.length === 0) return;
     if (Platform.OS !== 'web') {
       void Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     }
-    const latestRecord = summitRecords[summitRecords.length - 1];
-    const lines = [
-      `Summit Achievement!`,
-      ``,
-      `${mountain.iconEmoji} I summited ${mountain.name}${summitCountVal > 1 ? ` (x${summitCountVal})` : ''}!`,
-      `${mountain.country} · ${mountain.range}`,
-      `${mountain.elevation.toLocaleString()}m / ${mountain.elevationFt.toLocaleString()}ft`,
-      latestRecord?.date ? `${latestRecord.date}` : '',
-      latestRecord?.report ? `\n"${latestRecord.report}"` : '',
-    ].filter(Boolean).join('\n');
-    try {
-      await Share.share({ message: lines });
-    } catch (e) {
-      console.log('Share cancelled or failed', e);
-    }
-  }, [mountain, summitRecords, summitCountVal]);
+    // Open the share card for the most recent ascent of this mountain.
+    const latest = [...summitRecords].sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+    router.push({
+      pathname: '/share-card' as any,
+      params: { mountainId: mountain.id, createdAt: latest.createdAt },
+    });
+  }, [mountain, summitRecords, router]);
 
   const handleRemoveAllSummits = useCallback(() => {
     if (!id) return;
@@ -529,6 +519,7 @@ export default function MountainDetailScreen() {
             testID="share-summit-button"
           >
             <Share2 color="#fff" size={18} />
+            <Text style={styles.shareButtonText}>Share summit</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -1016,14 +1007,21 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255,255,255,0.15)',
   },
   shareButton: {
-    width: 42,
     height: 42,
     borderRadius: 21,
+    paddingHorizontal: 14,
+    gap: 6,
     backgroundColor: 'rgba(0,0,0,0.35)',
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.15)',
+  },
+  shareButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   scrollView: { flex: 1, zIndex: 2 },
   scrollContent: { paddingBottom: 0 },
