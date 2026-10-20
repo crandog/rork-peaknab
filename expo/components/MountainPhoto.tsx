@@ -1,18 +1,34 @@
 import { Image as ExpoImage } from 'expo-image';
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useMemo, useState } from 'react';
 import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 
-import { getMountainImage } from '@/constants/mountainImages';
+import { getMountainImage, mountainImages } from '@/constants/mountainImages';
 import { getMountainPhotoThumb } from '@/constants/mountainPhotoThumbs';
-
-/** Shown only when a mountain has no bundled photo (e.g. custom peaks). */
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=960&q=80';
+import { useSummits } from '@/contexts/SummitContext';
+import FrostPeakPlaceholder from '@/components/FrostPeakPlaceholder';
 
 interface MountainPhotoProps {
   mountainId?: string;
   /** Size/position style for the photo (the wrapper view fills it). */
   style: StyleProp<ViewStyle>;
   contentFit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+}
+
+/**
+ * Most recent attached summit photo for a peak (custom peaks have no bundled
+ * photo — they show the user's own photo when they attached one).
+ */
+export function useLatestSummitPhoto(mountainId: string | undefined, enabled: boolean): string | null {
+  const { records } = useSummits();
+  return useMemo(() => {
+    if (!enabled || !mountainId) return null;
+    const withPhoto = records.filter((r) => r.mountainId === mountainId && r.photoUri);
+    if (withPhoto.length === 0) return null;
+    const latest = withPhoto.reduce((a, b) =>
+      new Date(b.createdAt).getTime() > new Date(a.createdAt).getTime() ? b : a
+    );
+    return latest.photoUri ?? null;
+  }, [enabled, mountainId, records]);
 }
 
 /**
@@ -24,8 +40,10 @@ interface MountainPhotoProps {
  * - The remote copy uses expo-image's disk cache, so repeat visits load it
  *   locally without a network round trip.
  * - On network failure the remote layer is dropped and the bundled photo
- *   remains (custom peaks without a bundled photo fall back to a generic
- *   background image, matching the previous behavior).
+ *   remains.
+ * - Peaks without a bundled photo (custom peaks) never reuse another peak's
+ *   photo: they show the user's most recent attached summit photo, or a
+ *   neutral frost placeholder when there is none.
  * - `recyclingKey` + state reset guarantee rapid navigation between peaks
  *   never shows the previous mountain's photo.
  */
@@ -35,7 +53,9 @@ export const MountainPhoto = memo(function MountainPhoto({
   contentFit = 'cover',
 }: MountainPhotoProps) {
   const thumb = mountainId ? getMountainPhotoThumb(mountainId) : undefined;
-  const remoteUrl = mountainId ? getMountainImage(mountainId) : '';
+  const hasBundledPhoto = mountainId != null && mountainImages[mountainId] != null;
+  const remoteUrl = hasBundledPhoto ? getMountainImage(mountainId) : '';
+  const latestSummitPhoto = useLatestSummitPhoto(mountainId, !hasBundledPhoto);
   const [remoteFailed, setRemoteFailed] = useState<boolean>(false);
 
   // Reset when the same screen instance is reused for a different peak.
@@ -63,12 +83,19 @@ export const MountainPhoto = memo(function MountainPhoto({
           onError={() => setRemoteFailed(true)}
         />
       )}
-      {thumb == null && remoteFailed && (
-        <ExpoImage
-          source={{ uri: FALLBACK_IMAGE }}
-          style={StyleSheet.absoluteFill}
-          contentFit={contentFit}
-        />
+      {thumb == null && !hasBundledPhoto && (
+        latestSummitPhoto ? (
+          <ExpoImage
+            source={{ uri: latestSummitPhoto }}
+            style={StyleSheet.absoluteFill}
+            contentFit={contentFit}
+            cachePolicy="memory-disk"
+            recyclingKey={mountainId}
+            transition={150}
+          />
+        ) : (
+          <FrostPeakPlaceholder iconSize={44} />
+        )
       )}
     </View>
   );

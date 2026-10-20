@@ -29,7 +29,8 @@ import Colors from '@/constants/colors';
 import { useSummits, type SummitRecord } from '@/contexts/SummitContext';
 import { useFindMountain } from '@/hooks/useAllMountains';
 import { getMountainIconSource } from '@/constants/mountainIcons';
-import { getMountainImage, mountainImages } from '@/constants/mountainImages';
+import { mountainImages } from '@/constants/mountainImages';
+import FrostPeakPlaceholder from '@/components/FrostPeakPlaceholder';
 import { useUnits } from '@/contexts/UnitsContext';
 import type { Mountain } from '@/constants/mountains';
 import { useShareSettings } from '@/contexts/ShareSettingsContext';
@@ -186,11 +187,31 @@ interface CardProps {
   height: number;
 }
 
+/**
+ * Photo for the shared record: the user's attached photo first, then the
+ * peak's bundled photo. Custom peaks (no bundled photo) fall back to the
+ * most recent attached summit photo across their records — never another
+ * peak's photo. null means "render the neutral frost placeholder".
+ */
+function usePeakPhotoSource(mountain: Mountain, record: SummitRecord | undefined): string | null {
+  const { records } = useSummits();
+  return useMemo(() => {
+    if (record?.photoUri) return record.photoUri;
+    const bundled = mountainImages[mountain.id];
+    if (bundled != null) return bundled;
+    const withPhoto = records.filter((r) => r.mountainId === mountain.id && r.photoUri);
+    if (withPhoto.length === 0) return null;
+    const latest = withPhoto.reduce((a, b) =>
+      new Date(b.createdAt).getTime() > new Date(a.createdAt).getTime() ? b : a
+    );
+    return latest.photoUri ?? null;
+  }, [record?.photoUri, mountain.id, records]);
+}
+
 function StampCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
-  const iconSource = getMountainIconSource(mountain.id);
-  // Use the peak's real photo (same asset as the detail screen) when available;
-  // fall back to the bundled icon for peaks without an image.
-  const photoUri = mountainImages[mountain.id];
+  // The record's own photo, else the peak's bundled photo; custom peaks use
+  // their most recent summit photo or the frost placeholder.
+  const photoUri = usePeakPhotoSource(mountain, record);
   const accolade = getAccolade(mountain);
 
   const statFields: { label: string; value: string }[] = [];
@@ -219,17 +240,7 @@ function StampCard({ mountain, record, enabled, unitMode, width, height }: CardP
             cachePolicy="memory-disk"
           />
         ) : (
-          <>
-            <LinearGradient
-              colors={['#C9DCEE', '#EFF4FA']}
-              style={StyleSheet.absoluteFill}
-            />
-            <Image
-              source={iconSource}
-              style={styles.stampIcon}
-              contentFit="contain"
-            />
-          </>
+          <FrostPeakPlaceholder />
         )}
         <View style={styles.stampBadge}>
           <Text style={styles.stampBadgeText}>SUMMITED</Text>
@@ -328,7 +339,7 @@ function ExpeditionCard({ mountain, record, enabled, unitMode, width, height }: 
 }
 
 function PhotoCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
-  const photoSource = record?.photoUri ?? getMountainImage(mountain.id);
+  const photoSource = usePeakPhotoSource(mountain, record);
   const accolade = getAccolade(mountain);
 
   const chips: { text: string; gold?: boolean }[] = [];
@@ -359,12 +370,16 @@ function PhotoCard({ mountain, record, enabled, unitMode, width, height }: CardP
 
   return (
     <View style={[styles.photoCard, { width, height }]}>
-      <Image
-        source={{ uri: photoSource }}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        cachePolicy="memory-disk"
-      />
+      {photoSource ? (
+        <Image
+          source={{ uri: photoSource }}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          cachePolicy="memory-disk"
+        />
+      ) : (
+        <FrostPeakPlaceholder />
+      )}
       <LinearGradient
         colors={['rgba(8,16,26,0)', 'rgba(8,16,26,0)', 'rgba(8,16,26,0.72)']}
         locations={[0, 0.66, 1]}
@@ -402,7 +417,7 @@ function PhotoCard({ mountain, record, enabled, unitMode, width, height }: CardP
 }
 
 function StoryCard({ mountain, record, enabled, unitMode, width, height }: CardProps) {
-  const photoSource = record?.photoUri ?? getMountainImage(mountain.id);
+  const photoSource = usePeakPhotoSource(mountain, record);
   const accolade = getAccolade(mountain);
 
   const gridFields: { label: string; value: string; subValue?: string }[] = [];
@@ -439,12 +454,16 @@ function StoryCard({ mountain, record, enabled, unitMode, width, height }: CardP
 
   return (
     <View style={[styles.storyCard, { width, height }]}>
-      <Image
-        source={{ uri: photoSource }}
-        style={StyleSheet.absoluteFill}
-        contentFit="cover"
-        cachePolicy="memory-disk"
-      />
+      {photoSource ? (
+        <Image
+          source={{ uri: photoSource }}
+          style={StyleSheet.absoluteFill}
+          contentFit="cover"
+          cachePolicy="memory-disk"
+        />
+      ) : (
+        <FrostPeakPlaceholder />
+      )}
       <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(72,128,196,0.14)' }]} />
       <LinearGradient
         colors={['rgba(9,26,54,0.62)', 'rgba(13,34,68,0.24)', 'rgba(7,20,46,0.68)']}

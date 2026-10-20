@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,13 +9,14 @@ import {
   Platform,
   ScrollView,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Search, Wind, X, ChevronDown, Check, Plus, ArrowUpDown, Mountain, Trophy } from 'lucide-react-native';
 import OxygenInfoButton from '@/components/OxygenInfoButton';
 import Colors from '@/constants/colors';
-import { MountainCategory } from '@/constants/mountains';
+import { MountainCategory, mountainInCategory } from '@/constants/mountains';
 import { useSummits } from '@/contexts/SummitContext';
 import { useUnits } from '@/contexts/UnitsContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
@@ -26,7 +27,7 @@ const categories: Array<{ key: MountainCategory | 'all'; label: string }> = [
   { key: '7summits', label: '7 Summits' },
   { key: '8000m', label: '8000m' },
   { key: 'volcanic', label: 'Volcanic' },
-  { key: '14ers', label: '14ers' },
+  { key: '14ers', label: 'Colorado 14ers' },
   { key: 'alps', label: 'Alps' },
   { key: 'andes', label: 'Andes' },
   { key: 'himalaya', label: 'Himalaya' },
@@ -35,10 +36,18 @@ const categories: Array<{ key: MountainCategory | 'all'; label: string }> = [
 
 type SortOption = 'name' | 'elevation_desc' | 'elevation_asc';
 
+// Notes shown under the chips for categories that need explanation.
+const categoryNotes: Partial<Record<MountainCategory, string>> = {
+  '7summits': 'Includes both Carstensz Pyramid and Mount Kosciuszko, the two accepted versions of the list.',
+  '14ers': "A selection of Colorado's best-known 14ers.",
+};
+
+const FIRST_SUMMIT_HINT_KEY = 'peaknab.first-summit-hint-dismissed';
+
 export default function MountainsScreen() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const { isSummited, getSummit, getSummitCount } = useSummits();
+  const { isSummited, getSummit, getSummitCount, summitCount } = useSummits();
   const allMountains = useAllMountains();
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<MountainCategory | 'all'>('all');
@@ -46,18 +55,36 @@ export default function MountainsScreen() {
   const [showSort, setShowSort] = useState(false);
   const { useFeet, setUseFeet } = useUnits();
   const [summitedOnly, setSummitedOnly] = useState<boolean>(false);
+  // null = not loaded yet (banner stays hidden until we know)
+  const [hintDismissed, setHintDismissed] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    AsyncStorage.getItem(FIRST_SUMMIT_HINT_KEY)
+      .then((v) => {
+        if (active) setHintDismissed(v === 'true');
+      })
+      .catch(() => {
+        if (active) setHintDismissed(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const dismissHint = useCallback(() => {
+    setHintDismissed(true);
+    void AsyncStorage.setItem(FIRST_SUMMIT_HINT_KEY, 'true').catch(() => {});
+  }, []);
+
+  // Hidden forever once dismissed or once any summit exists.
+  const showFirstRunHint = hintDismissed === false && summitCount === 0;
 
   const filteredMountains = useMemo(() => {
     let filtered = allMountains;
 
     if (selectedCategory !== 'all') {
-      filtered = filtered.filter((m) => {
-        if (selectedCategory === '8000m') {
-          return m.elevation >= 8000;
-        }
-        if (m.category === selectedCategory) return true;
-        return m.tags?.includes(selectedCategory) ?? false;
-      });
+      filtered = filtered.filter((m) => mountainInCategory(m, selectedCategory));
     }
 
     if (summitedOnly) {
@@ -96,6 +123,26 @@ export default function MountainsScreen() {
   const handleAddMountain = useCallback(() => {
     router.push('/add-mountain' as any);
   }, [router]);
+
+  const handleSelectCategory = useCallback(
+    (key: MountainCategory | 'all') => {
+      if (key === 'all') {
+        // "All Peaks" clears everything.
+        setSelectedCategory('all');
+        setSummitedOnly(false);
+        return;
+      }
+      // Tapping the active category again turns it off.
+      setSelectedCategory((prev) => (prev === key ? 'all' : key));
+    },
+    []
+  );
+
+  const handleClearFilters = useCallback(() => {
+    setSearch('');
+    setSelectedCategory('all');
+    setSummitedOnly(false);
+  }, []);
 
   const renderItem = useCallback(({ item }: { item: typeof allMountains[0] }) => {
     return (
@@ -213,6 +260,7 @@ export default function MountainsScreen() {
               Summited
             </Text>
           </TouchableOpacity>
+          <View style={styles.chipDivider} />
           {categories.map((item) => {
             const isActive = selectedCategory === item.key;
             return (
@@ -222,7 +270,7 @@ export default function MountainsScreen() {
                   styles.categoryChip,
                   isActive && styles.categoryChipActive,
                 ]}
-                onPress={() => setSelectedCategory(item.key)}
+                onPress={() => handleSelectCategory(item.key)}
                 activeOpacity={0.7}
               >
                 <Text
@@ -238,13 +286,23 @@ export default function MountainsScreen() {
           })}
         </ScrollView>
 
+        {selectedCategory !== 'all' && categoryNotes[selectedCategory] && (
+          <Text style={styles.categoryNote}>{categoryNotes[selectedCategory]}</Text>
+        )}
+
         </View>
 
       {/* Mountains list */}
       <View style={styles.mountainsSection}>
         <View style={styles.listHeaderRow}>
           <Text style={styles.resultCount}>
-            {filteredMountains.length} peak{filteredMountains.length !== 1 ? 's' : ''}
+            {summitedOnly
+              ? `${filteredMountains.length} summited${
+                  selectedCategory !== 'all'
+                    ? ` · ${categories.find((c) => c.key === selectedCategory)?.label ?? ''}`
+                    : ''
+                }`
+              : `${filteredMountains.length} peak${filteredMountains.length !== 1 ? 's' : ''}`}
           </Text>
           <View style={styles.listHeaderRight}>
             <TouchableOpacity
@@ -296,6 +354,43 @@ export default function MountainsScreen() {
           initialNumToRender={10}
           maxToRenderPerBatch={10}
           style={styles.mountainList}
+          ListHeaderComponent={
+            showFirstRunHint ? (
+              <View style={styles.hintBanner}>
+                <Mountain color={Colors.primary} size={16} />
+                <Text style={styles.hintBannerText}>Tap any peak to log a summit.</Text>
+                <TouchableOpacity
+                  onPress={dismissHint}
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  testID="dismiss-first-run-hint"
+                >
+                  <X color={Colors.textMuted} size={16} />
+                </TouchableOpacity>
+              </View>
+            ) : null
+          }
+          ListEmptyComponent={
+            <View style={styles.emptyState}>
+              <View style={styles.emptyIconContainer}>
+                <Mountain color={Colors.primary} size={34} />
+              </View>
+              <Text style={styles.emptyTitle}>No peaks found</Text>
+              <Text style={styles.emptyText}>
+                {search.trim()
+                  ? `Nothing matches “${search.trim()}”`
+                  : summitedOnly
+                    ? "You haven't summited any peaks in this list yet"
+                    : 'No peaks in this category'}
+              </Text>
+              <TouchableOpacity
+                style={styles.emptyClearButton}
+                onPress={handleClearFilters}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.emptyClearButtonText}>Clear filters</Text>
+              </TouchableOpacity>
+            </View>
+          }
         />
       </View>
     </View>
@@ -491,7 +586,80 @@ const styles = StyleSheet.create({
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     gap: 4,
+  },
+  chipDivider: {
+    width: 1,
+    height: 20,
+    backgroundColor: 'rgba(200,215,230,0.9)',
+    alignSelf: 'center' as const,
     marginRight: 8,
+  },
+  categoryNote: {
+    paddingHorizontal: 20,
+    paddingTop: 6,
+    fontSize: 12,
+    lineHeight: 16,
+    color: Colors.textMuted,
+  },
+  hintBanner: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: 8,
+    marginHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 4,
+    paddingVertical: 9,
+    paddingHorizontal: 12,
+    backgroundColor: Colors.frost,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  hintBannerText: {
+    flex: 1,
+    fontSize: 13,
+    color: Colors.text,
+    fontWeight: '500' as const,
+  },
+  emptyState: {
+    alignItems: 'center' as const,
+    paddingVertical: 56,
+    paddingHorizontal: 32,
+  },
+  emptyIconContainer: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: Colors.frost,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    marginBottom: 16,
+  },
+  emptyTitle: {
+    fontSize: 17,
+    fontWeight: '700' as const,
+    color: Colors.text,
+    marginBottom: 6,
+  },
+  emptyText: {
+    fontSize: 13,
+    lineHeight: 18,
+    color: Colors.textMuted,
+    textAlign: 'center' as const,
+    marginBottom: 20,
+  },
+  emptyClearButton: {
+    backgroundColor: Colors.frost,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    paddingHorizontal: 18,
+    paddingVertical: 9,
+    borderRadius: 18,
+  },
+  emptyClearButtonText: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: Colors.primary,
   },
   categoryChipActive: {
     backgroundColor: Colors.primary,

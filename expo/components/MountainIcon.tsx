@@ -1,8 +1,10 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { View, Image, StyleSheet, Text } from 'react-native';
 import { MountainCategory } from '@/constants/mountains';
 import { getMountainIconSource } from '@/constants/mountainIcons';
 import Colors from '@/constants/colors';
+import { useLatestSummitPhoto } from '@/components/MountainPhoto';
+import FrostPeakPlaceholder from '@/components/FrostPeakPlaceholder';
 
 interface MountainIconProps {
   mountainId?: string;
@@ -25,9 +27,39 @@ const categoryEmojis: Record<string, string> = {
 
 function MountainIconComponent({ mountainId, category, size = 24 }: MountainIconProps) {
   const iconSource = getMountainIconSource(mountainId ?? 'default');
-  const [hasError, setHasError] = useState(false);
+  const [error, setHasError] = useState(false);
 
-  if (hasError) {
+  // Custom peaks have no bundled imagery: show the user's most recent
+  // attached summit photo, or a neutral frost placeholder.
+  const isCustom = category === 'custom';
+  const latestPhoto = useLatestSummitPhoto(mountainId, isCustom);
+  const customPhoto = useMemo(
+    () => (isCustom ? latestPhoto : null),
+    [isCustom, latestPhoto]
+  );
+
+  if (isCustom) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { width: size, height: size, borderRadius: Math.round(size * 0.21), overflow: 'hidden' },
+        ]}
+      >
+        {customPhoto ? (
+          <Image
+            source={{ uri: customPhoto }}
+            style={{ width: size, height: size }}
+            resizeMode="cover"
+          />
+        ) : (
+          <FrostPeakPlaceholder iconSize={Math.round(size * 0.45)} />
+        )}
+      </View>
+    );
+  }
+
+  if (error) {
     return (
       <View style={[
         styles.fallbackContainer,

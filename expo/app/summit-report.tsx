@@ -63,6 +63,8 @@ export default function SummitReportScreen() {
   // Scrolls the focused field above the keyboard so it (and the content
   // directly above it) stays visible while typing.
   const scrollToInput = useCallback((inputRef: React.RefObject<TextInput | null>) => {
+    // findNodeHandle isn't supported on web.
+    if (Platform.OS === 'web') return;
     const node = inputRef.current ? findNodeHandle(inputRef.current) : null;
     if (node == null) return;
     scrollRef.current?.scrollResponderScrollNativeHandleToKeyboard(node, 130, true);
@@ -202,7 +204,7 @@ export default function SummitReportScreen() {
           <TextInput
             ref={routeRef}
             style={styles.conditionsInput}
-            placeholder="Machame Route"
+            placeholder={availableRoutes.length > 0 ? `e.g. ${availableRoutes[0]}` : 'e.g. Normal route'}
             placeholderTextColor={Colors.textMuted}
             value={route}
             onChangeText={setRoute}

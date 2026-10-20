@@ -454,6 +454,31 @@ export default function MountainDetailScreen() {
           </View>
         )}
 
+        {([
+          ['Route', record.route],
+          ['Summit time', record.summitTime],
+          ['Time to summit', record.timeToSummit],
+          ['Round trip', record.roundTrip],
+          ['Conditions', record.conditions],
+        ] as const).some(([, value]) => !!value) && (
+          <View style={styles.reportDetails}>
+            {([
+              ['Route', record.route],
+              ['Summit time', record.summitTime],
+              ['Time to summit', record.timeToSummit],
+              ['Round trip', record.roundTrip],
+              ['Conditions', record.conditions],
+            ] as const)
+              .filter(([, value]) => !!value)
+              .map(([label, value]) => (
+                <View key={label} style={styles.reportDetailRow}>
+                  <Text style={styles.reportDetailLabel}>{label}</Text>
+                  <Text style={styles.reportDetailValue}>{value}</Text>
+                </View>
+              ))}
+          </View>
+        )}
+
         {record.report ? (
           <View style={styles.reportTextContainer}>
             <Text style={styles.reportText} numberOfLines={4}>{record.report}</Text>
@@ -1220,6 +1245,27 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 180,
     borderRadius: 10,
+  },
+  reportDetails: {
+    paddingHorizontal: 14,
+    paddingTop: 10,
+    gap: 4,
+  },
+  reportDetailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  reportDetailLabel: {
+    fontSize: 12,
+    color: Colors.textMuted,
+  },
+  reportDetailValue: {
+    fontSize: 12,
+    fontWeight: '600' as const,
+    color: Colors.text,
+    textAlign: 'right',
+    flexShrink: 1,
   },
   reportTextContainer: {
     paddingHorizontal: 14,

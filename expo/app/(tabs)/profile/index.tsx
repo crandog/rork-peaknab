@@ -39,7 +39,7 @@ import {
 import * as Print from 'expo-print';
 import * as Linking from 'expo-linking';
 import Colors from '@/constants/colors';
-import { categoryLabels, MountainCategory } from '@/constants/mountains';
+import { categoryLabels, MountainCategory, mountainInCategory } from '@/constants/mountains';
 import MountainIcon from '@/components/MountainIcon';
 import { useSummits } from '@/contexts/SummitContext';
 import { useAllMountains } from '@/hooks/useAllMountains';
@@ -129,12 +129,31 @@ export default function ProfileScreen() {
     const cats: MountainCategory[] = ['7summits', '8000m', '14ers', 'alps', 'andes', 'himalaya', 'other', 'custom'];
     return cats
       .map((cat) => {
-        const total = allMountains.filter((m) => m.category === cat).length;
-        const done = allMountains.filter((m) => m.category === cat && isSummited(m.id)).length;
+        const total = allMountains.filter((m) => mountainInCategory(m, cat)).length;
+        const done = allMountains.filter((m) => mountainInCategory(m, cat) && isSummited(m.id)).length;
         return { category: cat, total, done, label: categoryLabels[cat] };
       })
       .filter((cat) => cat.total > 0);
   }, [isSummited, allMountains]);
+
+  // Overall progress counts only the built-in peak list, so adding a custom
+  // peak never changes the denominator.
+  const builtInTotal = useMemo(
+    () => allMountains.filter((m) => m.category !== 'custom').length,
+    [allMountains]
+  );
+  const builtInSummited = useMemo(
+    () => summitedMountains.filter((m) => m.category !== 'custom').length,
+    [summitedMountains]
+  );
+  const customPeaksSummited = useMemo(
+    () => summitedMountains.filter((m) => m.category === 'custom').length,
+    [summitedMountains]
+  );
+
+  const overallCompletion = useMemo(() => {
+    return builtInTotal > 0 ? Math.round((builtInSummited / builtInTotal) * 100) : 0;
+  }, [builtInSummited, builtInTotal]);
 
   const recentSummits = useMemo(() => {
     return [...records]
@@ -146,10 +165,6 @@ export default function ProfileScreen() {
         return { ...r, mountain, summitCount: count };
       });
   }, [records, allMountains]);
-
-  const overallCompletion = useMemo(() => {
-    return allMountains.length > 0 ? Math.round((uniqueSummitCount / allMountains.length) * 100) : 0;
-  }, [uniqueSummitCount, allMountains]);
 
   const handleExportPDF = useCallback(async () => {
     if (Platform.OS !== 'web') {
@@ -176,22 +191,22 @@ export default function ProfileScreen() {
     const dateStr = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     const milestones: string[] = [];
-    const sevenSummitsTotal = allMountains.filter((m) => m.category === '7summits').length;
-    const sevenSummitsDone = allMountains.filter((m) => m.category === '7summits' && isSummited(m.id)).length;
+    const sevenSummitsTotal = allMountains.filter((m) => mountainInCategory(m, '7summits')).length;
+    const sevenSummitsDone = allMountains.filter((m) => mountainInCategory(m, '7summits') && isSummited(m.id)).length;
     if (sevenSummitsDone > 0) {
       milestones.push(sevenSummitsDone === sevenSummitsTotal
         ? `All ${sevenSummitsTotal} of the 7 Summits completed!`
         : `${sevenSummitsDone}/${sevenSummitsTotal} of the 7 Summits completed`);
     }
-    const eightKTotal = allMountains.filter((m) => m.category === '8000m').length;
-    const eightKDone = allMountains.filter((m) => m.category === '8000m' && isSummited(m.id)).length;
+    const eightKTotal = allMountains.filter((m) => mountainInCategory(m, '8000m')).length;
+    const eightKDone = allMountains.filter((m) => mountainInCategory(m, '8000m') && isSummited(m.id)).length;
     if (eightKDone > 0) {
       milestones.push(eightKDone === eightKTotal
         ? `All ${eightKTotal} of the 8000m Peaks completed!`
         : `${eightKDone}/${eightKTotal} of the 8000m Peaks completed`);
     }
-    const fourteenersTotal = allMountains.filter((m) => m.category === '14ers').length;
-    const fourteenersDone = allMountains.filter((m) => m.category === '14ers' && isSummited(m.id)).length;
+    const fourteenersTotal = allMountains.filter((m) => mountainInCategory(m, '14ers')).length;
+    const fourteenersDone = allMountains.filter((m) => mountainInCategory(m, '14ers') && isSummited(m.id)).length;
     if (fourteenersDone > 0) {
       milestones.push(fourteenersDone === fourteenersTotal
         ? `All ${fourteenersTotal} Colorado 14ers completed!`
@@ -426,7 +441,7 @@ export default function ProfileScreen() {
               <Text style={styles.completionPercentage}>{overallCompletion}%</Text>
             </View>
             <View style={styles.completionCircle}>
-              <Text style={styles.completionFraction}>{uniqueSummitCount}/{allMountains.length}</Text>
+              <Text style={styles.completionFraction}>{builtInSummited}/{builtInTotal}</Text>
               <Text style={styles.completionPeaks}>peaks</Text>
             </View>
           </View>
@@ -443,6 +458,11 @@ export default function ProfileScreen() {
               ]}
             />
           </View>
+          {customPeaksSummited > 0 && (
+            <Text style={styles.customPeaksNote}>
+              + {customPeaksSummited} of your own peaks
+            </Text>
+          )}
         </View>
 
         <View style={styles.statsGrid}>
@@ -908,6 +928,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.frost,
     borderRadius: 4,
     overflow: 'hidden',
+  },
+  customPeaksNote: {
+    fontSize: 11,
+    color: Colors.textMuted,
+    fontWeight: '500' as const,
+    marginTop: 8,
   },
   completionFill: {
     height: '100%',
