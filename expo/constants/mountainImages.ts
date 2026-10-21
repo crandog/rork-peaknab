@@ -148,7 +148,7 @@ export const mountainImages: Record<string, string> = {
   'carrauntoohil': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/41879e96-b505-4013-96a6-103cc6425c94.png',
   'galdhopiggen': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/527d5807-e49f-46ae-97a3-a4c8c112e816.png',
   'mount-kailash': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/57997d1e-b74f-4547-8643-b90f32c157aa.png',
-  'hkakabo-razi': 'https://0flxsf6ncoo30x7j7rdu6.rork.app/~assets/img/18648eeb-7cad-409a-b916-cb96abd4c8b3.png',
+  'hkakabo-razi': 'https://r2-pub.rork.com/attachments/ba87jo1nk9ykcs5gxshb4.jpg',
   'mount-etna': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/e1835b87-a65d-4cdd-962f-9569d1371593.png',
   'mauna-kea': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/51cad854-9954-4f45-a834-a4f4affc0f7c.png',
   'yanapaccha': 'https://r2-pub.rork.com/projects/0flxsf6ncoo30x7j7rdu6/assets/ae9cd021-fd06-4776-a9c9-870d8bef10d2.png',
