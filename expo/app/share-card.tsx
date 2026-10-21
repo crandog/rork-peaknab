@@ -78,10 +78,20 @@ function getAccolade(mountain: Mountain): string | undefined {
     elbrus: 'One of the 7 Summits · Highest point in Europe',
     vinson: 'One of the 7 Summits · Highest point in Antarctica',
     carstensz: 'One of the 7 Summits · Highest point in Oceania',
+    'hkakabo-razi': 'Highest peak in Myanmar',
   };
   if (accolades[mountain.id]) return accolades[mountain.id];
   if (mountain.elevation >= 8000) return 'One of the 14 eight-thousanders';
-  if (mountain.tags?.includes('volcanic')) return 'One of the Volcanic 7 Summits';
+  const VOLCANIC_SEVEN_SUMMITS = [
+    'kilimanjaro',
+    'elbrus',
+    'ojos-del-salado',
+    'orizaba',
+    'mt-elbrus-traverse', // Damavand
+    'mount-giluwe',
+    'mount-sidley',
+  ];
+  if (VOLCANIC_SEVEN_SUMMITS.includes(mountain.id)) return 'One of the Volcanic 7 Summits';
   if (mountain.category === '14ers') return 'Colorado 14er';
   return undefined;
 }

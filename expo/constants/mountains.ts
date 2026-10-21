@@ -41,7 +41,7 @@ export const categoryLabels: Record<MountainCategory, string> = {
   'himalaya': 'Himalaya',
   'other': 'World Classics',
   'custom': 'My Peaks',
-  'volcanic': 'Volcanic 7',
+  'volcanic': 'Volcanic',
 };
 
 export const categoryDescriptions: Record<MountainCategory, string> = {
@@ -53,7 +53,7 @@ export const categoryDescriptions: Record<MountainCategory, string> = {
   'himalaya': 'Notable Himalayan peaks below 8000m',
   'other': 'Famous climbs around the world',
   'custom': 'Your personally added peaks',
-  'volcanic': 'The highest volcanoes on each continent',
+  'volcanic': 'Volcanoes around the world, including the Volcanic Seven Summits',
 };
 
 /**
