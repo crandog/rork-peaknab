@@ -165,7 +165,7 @@ export const mountains: Mountain[] = [
     baseName: 'Machame Gate',
     baseElevation_m: 1800,
     iconEmoji: '🌋',
-    routes: ['Marangu Route', 'Machame Route', 'Lemosho Route', 'Rongai Route'],
+    routes: ['Marangu Route', 'Machame Route', 'Lemosho Route', 'Rongai Route', 'Umbwe Route'],
     camps: {
       route: 'Machame Route',
       list: [
