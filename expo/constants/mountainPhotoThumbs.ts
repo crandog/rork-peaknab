@@ -161,6 +161,7 @@ export const mountainPhotoThumbs: Record<string, number> = {
   'carrauntoohil': require('../assets/images/photo-thumbs/carrauntoohil.webp'),
   'galdhopiggen': require('../assets/images/photo-thumbs/galdhopiggen.webp'),
   'mount-kailash': require('../assets/images/photo-thumbs/mount-kailash.webp'),
+  'hkakabo-razi': require('../assets/images/photo-thumbs/hkakabo-razi.webp'),
   'mount-etna': require('../assets/images/photo-thumbs/mount-etna.webp'),
   'mauna-kea': require('../assets/images/photo-thumbs/mauna-kea.webp'),
   'yanapaccha': require('../assets/images/photo-thumbs/yanapaccha.webp'),

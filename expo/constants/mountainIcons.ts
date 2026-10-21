@@ -156,6 +156,7 @@ const MOUNTAIN_ICON_MAP: Record<string, ImageRequireSource> = {
   'carrauntoohil': require('../assets/images/peaks/carrauntoohil.png'),
   'galdhopiggen': require('../assets/images/peaks/galdhopiggen.png'),
   'mount-kailash': require('../assets/images/peaks/mount-kailash.png'),
+  'hkakabo-razi': require('../assets/images/peaks/hkakabo-razi.png'),
   'mount-etna': require('../assets/images/peaks/mount-etna.png'),
   'mauna-kea': require('../assets/images/peaks/mauna-kea.png'),
 };
